@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>TypeParkinson — a keyboard built around your hands</title>
+<link rel="stylesheet" href="_ds/broadsheet-5a13f8e0-75e8-41e1-b69f-0f67a3879ee7/styles.css">
+<script src="_ds/broadsheet-5a13f8e0-75e8-41e1-b69f-0f67a3879ee7/_ds_bundle.js"></script>
+<style>html{scroll-behavior:smooth}body{margin:0;background:var(--color-bg);text-wrap:pretty}a{color:var(--color-accent-700);text-decoration:none}a:hover{color:var(--color-accent-600)}
+.tp-theme{--color-accent:oklch(.52 .21 260);--color-accent-2:oklch(.6 .22 355);--color-accent-100:oklch(.97 .02 255);--color-accent-200:oklch(.93 .045 255);--color-accent-300:oklch(.86 .08 256);--color-accent-400:oklch(.76 .13 257);--color-accent-500:oklch(.62 .18 258);--color-accent-600:oklch(.47 .2 260);--color-accent-700:oklch(.41 .18 262);--color-accent-800:oklch(.34 .14 263);--color-accent-900:oklch(.26 .09 264);--color-accent-2-700:oklch(.5 .19 355)}
+.tp-theme.tp-dark{--color-bg:#1b1a1d;--color-surface:#252428;--color-text:#efedf0;--color-accent:oklch(.7 .15 255);--color-accent-2:oklch(.74 .17 355);--color-neutral-200:#2a292d;--color-neutral-300:#3a393d;--color-neutral-700:#aaa9ad;--color-accent-600:oklch(.76 .13 257);--color-accent-700:oklch(.86 .08 256);--color-accent-2-700:oklch(.87 .085 355);color-scheme:dark}</style>
+</helmet>
+<div class="{{ themeClass }}" style="background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);min-height:100vh;transition:background .2s">
+
+  <nav class="nav" style="padding-inline:clamp(20px,5vw,72px);display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+    <span class="nav-brand" style="margin-right:auto">TypeParkinson</span>
+    <a href="#how" style="font-size:15px">How it works</a>
+    <a href="#adjusts" style="font-size:15px">What it adjusts</a>
+    <a href="#privacy" style="font-size:15px">Privacy</a>
+    <a href="#download" class="btn btn-primary" style="color:#fff">Download now</a>
+  </nav>
+
+  <div style="max-width:1200px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+
+    <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:56px clamp(32px,6vw,96px);align-items:center;padding:clamp(56px,9vw,112px) 0 72px">
+      <div style="display:flex;flex-direction:column;gap:28px">
+        <h1 style="margin:0 0 0 -.035em;font-family:var(--font-heading);font-size:clamp(42px,6vw,76px);line-height:1.06;letter-spacing:-.02em">
+          <span style="display:block">A keyboard</span>
+          <span style="display:block">built around</span>
+          <span style="display:block">your hands.</span>
+        </h1>
+        <p style="margin:0;font-size:19px;line-height:1.55;max-width:46ch">TypeParkinson watches how you touch the screen, builds an Android keyboard around it, and then checks — on a phrase you haven’t seen — that the new keyboard actually helps you type.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+          <a href="#download" class="btn btn-primary" style="color:#fff;min-height:52px;padding:0 28px;font-size:17px;display:inline-flex;align-items:center">Download now</a>
+          <a href="#how" class="btn btn-ghost" style="min-height:52px;font-size:17px;display:inline-flex;align-items:center">See how it works</a>
+        </div>
+        <span style="font-size:14px;color:var(--color-neutral-700)">Free for Android. Setup takes about three minutes.</span>
+      </div>
+      <div style="display:flex;justify-content:center">
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}">
+          <video ref="{{ vidRef }}" src="uploads/typeparkinson-animation-light.mp4" autoPlay="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" style="display:block;width:100%;max-height:760px;object-fit:contain"></video>
+        </sc-if>
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}">
+          <video ref="{{ vidRef }}" src="uploads/typeparkinson-animation-dark.mp4" autoPlay="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" style="display:block;width:100%;max-height:760px;object-fit:contain"></video>
+        </sc-if>
+      </div>
+    </section>
+
+    <section aria-label="At a glance" style="padding:24px 0 56px">
+      <div style="height:5px;border-top:2px solid var(--color-text);border-bottom:1px solid var(--color-text);box-sizing:border-box"></div>
+      <p style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px 28px;margin:0;padding:14px 0;font-size:13px;line-height:14px;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 70%,transparent)">
+        <span>Android app + keyboard</span><span>Works in every app</span><span>Profile stays on your phone</span>
+      </p>
+      <div style="border-top:1px solid var(--color-text)"></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px 70px;padding:14px 0 28px">
+        <sc-for list="{{ index }}" as="ix" hint-placeholder-count="4">
+          <p style="display:flex;align-items:baseline;gap:8px;margin:0;font-size:16px;line-height:28px"><span>{{ ix.label }}</span><span style="flex:1;min-width:28px;align-self:flex-end;margin-bottom:.34em;border-bottom:1px dotted color-mix(in srgb,var(--color-text) 45%,transparent)"></span><span style="font-family:var(--font-heading);font-size:18px;color:{{ ix.color }}">{{ ix.num }}</span></p>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid var(--color-text)"></div>
+    </section>
+
+    <section id="how" style="padding:72px 0 56px;scroll-margin-top:24px">
+      <span style="display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 70%,transparent);margin:0 0 14px">How it works</span>
+      <h2 style="margin:0 0 48px;font-family:var(--font-heading);font-size:clamp(30px,3.6vw,44px);line-height:1.12;letter-spacing:-.015em;max-width:22ch">Measure. Build. Check. Then type anywhere.</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:44px clamp(28px,4vw,56px)">
+        <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <span style="font-family:var(--font-heading);font-size:40px;line-height:1;color:var(--color-accent)">{{ st.n }}</span>
+            <h3 style="margin:0;font-family:var(--font-heading);font-size:23px;line-height:1.25">{{ st.title }}</h3>
+            <p style="margin:0;font-size:16px;line-height:1.65;color:color-mix(in srgb,var(--color-text) 80%,transparent);hyphens:auto">{{ st.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="adjusts" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:40px clamp(32px,6vw,96px);padding:88px 0 56px;scroll-margin-top:24px">
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <span style="font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 70%,transparent)">What it adjusts</span>
+        <h2 style="margin:0;font-family:var(--font-heading);font-size:clamp(30px,3.6vw,44px);line-height:1.12;letter-spacing:-.015em">Five settings, each traced to something you did.</h2>
+        <p style="margin:0;font-size:17px;line-height:1.6;max-width:42ch">Every proposed change shows the exercise it came from. Change any of them before you try the keyboard — and after the check, anything that didn’t help is flagged so you can turn it off.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:30px">
+        <sc-for list="{{ settings }}" as="s" hint-placeholder-count="5">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap">
+              <span style="font-size:19px;font-weight:600">{{ s.name }}</span>
+              <span style="font-size:13px;font-style:italic;color:var(--color-neutral-700)">{{ s.basis }}</span>
+            </div>
+            <p style="margin:0;font-size:16px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">{{ s.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="padding:88px 0 56px;max-width:760px">
+      <span style="display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--color-text) 70%,transparent);margin:0 0 14px">Every day after</span>
+      <h2 style="margin:0 0 20px;font-family:var(--font-heading);font-size:clamp(30px,3.6vw,44px);line-height:1.12;letter-spacing:-.015em">Typing feels different today?</h2>
+      <p style="margin:0 0 16px;font-size:18px;line-height:1.6">Hands aren’t the same every morning. One button on the home screen runs a six-tap check and compares today with your usual. If your touches are landing somewhere new, TypeParkinson reads them differently for the day.</p>
+      <p style="margin:0;font-size:18px;line-height:1.6">The keys themselves never move. Once you approve a layout it stays put, so your fingers can learn where everything is.</p>
+    </section>
+
+    <section id="privacy" style="padding:72px 0 56px;scroll-margin-top:24px">
+      <figure style="margin:0">
+        <blockquote style="margin:0;font-family:var(--font-heading);font-style:italic;font-weight:400;font-size:clamp(24px,2.8vw,36px);line-height:1.35;letter-spacing:-.01em;max-width:30ch">Your touch profile never leaves this phone. TypeParkinson doesn’t save what you type.</blockquote>
+      </figure>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:32px clamp(28px,4vw,56px);margin-top:44px">
+        <sc-for list="{{ promises }}" as="p" hint-placeholder-count="3">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <h3 style="margin:0;font-family:var(--font-heading);font-size:20px">{{ p.title }}</h3>
+            <p style="margin:0;font-size:15.5px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 80%,transparent)">{{ p.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="download" style="padding:96px 0 72px;display:flex;flex-direction:column;gap:20px;align-items:flex-start;scroll-margin-top:24px">
+      <h2 style="margin:0 0 0 -.03em;font-family:var(--font-heading);font-size:clamp(36px,5vw,60px);line-height:1.08;letter-spacing:-.02em;max-width:18ch">Three minutes of tapping. A keyboard that fits.</h2>
+      <p style="margin:0;font-size:18px;line-height:1.6;max-width:50ch">Five short exercises, no right answers. Pause or skip any of them — the keyboard adapts to whatever you do.</p>
+      <a href="#download" class="btn btn-primary" style="color:#fff;min-height:56px;padding:0 32px;font-size:18px;display:inline-flex;align-items:center;margin-top:8px">Download now</a>
+      <span style="font-size:14px;color:var(--color-neutral-700)">For Android phones. Free.</span>
+    </section>
+
+    <footer style="padding:40px 0 56px;display:flex;flex-direction:column;gap:8px;font-size:13px;line-height:1.6;color:color-mix(in srgb,var(--color-text) 70%,transparent)">
+      <span style="max-width:70ch;font-style:italic">TypeParkinson describes how your touches behave. It isn’t a medical device, doesn’t assess or diagnose any condition, and isn’t a substitute for advice from a clinician.</span>
+      <span>© 2026 TypeParkinson</span>
+    </footer>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Appearance&quot;}}">
+class Component extends DCLogic {
+  vidRef = el => { if (el) { el.muted = true; const p = el.play(); if (p) p.catch(() => {}); } };
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    return {
+      themeClass: dark ? 'tp-theme tp-dark' : 'tp-theme',
+      isLight: !dark, isDark: dark, vidRef: this.vidRef,
+      index: [
+        { label: 'Setup, start to finish', num: '≈ 3 min', color: 'var(--color-accent-700)' },
+        { label: 'Short touch exercises', num: '5', color: 'var(--color-text)' },
+        { label: 'Taps in the daily check', num: '6', color: 'var(--color-text)' },
+        { label: 'Messages saved, ever', num: '0', color: 'var(--color-text)' }
+      ],
+      steps: [
+        { n: '1', title: 'Learn how you touch', body: 'Tap targets, double-tap, touch and hold, follow a path, copy a short phrase. TypeParkinson records where your touches land and how your finger moves.' },
+        { n: '2', title: 'See your touch profile', body: 'A plain-language summary: whether touches drift in one direction, how close targets went, whether taps register twice.' },
+        { n: '3', title: 'Check it actually helps', body: 'Type one fresh phrase on a standard keyboard and another on yours. You see errors, corrections and time side by side.' },
+        { n: '4', title: 'Use it in every app', body: 'Switch it on in Android’s keyboard settings and it works anywhere you type — messages, email, search.' }
+      ],
+      settings: [
+        { name: 'Key size and spacing', basis: 'From target taps', desc: 'Standard, large or extra-large keys with more room between them, for fewer near-misses.' },
+        { name: 'Touch interpretation', basis: 'From target taps', desc: 'If your touches tend to land a little low or to one side, each one is read where you were aiming.' },
+        { name: 'Repeat handling', basis: 'From double taps', desc: 'Ignores an accidental second contact on the same key within 120 ms. Deliberate double letters still type.' },
+        { name: 'Tap tolerance', basis: 'From touch and release', desc: 'A tap still counts if your finger moves a little before lifting.' },
+        { name: 'Correction controls', basis: 'From phrase copying', desc: 'Large Undo, Delete word and Backspace buttons above the keys.' }
+      ],
+      promises: [
+        { title: 'On the phone only', body: 'Your touch profile is stored on your device. Nothing is uploaded.' },
+        { title: 'Nothing you type is kept', body: 'The keyboard reads where you touch, not what you write, and never saves your messages.' },
+        { title: 'Not a medical test', body: 'Findings describe how your touches behaved that day. They say nothing about any condition.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
