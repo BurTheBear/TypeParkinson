@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/broadsheet-5a13f8e0-75e8-41e1-b69f-0f67a3879ee7/styles.css">
+<script src="_ds/broadsheet-5a13f8e0-75e8-41e1-b69f-0f67a3879ee7/_ds_bundle.js"></script>
+<style>body{margin:0;background:var(--color-bg)}a{color:var(--color-accent)}a:hover{color:var(--color-accent-600)}
+.tp-theme{--color-accent:oklch(.52 .21 260);--color-accent-2:oklch(.6 .22 355);--color-accent-100:oklch(.97 .02 255);--color-accent-200:oklch(.93 .045 255);--color-accent-300:oklch(.86 .08 256);--color-accent-400:oklch(.76 .13 257);--color-accent-500:oklch(.62 .18 258);--color-accent-600:oklch(.47 .2 260);--color-accent-700:oklch(.41 .18 262);--color-accent-800:oklch(.34 .14 263);--color-accent-900:oklch(.26 .09 264);--color-accent-2-100:oklch(.97 .02 355);--color-accent-2-200:oklch(.93 .045 355);--color-accent-2-300:oklch(.87 .085 355);--color-accent-2-400:oklch(.78 .14 355);--color-accent-2-500:oklch(.69 .19 355);--color-accent-2-600:oklch(.6 .21 355);--color-accent-2-700:oklch(.5 .19 355);--color-accent-2-800:oklch(.41 .15 355);--color-accent-2-900:oklch(.31 .1 355)}
+.tp-theme.tp-dark{--color-bg:#1b1a1d;--color-surface:#252428;--color-text:#efedf0;--color-divider:color-mix(in srgb,#efedf0 18%,transparent);--color-accent:oklch(.7 .15 255);--color-accent-2:oklch(.74 .17 355);--color-neutral-100:#1f1e21;--color-neutral-200:#2a292d;--color-neutral-300:#3a393d;--color-neutral-400:#4f4e52;--color-neutral-500:#6c6b70;--color-neutral-600:#8a898e;--color-neutral-700:#aaa9ad;--color-neutral-800:#c9c8cc;--color-neutral-900:#e4e3e6;--color-accent-100:oklch(.26 .09 264);--color-accent-200:oklch(.34 .14 263);--color-accent-300:oklch(.41 .18 262);--color-accent-400:oklch(.47 .2 260);--color-accent-500:oklch(.62 .18 258);--color-accent-600:oklch(.76 .13 257);--color-accent-700:oklch(.86 .08 256);--color-accent-800:oklch(.93 .045 255);--color-accent-900:oklch(.97 .02 255);--color-accent-2-100:oklch(.31 .1 355);--color-accent-2-200:oklch(.41 .15 355);--color-accent-2-300:oklch(.5 .19 355);--color-accent-2-400:oklch(.6 .21 355);--color-accent-2-500:oklch(.69 .19 355);--color-accent-2-600:oklch(.78 .14 355);--color-accent-2-700:oklch(.87 .085 355);--color-accent-2-800:oklch(.93 .045 355);--color-accent-2-900:oklch(.97 .02 355);--shadow-sm:0 1px 2px rgba(0,0,0,.5);--shadow-md:0 3px 10px rgba(0,0,0,.5);--shadow-lg:0 12px 32px rgba(0,0,0,.6);color-scheme:dark}</style>
+</helmet>
+<div class="{{ themeClass }}" style="background:var(--color-bg);transition:background .2s;min-height:100vh;display:flex;flex-wrap:wrap;gap:64px;align-items:flex-start;justify-content:center;padding:48px 32px;box-sizing:border-box;font-family:var(--font-body);color:var(--color-text)">
+
+  <aside style="flex:0 1 300px;min-width:240px;display:flex;flex-direction:column;gap:22px;padding-top:28px">
+    <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Prototype · Android app + keyboard</div>
+    <h1 style="margin:0;font-size:46px;line-height:1">TypeParkinson</h1>
+    <p style="margin:0;font-size:16px;line-height:1.5;text-wrap:pretty">Measures how someone touches the screen, builds a keyboard around it, then checks that the keyboard actually helps.</p>
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0">
+      <sc-for list="{{ steps }}" as="st" hint-placeholder-count="7">
+        <li style="display:flex">
+          <button onClick="{{ st.go }}" style="all:unset;cursor:pointer;display:flex;gap:14px;align-items:baseline;padding:7px 0;font-size:16px;color:{{ st.color }};font-weight:{{ st.weight }}" style-hover="color:var(--color-accent)">
+            <span style="font-size:12px;width:16px;font-feature-settings:'tnum' 1">{{ st.n }}</span><span>{{ st.label }}</span>
+          </button>
+        </li>
+      </sc-for>
+    </ol>
+    <p style="margin:0;font-size:13px;line-height:1.5;color:var(--color-neutral-700);text-wrap:pretty">Mouse clicks are too precise to show much, so every touch passes through a simulated offset, jitter and occasional extra contact. Change its strength in Tweaks.</p>
+  <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:var(--color-neutral-700)">Appearance</span><div class="seg" style="align-self:flex-start"><sc-for list="{{ modes }}" as="md" hint-placeholder-count="2"><label class="seg-opt" style="padding:8px 14px;font-size:14px"><input type="radio" name="mode" checked="{{ md.checked }}" onChange="{{ md.pick }}"><span>{{ md.label }}</span></label></sc-for></div></div>
+  </aside>
+
+  <div style="flex:none;width:384px;height:800px;padding:10px;box-sizing:border-box;border-radius:46px;background:var(--color-neutral-300);box-shadow:var(--shadow-lg)">
+    <div style="position:relative;width:364px;height:780px;border-radius:36px;background:var(--color-bg);overflow:hidden;display:flex;flex-direction:column">
+      <div style="flex:none;height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600">
+        <span>9:41</span>
+        <div style="display:flex;gap:3px;align-items:flex-end"><span style="width:3px;height:5px;background:var(--color-text)"></span><span style="width:3px;height:7px;background:var(--color-text)"></span><span style="width:3px;height:9px;background:var(--color-text)"></span><span style="width:18px;height:9px;margin-left:6px;border:1.5px solid var(--color-text);border-radius:2px;box-sizing:border-box;padding:1px"><span style="display:block;width:70%;height:100%;background:var(--color-text)"></span></span></div>
+      </div>
+
+      <div style="flex:1;min-height:0;position:relative;display:flex;flex-direction:column">
+
+        <sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1;display:flex;flex-direction:column;gap:22px;padding:30px 22px 26px">
+            <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Setup</div>
+            <h2 style="margin:0;font-size:34px;line-height:1.08;text-wrap:pretty">Let’s learn how you touch the screen.</h2>
+            <p style="margin:0;font-size:16px;line-height:1.5;text-wrap:pretty">Five short exercises, about three minutes. There are no right answers — the keyboard adapts to whatever you do.</p>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:14px;line-height:1.4">Hold the phone the way you usually do. Which hand will you tap with?</div>
+              <div class="seg" style="align-self:flex-start">
+                <sc-for list="{{ hands }}" as="h" hint-placeholder-count="3">
+                  <label class="seg-opt" style="padding:10px 14px;font-size:14px"><input type="radio" name="hand" checked="{{ h.checked }}" onChange="{{ h.pick }}"><span>{{ h.label }}</span></label>
+                </sc-for>
+              </div>
+            </div>
+            <div style="margin-top:auto;display:flex;flex-direction:column;gap:12px">
+              <p style="margin:0;font-size:13px;line-height:1.45;color:var(--color-neutral-700)">You can pause or skip any exercise. Your touch profile stays on this phone.</p>
+              <button class="btn btn-primary" onClick="{{ startEx }}" style="width:100%;min-height:52px;font-size:16px">Start exercises</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isTask }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:12px;padding:16px 22px 0">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:36px">
+              <span style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">{{ kicker }}</span>
+              <sc-if value="{{ showPause }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;gap:4px">
+                  <button class="btn btn-ghost" onClick="{{ pause }}" style="min-height:40px;padding:6px 10px">Pause</button>
+                  <button class="btn btn-ghost" onClick="{{ skip }}" style="min-height:40px;padding:6px 10px">Skip</button>
+                </div>
+              </sc-if>
+            </div>
+            <div style="display:flex;gap:4px">
+              <sc-for list="{{ segs }}" as="sg" hint-placeholder-count="5">
+                <span style="flex:1;height:3px;border-radius:2px;background:{{ sg.bg }}"></span>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <h3 style="margin:0;font-size:23px">{{ taskTitle }}</h3>
+              <p style="margin:0;font-size:14px;line-height:1.4;color:var(--color-neutral-700);text-wrap:pretty">{{ taskHint }}</p>
+            </div>
+
+            <sc-if value="{{ isArea }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div ref="{{ areaRef }}" onPointerDown="{{ onDown }}" onPointerMove="{{ onMove }}" onPointerUp="{{ onUp }}" style="position:relative;width:320px;height:440px;background:var(--color-surface);border-radius:var(--radius-lg);touch-action:none;overflow:hidden;cursor:crosshair;user-select:none">
+                  <sc-if value="{{ isPath }}" hint-placeholder-val="{{ false }}">
+                    <svg width="320" height="440" style="position:absolute;inset:0;pointer-events:none">
+                      <polyline points="{{ pathPts }}" fill="none" stroke="var(--color-neutral-400)" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                      <polyline points="{{ trailPts }}" fill="none" stroke="var(--color-accent)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                    </svg>
+                  </sc-if>
+                  <sc-for list="{{ targets }}" as="t" hint-placeholder-count="1">
+                    <div style="position:absolute;left:{{ t.left }}px;top:{{ t.top }}px;width:{{ t.d }}px;height:{{ t.d }}px;border-radius:50%;background:{{ t.bg }};pointer-events:none"></div>
+                  </sc-for>
+                  <sc-if value="{{ hasRaw }}" hint-placeholder-val="{{ false }}">
+                    <div style="position:absolute;left:{{ rawL }}px;top:{{ rawT }}px;width:12px;height:12px;border-radius:50%;border:2px solid var(--color-accent-2);box-sizing:border-box;pointer-events:none"></div>
+                  </sc-if>
+                  <sc-if value="{{ hasFlash }}" hint-placeholder-val="{{ false }}">
+                    <div style="position:absolute;left:{{ flashL }}px;top:{{ flashT }}px;width:12px;height:12px;border-radius:50%;background:var(--color-text);box-shadow:0 0 0 3px var(--color-bg);pointer-events:none"></div>
+                  </sc-if>
+                  <div style="position:absolute;left:0;right:0;bottom:14px;text-align:center;font-size:13px;color:var(--color-neutral-800);pointer-events:none;padding:0 16px">{{ areaMsg }}</div>
+                </div>
+                <div style="font-size:12px;color:var(--color-neutral-700)">{{ progress }}</div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ isTyping }}" hint-placeholder-val="{{ false }}">
+              <div style="flex:1;min-height:0;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <span style="font-size:12px;color:var(--color-neutral-700)">Type this</span>
+                  <span style="font-size:19px;line-height:1.35">{{ target }}</span>
+                </div>
+                <div style="min-height:34px;font-size:19px;line-height:1.35;padding-bottom:6px;border-bottom:2px solid var(--color-accent);display:flex;flex-wrap:wrap;align-items:flex-end">
+                  <sc-for list="{{ chars }}" as="c" hint-placeholder-count="0">
+                    <span style="white-space:pre;color:{{ c.color }};text-decoration:{{ c.deco }};text-decoration-color:var(--color-accent-2)">{{ c.c }}</span>
+                  </sc-for>
+                  <span style="display:inline-block;width:2px;height:22px;background:var(--color-accent);margin-left:1px"></span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                  <span style="font-size:12px;color:var(--color-neutral-700)">{{ typingStats }}</span>
+                  <button class="btn btn-primary" onClick="{{ finish }}" disabled="{{ cantFinish }}" style="min-height:40px">Done</button>
+                </div>
+                <div style="margin:auto -22px 0;padding:10px 10px 14px;background:var(--color-neutral-200);display:flex;flex-direction:column;gap:8px">
+                  <sc-if value="{{ showCorrBar }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px">
+                      <button class="btn btn-secondary" onClick="{{ undo }}" style="min-height:48px;background:var(--color-bg);font-size:15px">Undo</button>
+                      <button class="btn btn-secondary" onClick="{{ delWord }}" style="min-height:48px;background:var(--color-bg);font-size:15px">Delete word</button>
+                      <button class="btn btn-secondary" onClick="{{ backspace }}" style="min-height:48px;background:var(--color-bg);font-size:15px">⌫ Backspace</button>
+                    </div>
+                  </sc-if>
+                  <div ref="{{ kbRef }}" onPointerDown="{{ onKb }}" style="position:relative;width:344px;height:{{ kbH }}px;touch-action:none;user-select:none;cursor:pointer">
+                    <sc-for list="{{ keys }}" as="k" hint-placeholder-count="30">
+                      <div style="position:absolute;left:{{ k.x }}px;top:{{ k.y }}px;width:{{ k.w }}px;height:{{ k.h }}px;background:{{ k.bg }};border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);display:grid;place-items:center;font-size:{{ k.fs }}px;pointer-events:none">{{ k.label }}</div>
+                    </sc-for>
+                    <sc-if value="{{ hasKbRaw }}" hint-placeholder-val="{{ false }}">
+                      <div style="position:absolute;left:{{ kbRawL }}px;top:{{ kbRawT }}px;width:10px;height:10px;border-radius:50%;border:2px solid var(--color-accent-2);box-sizing:border-box;pointer-events:none"></div>
+                      <div style="position:absolute;left:{{ kbRegL }}px;top:{{ kbRegT }}px;width:10px;height:10px;border-radius:50%;background:var(--color-text);pointer-events:none"></div>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
+          <sc-if value="{{ paused }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:0;background:color-mix(in srgb, var(--color-bg) 94%, transparent);display:flex;flex-direction:column;justify-content:center;gap:14px;padding:0 32px">
+              <h2 style="margin:0;font-size:32px">Paused</h2>
+              <p style="margin:0 0 8px;font-size:16px;line-height:1.5">Take as long as you need. Nothing you’ve done so far is lost.</p>
+              <button class="btn btn-primary" onClick="{{ resume }}" style="min-height:52px;font-size:16px">Resume</button>
+              <button class="btn btn-secondary" onClick="{{ skip }}" style="min-height:48px">Skip this exercise</button>
+              <button class="btn btn-ghost" onClick="{{ goWelcome }}" style="min-height:44px">Leave setup</button>
+            </div>
+          </sc-if>
+        </sc-if>
+
+        <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;min-height:0;overflow:auto;padding:22px 22px 26px;display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Your touch profile</div>
+              <h2 style="margin:0;font-size:30px;line-height:1.1">Here’s how your touches landed.</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+              <div style="position:relative;width:260px;height:260px;align-self:center">
+                <div style="position:absolute;left:52px;top:52px;width:156px;height:156px;border-radius:50%;background:var(--color-surface)"></div>
+                <div style="position:absolute;left:129px;top:110px;width:2px;height:40px;background:var(--color-neutral-400)"></div>
+                <div style="position:absolute;left:110px;top:129px;width:40px;height:2px;background:var(--color-neutral-400)"></div>
+                <sc-for list="{{ plot.dots }}" as="d" hint-placeholder-count="10">
+                  <div style="position:absolute;left:{{ d.left }}px;top:{{ d.top }}px;width:10px;height:10px;border-radius:50%;background:{{ d.bg }};opacity:.85"></div>
+                </sc-for>
+                <div style="position:absolute;left:{{ plot.mL }}px;top:{{ plot.mT }}px;width:18px;height:18px;border-radius:50%;border:2.5px solid var(--color-accent-2);box-sizing:border-box"></div>
+              </div>
+              <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--color-neutral-700);align-self:center">
+                <span style="display:flex;gap:6px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-accent)"></span>On target</span>
+                <span style="display:flex;gap:6px;align-items:center"><span style="width:8px;height:8px;border-radius:50%;background:var(--color-neutral-600)"></span>Missed</span>
+                <span style="display:flex;gap:6px;align-items:center"><span style="width:10px;height:10px;border-radius:50%;border:2px solid var(--color-accent-2);box-sizing:border-box"></span>Average</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px">
+              <sc-for list="{{ findings }}" as="f" hint-placeholder-count="4">
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <div style="font-size:17px;line-height:1.35;font-weight:600;text-wrap:pretty">{{ f.text }}</div>
+                  <div style="font-size:13px;line-height:1.4;color:var(--color-neutral-700)">{{ f.detail }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <p style="margin:0;font-size:13px;line-height:1.5;color:var(--color-neutral-700);font-style:italic;text-wrap:pretty">These describe how your touches behaved today. They aren’t a medical assessment and say nothing about any condition.</p>
+            <button class="btn btn-primary" onClick="{{ goSettings }}" style="width:100%;min-height:52px;font-size:16px;flex:none">See your proposed keyboard</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;min-height:0;overflow:auto;padding:22px 22px 26px;display:flex;flex-direction:column;gap:20px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Proposed keyboard</div>
+              <h2 style="margin:0;font-size:30px;line-height:1.1">Built from your profile.</h2>
+              <p style="margin:0;font-size:14px;line-height:1.45;color:var(--color-neutral-700)">Change anything, then try it. Once you approve, the keys stay where they are so your hands can learn them.</p>
+            </div>
+            <div style="margin:0 -12px;padding:10px;background:var(--color-neutral-200);display:flex;flex-direction:column;gap:8px">
+              <sc-if value="{{ showCorrPrev }}" hint-placeholder-val="{{ true }}">
+                <div style="display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;font-size:13px">
+                  <div style="height:40px;display:grid;place-items:center;background:var(--color-bg);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">Undo</div>
+                  <div style="height:40px;display:grid;place-items:center;background:var(--color-bg);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">Delete word</div>
+                  <div style="height:40px;display:grid;place-items:center;background:var(--color-bg);border-radius:var(--radius-md);box-shadow:var(--shadow-sm)">⌫ Backspace</div>
+                </div>
+              </sc-if>
+              <div style="position:relative;width:320px;height:{{ prevH }}px">
+                <sc-for list="{{ prevKeys }}" as="k" hint-placeholder-count="30">
+                  <div style="position:absolute;left:{{ k.x }}px;top:{{ k.y }}px;width:{{ k.w }}px;height:{{ k.h }}px;background:{{ k.bg }};border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);display:grid;place-items:center;font-size:{{ k.fs }}px">{{ k.label }}</div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:20px">
+              <sc-for list="{{ settingsList }}" as="s" hint-placeholder-count="5">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px">
+                    <span style="font-size:16px;font-weight:600">{{ s.name }}</span>
+                    <span style="font-size:12px;color:var(--color-neutral-700)">{{ s.basis }}</span>
+                  </div>
+                  <div style="font-size:13px;line-height:1.45;color:var(--color-neutral-800);text-wrap:pretty">{{ s.desc }}</div>
+                  <div class="seg" style="align-self:flex-start">
+                    <sc-for list="{{ s.opts }}" as="o" hint-placeholder-count="2">
+                      <label class="seg-opt" style="padding:8px 14px;font-size:13px"><input type="radio" name="{{ s.id }}" checked="{{ o.checked }}" onChange="{{ o.pick }}"><span>{{ o.label }}</span></label>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <button class="btn btn-primary" onClick="{{ goTest }}" style="width:100%;min-height:52px;font-size:16px;flex:none">Try it — compare with a standard keyboard</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isCompare }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;min-height:0;overflow:auto;padding:22px 22px 26px;display:flex;flex-direction:column;gap:20px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Check results</div>
+              <h2 style="margin:0;font-size:30px;line-height:1.1">{{ verdict }}</h2>
+              <p style="margin:0;font-size:14px;line-height:1.45;color:var(--color-neutral-700);text-wrap:pretty">{{ verdictSub }}</p>
+            </div>
+            <table class="table" style="font-size:15px">
+              <thead><tr><th></th><th>Standard</th><th>Yours</th></tr></thead>
+              <tbody>
+                <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="3">
+                  <tr><td>{{ m.name }}</td><td style="font-feature-settings:'tnum' 1">{{ m.b }}</td><td style="font-feature-settings:'tnum' 1;font-weight:600;color:{{ m.color }}">{{ m.p }}</td></tr>
+                </sc-for>
+              </tbody>
+            </table>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <h4 style="margin:0;font-size:18px">What each setting did</h4>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:16px;margin-top:-10px">
+              <sc-for list="{{ evidence }}" as="ev" hint-placeholder-count="4">
+                <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start">
+                  <div style="display:flex;flex-direction:column;gap:2px">
+                    <span style="font-size:15px;font-weight:600">{{ ev.name }}</span>
+                    <span style="font-size:13px;line-height:1.4;color:var(--color-neutral-700);text-wrap:pretty">{{ ev.text }}</span>
+                  </div>
+                  <sc-if value="{{ ev.weak }}" hint-placeholder-val="{{ false }}">
+                    <button class="btn btn-secondary" onClick="{{ ev.off }}" style="flex:none;min-height:40px;font-size:13px">Turn off</button>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;flex:none">
+              <button class="btn btn-primary" onClick="{{ goEnable }}" style="width:100%;min-height:52px;font-size:16px">Approve this keyboard</button>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+                <button class="btn btn-secondary" onClick="{{ goSettings }}" style="min-height:44px">Change settings</button>
+                <button class="btn btn-secondary" onClick="{{ goTest }}" style="min-height:44px">Check again</button>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isEnable }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;min-height:0;display:flex;flex-direction:column">
+            <sc-if value="{{ en0 }}" hint-placeholder-val="{{ true }}">
+              <div style="flex:1;display:flex;flex-direction:column;gap:20px;padding:30px 22px 26px">
+                <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Last step</div>
+                <h2 style="margin:0;font-size:32px;line-height:1.1">Use it in every app.</h2>
+                <p style="margin:0;font-size:16px;line-height:1.5;text-wrap:pretty">The TypeParkinson keyboard works in any app that uses the system keyboard. Android asks you to switch it on yourself.</p>
+                <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.4">
+                  <li>Turn on TypeParkinson in keyboard settings.</li>
+                  <li>Choose it as your keyboard.</li>
+                </ol>
+                <button class="btn btn-primary" onClick="{{ openSys }}" style="margin-top:auto;width:100%;min-height:52px;font-size:16px">Open keyboard settings</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ en1 }}" hint-placeholder-val="{{ false }}">
+              <div style="flex:1;display:flex;flex-direction:column;background:var(--color-neutral-100)">
+                <div style="padding:18px 22px 6px;font-size:12px;color:var(--color-neutral-700)">System settings</div>
+                <div style="padding:0 22px 18px;font-size:24px;font-weight:600">On-screen keyboard</div>
+                <div style="display:flex;flex-direction:column">
+                  <sc-for list="{{ sysRows }}" as="r" hint-placeholder-count="2">
+                    <button onClick="{{ r.toggle }}" style="all:unset;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 22px;min-height:44px" style-hover="background:var(--color-neutral-200)">
+                      <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:17px">{{ r.name }}</span><span style="font-size:12px;color:var(--color-neutral-700)">{{ r.sub }}</span></span>
+                      <span style="width:44px;height:26px;border-radius:13px;background:{{ r.track }};position:relative;flex:none"><span style="position:absolute;top:3px;left:{{ r.knob }}px;width:20px;height:20px;border-radius:50%;background:var(--color-bg);box-shadow:var(--shadow-sm)"></span></span>
+                    </button>
+                  </sc-for>
+                </div>
+                <div style="margin-top:auto;padding:22px">
+                  <button class="btn btn-primary" onClick="{{ toChoose }}" disabled="{{ notEnabled }}" style="width:100%;min-height:52px;font-size:16px">Back to TypeParkinson</button>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ en2 }}" hint-placeholder-val="{{ false }}">
+              <div style="flex:1;display:flex;flex-direction:column;gap:18px;padding:30px 22px 26px">
+                <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Last step</div>
+                <h2 style="margin:0;font-size:30px;line-height:1.1">Choose your keyboard</h2>
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <sc-for list="{{ kbChoices }}" as="c" hint-placeholder-count="2">
+                    <label class="radio" style="min-height:48px;font-size:17px"><input type="radio" name="kbchoice" checked="{{ c.checked }}" onChange="{{ c.pick }}"><span class="dot"></span><span>{{ c.label }}</span></label>
+                  </sc-for>
+                </div>
+                <button class="btn btn-primary" onClick="{{ goHome }}" disabled="{{ notChosen }}" style="margin-top:auto;width:100%;min-height:52px;font-size:16px">Finish setup</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ dialog }}" hint-placeholder-val="{{ false }}">
+              <div class="dialog-backdrop" style="position:absolute">
+                <div class="dialog">
+                  <div class="dialog-title">Turn on TypeParkinson?</div>
+                  <div class="dialog-body" style="line-height:1.5">Android warns that any keyboard could collect what you type. TypeParkinson keeps your touch profile on this phone and never saves your messages.</div>
+                  <div class="dialog-actions">
+                    <button class="btn btn-ghost" onClick="{{ dlgCancel }}" style="min-height:44px">Cancel</button>
+                    <button class="btn btn-primary" onClick="{{ dlgOk }}" style="min-height:44px">OK</button>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isHome }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;min-height:0;overflow:auto;padding:22px 22px 26px;display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">TypeParkinson</div>
+              <h2 style="margin:0;font-size:30px;line-height:1.1">Your keyboard is on.</h2>
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="tag tag-accent">Active</span><span style="font-size:13px;color:var(--color-neutral-700)">{{ homeSummary }}</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-primary" onClick="{{ startRecal }}" style="width:100%;min-height:72px;font-size:19px">Typing feels different today</button>
+              <span style="font-size:13px;color:var(--color-neutral-700);line-height:1.4">A six-tap check. Adjusts how touches are read today — the keys don’t move.</span>
+            </div>
+            <sc-if value="{{ hasToday }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+                <span style="font-size:14px;line-height:1.4">{{ todayText }}</span>
+                <button class="btn btn-ghost" onClick="{{ clearToday }}" style="flex:none;min-height:44px">Use usual</button>
+              </div>
+            </sc-if>
+            <div style="display:flex;gap:18px;align-items:center">
+              <div style="position:relative;width:120px;height:120px;flex:none">
+                <div style="position:absolute;left:30px;top:30px;width:60px;height:60px;border-radius:50%;background:var(--color-surface)"></div>
+                <sc-for list="{{ mini.dots }}" as="d" hint-placeholder-count="10">
+                  <div style="position:absolute;left:{{ d.left }}px;top:{{ d.top }}px;width:6px;height:6px;border-radius:50%;background:var(--color-accent)"></div>
+                </sc-for>
+                <div style="position:absolute;left:{{ mini.mL }}px;top:{{ mini.mT }}px;width:12px;height:12px;border-radius:50%;border:2px solid var(--color-accent-2);box-sizing:border-box"></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <span style="font-size:16px;font-weight:600">Touch profile</span>
+                <span style="font-size:13px;line-height:1.4;color:var(--color-neutral-700)">{{ profileLine }}</span>
+                <button class="btn btn-ghost" onClick="{{ goProfile }}" style="align-self:flex-start;min-height:40px;padding-left:0">View profile</button>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <h4 style="margin:0;font-size:18px">Keyboard settings</h4>
+              <sc-for list="{{ homeSettings }}" as="h" hint-placeholder-count="5">
+                <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px"><span>{{ h.name }}</span><span style="color:var(--color-neutral-700)">{{ h.val }}</span></div>
+              </sc-for>
+              <div style="display:flex;gap:8px;margin-top:4px">
+                <button class="btn btn-secondary" onClick="{{ goSettings }}" style="min-height:44px">Edit</button>
+                <button class="btn btn-secondary" onClick="{{ startEx }}" style="min-height:44px">Full recalibration</button>
+              </div>
+            </div>
+            <p style="margin:0;font-size:13px;line-height:1.5;color:var(--color-neutral-700);font-style:italic">Your touch profile never leaves this phone. TypeParkinson doesn’t save what you type.</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isRecalResult }}" hint-placeholder-val="{{ false }}">
+          <div style="flex:1;min-height:0;overflow:auto;padding:22px 22px 26px;display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-700)">Today vs. usual</div>
+              <h2 style="margin:0;font-size:30px;line-height:1.1">{{ recalHead }}</h2>
+              <p style="margin:0;font-size:14px;line-height:1.45;color:var(--color-neutral-700);text-wrap:pretty">{{ recalSub }}</p>
+            </div>
+            <div style="display:flex;gap:20px;justify-content:center">
+              <sc-for list="{{ recalPlots }}" as="pl" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+                  <div style="position:relative;width:140px;height:140px">
+                    <div style="position:absolute;left:35px;top:35px;width:70px;height:70px;border-radius:50%;background:var(--color-surface)"></div>
+                    <sc-for list="{{ pl.dots }}" as="d" hint-placeholder-count="6">
+                      <div style="position:absolute;left:{{ d.left }}px;top:{{ d.top }}px;width:7px;height:7px;border-radius:50%;background:{{ pl.color }}"></div>
+                    </sc-for>
+                    <div style="position:absolute;left:{{ pl.mL }}px;top:{{ pl.mT }}px;width:14px;height:14px;border-radius:50%;border:2px solid var(--color-accent-2);box-sizing:border-box"></div>
+                  </div>
+                  <span style="font-size:13px;color:var(--color-neutral-700)">{{ pl.label }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:auto">
+              <button class="btn btn-primary" onClick="{{ applyToday }}" style="width:100%;min-height:52px;font-size:16px">Adjust for today</button>
+              <button class="btn btn-secondary" onClick="{{ goHome }}" style="width:100%;min-height:48px">Keep my usual settings</button>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dark&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Appearance&quot;},&quot;tremor&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1,&quot;min&quot;:0,&quot;max&quot;:2.5,&quot;step&quot;:0.1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Simulation&quot;},&quot;showRaw&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Simulation&quot;}}">
+const G=()=>{let u=0;while(!u)u=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*Math.random());};
+const R=(a,b)=>a+Math.random()*(b-a);
+const mean=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:0;
+const PH={type:'meet me at the library at noon',base:'the dog ran past the old mill',pers:'a cup of tea sits by the door'};
+const KBW=344,AW=320,AH=440,CX=160,CY=220;
+const PATH=Array.from({length:81},(_,i)=>{const t=i/80;return{x:40+t*240,y:CY+120*Math.sin(t*Math.PI*1.5)};});
+const PATHPTS=PATH.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ');
+const EX=[
+ {key:'tap',title:'Tap the highlighted target',hint:'Tap the cyan circle each time it appears. Some sit close to others.'},
+ {key:'dbl',title:'Tap the same target twice',hint:'Tap the circle twice at your own pace, like typing a double letter.'},
+ {key:'hold',title:'Touch and release',hint:'Touch the circle, rest your finger there a moment, then lift.'},
+ {key:'path',title:'Follow the path',hint:'Start on the cyan dot and slide along the grey line to the end.'},
+ {key:'type',title:'Copy a short phrase',hint:'Type it the way you normally would. Fixing mistakes is fine.'}];
+const SIZES={Standard:{h:42,gap:4},Large:{h:52,gap:6},'Extra large':{h:60,gap:8}};
+function tapTrials(n){const out=[];for(let i=0;i<n;i++){if(i%2===0)out.push({kind:'single',targets:[{x:R(60,260),y:R(60,AH-90),r:26,on:true}]});else{const cx=R(100,220),cy=R(60,AH-90),on=Math.floor(Math.random()*3);out.push({kind:'cluster',targets:[-1,0,1].map((k,j)=>({x:cx+k*36,y:cy,r:16,on:j===on}))});}}return out;}
+function lev(a,b){const m=a.length,n=b.length;const d=Array.from({length:m+1},(_,i)=>[i]);for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n];}
+function layout(size){const {h,gap}=SIZES[size]||SIZES.Standard;const cw=(KBW-9*gap)/10,u=cw+gap,keys=[];
+ 'qwertyuiop'.split('').forEach((c,i)=>keys.push({id:c,label:c,x:i*u,y:0,w:cw,h,row:0}));
+ 'asdfghjkl'.split('').forEach((c,i)=>keys.push({id:c,label:c,x:u/2+i*u,y:h+gap,w:cw,h,row:1}));
+ 'zxcvbnm'.split('').forEach((c,i)=>keys.push({id:c,label:c,x:u+i*u,y:2*(h+gap),w:cw,h,row:2}));
+ keys.push({id:'bs',label:'⌫',x:8*u,y:2*(h+gap),w:KBW-8*u,h,row:2});
+ keys.push({id:',',label:',',x:0,y:3*(h+gap),w:2*u-gap,h,row:3});
+ keys.push({id:' ',label:'space',x:2*u,y:3*(h+gap),w:6*u-gap,h,row:3});
+ keys.push({id:'.',label:'.',x:8*u,y:3*(h+gap),w:KBW-8*u,h,row:3});
+ return{keys,h,gap,height:4*h+3*gap};}
+function hit(p,L){if(p.y<-L.gap-6||p.y>L.height+L.gap+6||p.x<-10||p.x>KBW+10)return null;const row=Math.max(0,Math.min(3,Math.floor((p.y+L.gap/2)/(L.h+L.gap))));let best=null,bd=1e9;L.keys.forEach(k=>{if(k.row!==row)return;const d=Math.max(k.x-p.x,0,p.x-(k.x+k.w));if(d<bd){bd=d;best=k;}});return best;}
+function plot(taps,size,scale,dot){const c=size/2,cl=v=>Math.max(0,Math.min(size-dot,v));const dx=mean(taps.map(t=>t.dx)),dy=mean(taps.map(t=>t.dy));
+ return{dots:taps.map(t=>({left:cl(c+t.dx*scale-dot/2),top:cl(c+t.dy*scale-dot/2),bg:t.hit?'var(--color-accent)':'var(--color-neutral-600)'})),mL:c+dx*scale-(dot+8)/2,mT:c+dy*scale-(dot+8)/2};}
+const dirText=(dx,dy)=>{const h=dx>3?'to the right':dx<-3?'to the left':'';const v=dy>3?'low':dy<-3?'high':'';return h&&v?`${v} and ${h}`:h||v;};
+
+class Component extends DCLogic {
+  areaRef=React.createRef(); kbRef=React.createRef();
+  state={screen:'welcome',hand:'Right hand',ex:0,paused:false,busy:false,skipped:{},recal:false,
+    trials:tapTrials(10),rtrials:tapTrials(6),ti:0,taps:[],recalTaps:[],flash:null,raw:null,msg:'',
+    dbl:[],dblTaps:0,t1:0,holds:[],hold:null,path:[],drawing:false,pathDev:null,
+    typed:'',hist:[],bs:0,t0:null,phraseRes:null,pressed:null,kraw:null,
+    settings:null,phase:0,res:{},comp:{corrected:0,hurt:0,blocked:0,taps:0},
+    enableStep:0,enabled:false,dialog:false,chosen:null,today:null};
+  get str(){return this.props.tremor??1;}
+  sim(p){const s=this.str;return{x:p.x+s*(7+4.5*G()),y:p.y+s*(2.5+4.5*G())};}
+  simLight(p){const s=this.str;this.ph=(this.ph||0)+0.35;return{x:p.x+s*(3*Math.sin(this.ph)+1.5*G()),y:p.y+s*(3*Math.cos(this.ph*1.3)+1.5*G())};}
+  pt(e,ref){const r=ref.current.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
+  later(fn,ms){setTimeout(fn,ms);}
+  scoreTap(t,q){const c=t.targets.find(x=>x.on);let near=c,nd=1e9;t.targets.forEach(x=>{const d=Math.hypot(q.x-x.x,q.y-x.y);if(d<nd){nd=d;near=x;}});return{kind:t.kind,dx:q.x-c.x,dy:q.y-c.y,hit:near===c&&Math.hypot(q.x-c.x,q.y-c.y)<=c.r+6};}
+  demoTaps(){if(!this._demo){this._demo=tapTrials(10).map(t=>{const c=t.targets.find(x=>x.on);return this.scoreTap(t,{x:c.x+7+4.5*G(),y:c.y+2.5+4.5*G()});});}return this._demo;}
+  profile(){const s=this.state,sk=s.skipped;
+    const taps=s.taps.length>=3?s.taps:(sk.tap?[]:this.demoTaps());
+    const sing=taps.filter(t=>t.kind==='single'),clus=taps.filter(t=>t.kind==='cluster');
+    const rate=a=>a.length?a.filter(t=>t.hit).length/a.length:1;
+    return{taps,hasTaps:taps.length>0,dx:mean(taps.map(t=>t.dx)),dy:mean(taps.map(t=>t.dy)),single:rate(sing),cluster:rate(clus),
+      dbl:s.dbl.length?s.dbl:(sk.dbl?null:[{contacts:2},{contacts:3},{contacts:2},{contacts:3}]),
+      holds:s.holds.length?s.holds:(sk.hold?null:[{dur:.41,move:7},{dur:.38,move:9},{dur:.52,move:6},{dur:.44,move:8}]),
+      pathDev:s.pathDev??(sk.path?null:8.6),phrase:s.phraseRes??(sk.type?null:{errors:3,corrections:5,time:24})};}
+  derive(p){const extra=p.dbl?p.dbl.reduce((a,d)=>a+Math.max(0,d.contacts-2),0):0;const mv=p.holds?mean(p.holds.map(h=>h.move)):6;
+    return{keySize:(p.cluster<0.8||p.single<0.9)?'Large':'Standard',offset:Math.hypot(p.dx,p.dy)>3,repeat:extra>0||!p.dbl,tolerance:true,tolPx:Math.max(12,Math.round(mv*1.6)),correction:true};}
+  offsetNow(){const t=this.state.today;if(t)return t;const p=this.profile();return{dx:p.dx,dy:p.dy};}
+  kbMode(){const s=this.state;if(s.screen==='test')return s.phase===0?'base':'pers';return'base';}
+  target(){const s=this.state;return s.screen==='test'?(s.phase===0?PH.base:PH.pers):PH.type;}
+  typReset(){return{typed:'',hist:[],bs:0,t0:null,kraw:null,pressed:null};}
+
+  go=(screen)=>{const patch={screen,paused:false,busy:false,msg:'',flash:null,raw:null};
+    if(['settings','test','compare','enable','home'].includes(screen)&&!this.state.settings)patch.settings=this.derive(this.profile());
+    if(screen==='test')Object.assign(patch,{phase:0,res:{},comp:{corrected:0,hurt:0,blocked:0,taps:0}},this.typReset());
+    if(screen==='compare'&&!this.state.res.pers)patch.res={base:{errors:4,corrections:6,time:21.3},pers:{errors:1,corrections:2,time:17.8,corrected:6,hurt:1,blocked:2,taps:34}};
+    if(screen==='enable')Object.assign(patch,{enableStep:0,dialog:false});
+    if(screen==='home')Object.assign(patch,{enabled:true,recal:false,chosen:'TypeParkinson'});
+    this.setState(patch);};
+  startEx=()=>this.setState({screen:'ex',ex:0,ti:0,recal:false,paused:false,busy:false,trials:tapTrials(10),taps:[],dbl:[],dblTaps:0,holds:[],hold:null,path:[],pathDev:null,phraseRes:null,skipped:{},settings:null,today:null,msg:'',flash:null,raw:null,...this.typReset()});
+  startRecal=()=>this.setState({screen:'ex',ex:0,ti:0,recal:true,paused:false,busy:false,rtrials:tapTrials(6),recalTaps:[],msg:'',flash:null,raw:null});
+  nextEx=()=>{const s=this.state;if(s.ex>=4){this.go('profile');return;}this.setState({ex:s.ex+1,ti:0,msg:'',busy:false,paused:false,flash:null,raw:null,hold:null,drawing:false,...this.typReset()});};
+  skip=()=>{const s=this.state;if(s.recal){this.go('home');return;}this.setState({skipped:{...s.skipped,[EX[s.ex].key]:true},paused:false},this.nextEx);};
+
+  tapDown(p){const s=this.state;const trials=s.recal?s.rtrials:s.trials;const i=s.ti,t=trials[i];if(!t)return;const q=this.sim(p);const r=this.scoreTap(t,q);const k=s.recal?'recalTaps':'taps';
+    this.setState({[k]:[...s[k],r],flash:q,raw:p,busy:true,msg:r.hit?'':'Landed outside the target — that’s useful too.'});
+    this.later(()=>{if(i+1>=trials.length){this.setState({flash:null,raw:null,busy:false});this.state.recal?this.go('recalResult'):this.nextEx();}else this.setState({ti:i+1,flash:null,raw:null,busy:false,msg:''});},450);}
+  dblDown(p){const s=this.state;if(Math.hypot(p.x-CX,p.y-CY)>70){this.setState({msg:'Tap inside the circle.'});return;}
+    const extra=Math.random()<0.3*this.str?1:0;const now=performance.now();
+    if(s.dblTaps===0){this.setState({dblTaps:1,dblContacts:1+extra,t1:now,msg:'One more tap.',raw:p});return;}
+    const contacts=s.dblContacts+1+extra,interval=now-s.t1;const dbl=[...s.dbl,{interval,contacts}];
+    this.setState({dbl,dblTaps:0,busy:true,raw:p,msg:`${contacts} contacts registered${contacts>2?` (${contacts-2} extra)`:''} · ${Math.round(interval)} ms apart`});
+    this.later(()=>{this.setState({busy:false,raw:null});if(dbl.length>=4)this.nextEx();},900);}
+  onDown=e=>{const s=this.state;if(s.paused||s.busy)return;const key=s.recal?'tap':EX[s.ex].key;const p=this.pt(e,this.areaRef);
+    if(key==='tap')this.tapDown(p);else if(key==='dbl')this.dblDown(p);
+    else if(key==='hold'){if(Math.hypot(p.x-CX,p.y-CY)>60){this.setState({msg:'Touch the circle to begin.'});return;}e.currentTarget.setPointerCapture(e.pointerId);this.setState({hold:{t:performance.now(),p,max:0},msg:'Holding…',raw:p});}
+    else if(key==='path'){if(Math.hypot(p.x-PATH[0].x,p.y-PATH[0].y)>36){this.setState({msg:'Start on the cyan dot at the left.'});return;}e.currentTarget.setPointerCapture(e.pointerId);this.setState({drawing:true,path:[this.simLight(p)],msg:''});}};
+  onMove=e=>{const s=this.state;if(s.hold){const p=this.pt(e,this.areaRef);const d=Math.hypot(p.x-s.hold.p.x,p.y-s.hold.p.y);if(d>s.hold.max)this.setState({hold:{...s.hold,max:d}});}
+    else if(s.drawing){const p=this.pt(e,this.areaRef);this.setState({path:[...s.path,this.simLight(p)]});}};
+  onUp=()=>{const s=this.state;
+    if(s.hold){const dur=(performance.now()-s.hold.t)/1000;const move=s.hold.max+this.str*(3+2.5*Math.abs(G()));const holds=[...s.holds,{dur,move}];
+      this.setState({hold:null,holds,raw:null,msg:`Held ${dur.toFixed(2)} s · finger moved ${Math.round(move)} px`});if(holds.length>=4){this.setState({busy:true});this.later(()=>this.nextEx(),900);}}
+    else if(s.drawing){const end=PATH[PATH.length-1],last=s.path[s.path.length-1];
+      if(Math.hypot(last.x-end.x,last.y-end.y)>40){this.setState({drawing:false,msg:'Not quite to the end — start again from the dot.'});return;}
+      const dev=mean(s.path.map(q=>Math.min(...PATH.map(r=>Math.hypot(r.x-q.x,r.y-q.y)))));
+      this.setState({drawing:false,pathDev:dev,busy:true,msg:`Stayed within ${Math.round(dev)} px of the path on average.`});this.later(()=>this.nextEx(),1400);}};
+
+  onKb=e=>{const s=this.state;if(s.paused)return;const pers=this.kbMode()==='pers';const st=s.settings||{};const L=layout(pers?st.keySize:'Standard');
+    const p=this.pt(e,this.kbRef);const sm=this.sim(p);let q=sm;if(pers&&st.offset){const o=this.offsetNow();q={x:sm.x-o.dx,y:sm.y-o.dy};}
+    const k=hit(q,L),k0=hit(sm,L),want=hit(p,L);
+    this.setState(x=>({kraw:{p,q},comp:pers?{...x.comp,taps:x.comp.taps+1,corrected:x.comp.corrected+(st.offset&&k&&want&&k0&&k0.id!==want.id&&k.id===want.id?1:0),hurt:x.comp.hurt+(st.offset&&k&&want&&k0&&k0.id===want.id&&k.id!==want.id?1:0)}:x.comp}));
+    if(!k)return;this.emit(k.id,pers);if(Math.random()<0.16*this.str)setTimeout(()=>this.emit(k.id,pers),35);};
+  emit(id,pers){const now=performance.now();const st=this.state.settings||{};
+    if(pers&&st.repeat&&this.lastId===id&&now-this.lastT<120){this.setState(s=>({comp:{...s.comp,blocked:s.comp.blocked+1}}));return;}
+    this.lastId=id;this.lastT=now;
+    this.setState(s=>{let typed=s.typed,bs=s.bs;if(id==='bs'){if(!typed)return{pressed:id};typed=typed.slice(0,-1);bs++;}else typed+=id;return{typed,bs,hist:[...s.hist,s.typed].slice(-60),t0:s.t0??now,pressed:id};});
+    clearTimeout(this.prT);this.prT=setTimeout(()=>this.setState({pressed:null}),140);}
+  undo=()=>this.setState(s=>s.hist.length?{typed:s.hist[s.hist.length-1],hist:s.hist.slice(0,-1),bs:s.bs+1}:{});
+  delWord=()=>this.setState(s=>s.typed?{typed:s.typed.replace(/\S+\s*$|\s+$/,''),hist:[...s.hist,s.typed],bs:s.bs+1}:{});
+  backspace=()=>this.setState(s=>s.typed?{typed:s.typed.slice(0,-1),hist:[...s.hist,s.typed],bs:s.bs+1}:{});
+  finish=()=>{const s=this.state;const r={errors:lev(s.typed.trim(),this.target()),corrections:s.bs,time:s.t0?(performance.now()-s.t0)/1000:0};
+    if(s.screen==='ex'){this.setState({phraseRes:r},this.nextEx);}
+    else if(s.phase===0)this.setState({res:{base:r},phase:1,comp:{corrected:0,hurt:0,blocked:0,taps:0},...this.typReset()});
+    else this.setState({res:{...s.res,pers:{...r,...s.comp}},screen:'compare'});};
+  setSetting(k,v){this.setState(s=>({settings:{...(s.settings||this.derive(this.profile())),[k]:v}}));}
+
+  renderVals(){
+    const dark=this.state.dark??(this.props.dark??false);
+    const s=this.state,scr=s.screen,showRaw=this.props.showRaw??false;
+    const p=this.profile();const st=s.settings||this.derive(p);
+    const exm=EX[s.ex];const key=s.recal?'tap':exm.key;
+    const isTask=scr==='ex'||scr==='test';const isTyping=scr==='test'||(scr==='ex'&&key==='type');const isArea=scr==='ex'&&!isTyping;
+    const active={compare:'test',recalResult:'home'}[scr]||(scr==='ex'&&s.recal?'home':scr);
+    const steps=[['welcome','Welcome',()=>this.go('welcome')],['ex','Touch exercises',this.startEx],['profile','Touch profile',()=>this.go('profile')],['settings','Proposed keyboard',()=>this.go('settings')],['test','Check it helps',()=>this.go('test')],['enable','Enable keyboard',()=>this.go('enable')],['home','Everyday use',()=>this.go('home')]]
+      .map(([id,label,go],i)=>({n:i+1,label,go,color:id===active?'var(--color-accent-700)':'var(--color-text)',weight:id===active?600:400}));
+    const v={themeClass:dark?'tp-theme tp-dark':'tp-theme',modes:[['Light',false],['Dark',true]].map(([label,d])=>({label,checked:dark===d,pick:()=>this.setState({dark:d})})),steps,isWelcome:scr==='welcome',isTask,isProfile:scr==='profile',isSettings:scr==='settings',isCompare:scr==='compare',isEnable:scr==='enable',isHome:scr==='home',isRecalResult:scr==='recalResult',
+      startEx:this.startEx,startRecal:this.startRecal,goWelcome:()=>this.go('welcome'),goSettings:()=>this.go('settings'),goTest:()=>this.go('test'),goEnable:()=>this.go('enable'),goHome:()=>this.go('home'),goProfile:()=>this.go('profile'),
+      hands:['Right hand','Left hand','Both / varies'].map(h=>({label:h,checked:s.hand===h,pick:()=>this.setState({hand:h})})),
+      areaRef:this.areaRef,kbRef:this.kbRef,onDown:this.onDown,onMove:this.onMove,onUp:this.onUp,onKb:this.onKb,
+      pause:()=>this.setState({paused:true}),resume:()=>this.setState({paused:false}),skip:this.skip,paused:s.paused&&isTask,
+      undo:this.undo,delWord:this.delWord,backspace:this.backspace,finish:this.finish,isArea,isTyping};
+
+    if(isTask){
+      if(scr==='test'){v.kicker=`Check · round ${s.phase+1} of 2`;v.taskTitle=s.phase===0?'Type on a standard keyboard':'Now type on yours';v.taskHint='A fresh phrase each round, so practice doesn’t skew the comparison.';v.segs=[0,1].map(i=>({bg:i<=s.phase?'var(--color-accent)':'var(--color-neutral-300)'}));v.showPause=false;}
+      else if(s.recal){v.kicker='Quick check';v.taskTitle='Tap the highlighted target';v.taskHint='Six taps, using the hand you’re typing with today.';v.segs=[{bg:'var(--color-accent)'}];v.showPause=true;}
+      else{v.kicker=`Exercise ${s.ex+1} of 5`;v.taskTitle=exm.title;v.taskHint=exm.hint;v.segs=EX.map((x,i)=>({bg:i<s.ex?'var(--color-accent)':i===s.ex?'var(--color-accent-400)':'var(--color-neutral-300)'}));v.showPause=true;}
+    }
+    if(isArea){
+      let targets=[];const T=(x,y,r,bg)=>({left:x-r,top:y-r,d:2*r,bg});
+      if(key==='tap'){const t=(s.recal?s.rtrials:s.trials)[s.ti];if(t)targets=t.targets.map(x=>T(x.x,x.y,x.r,x.on?'var(--color-accent)':'var(--color-neutral-400)'));const n=(s.recal?s.rtrials:s.trials).length;v.progress=`Target ${Math.min(s.ti+1,n)} of ${n}`;v.areaMsg=s.msg;}
+      else if(key==='dbl'){targets=[T(CX,CY,56,s.dblTaps?'var(--color-accent-600)':'var(--color-accent)')];v.progress=`Round ${Math.min(s.dbl.length+1,4)} of 4`;v.areaMsg=s.msg||'Tap twice.';}
+      else if(key==='hold'){targets=[T(CX,CY,56,s.hold?'var(--color-accent-700)':'var(--color-accent)')];v.progress=`Round ${Math.min(s.holds.length+1,4)} of 4`;v.areaMsg=s.msg||'Touch, hold briefly, release.';}
+      else if(key==='path'){const a=PATH[0],b=PATH[PATH.length-1];targets=[T(a.x,a.y,16,'var(--color-accent)'),T(b.x,b.y,16,'var(--color-neutral-600)')];v.progress='One slide, start to end';v.areaMsg=s.msg;}
+      v.targets=targets;v.isPath=key==='path';v.pathPts=PATHPTS;v.trailPts=s.path.map(q=>q.x.toFixed(1)+','+q.y.toFixed(1)).join(' ');
+      v.hasFlash=!!s.flash;if(s.flash){v.flashL=s.flash.x-6;v.flashT=s.flash.y-6;}
+      v.hasRaw=showRaw&&!!s.raw;if(s.raw){v.rawL=s.raw.x-6;v.rawT=s.raw.y-6;}
+    }
+    if(isTyping){
+      const pers=this.kbMode()==='pers';const L=layout(pers?st.keySize:'Standard');const target=this.target();
+      v.target=target;v.chars=s.typed.split('').map((c,i)=>{const bad=c!==target[i];return{c,color:bad?'var(--color-accent-2-700)':'var(--color-text)',deco:bad?'underline':'none'};});
+      v.typingStats=`${s.bs} correction${s.bs===1?'':'s'}`+(s.t0?'':' · timer starts on first key');v.cantFinish=!s.typed;
+      v.showCorrBar=pers&&st.correction;v.kbH=L.height;
+      v.keys=L.keys.map(k=>({...k,bg:s.pressed===k.id?'var(--color-accent-300)':(k.label.length>1||k.id===','||k.id==='.')?'var(--color-neutral-300)':'var(--color-bg)',fs:k.label.length>1&&k.id!=='bs'?13:18}));
+      v.hasKbRaw=showRaw&&!!s.kraw;if(s.kraw){v.kbRawL=s.kraw.p.x-5;v.kbRawT=s.kraw.p.y-5;v.kbRegL=s.kraw.q.x-5;v.kbRegT=s.kraw.q.y-5;}
+    }
+    if(scr==='profile'){
+      v.plot=plot(p.taps,260,3,10);const f=[];
+      if(p.hasTaps){const d=dirText(p.dx,p.dy);f.push(d?{text:`Your touches often land slightly ${d}.`,detail:`On average ${Math.abs(p.dx).toFixed(0)} px ${p.dx>=0?'right':'left'} and ${Math.abs(p.dy).toFixed(0)} px ${p.dy>=0?'below':'above'} the centre of the target.`}:{text:'Your touches land close to the centre of targets.',detail:'No consistent direction of offset.'});
+        f.push(p.cluster<p.single-0.1?{text:'Closely spaced targets were harder to select.',detail:`${Math.round(p.cluster*100)}% of close targets hit, versus ${Math.round(p.single*100)}% of separate ones.`}:{text:'Close and separate targets went about equally well.',detail:`${Math.round(p.cluster*100)}% and ${Math.round(p.single*100)}% hit.`});}
+      if(p.dbl){const extra=p.dbl.reduce((a,d)=>a+Math.max(0,d.contacts-2),0);f.push(extra?{text:'Some taps produced several separate contacts.',detail:`${extra} extra contact${extra>1?'s':''} across ${p.dbl.length} double-tap rounds.`}:{text:'Each tap registered as one contact.',detail:`No extra contacts across ${p.dbl.length} rounds.`});}
+      if(p.holds){f.push({text:`Your finger moved about ${Math.round(mean(p.holds.map(h=>h.move)))} px while touching.`,detail:`Each touch lasted about ${mean(p.holds.map(h=>h.dur)).toFixed(2)} s.`});}
+      if(p.pathDev!=null)f.push({text:`Sliding stayed within about ${Math.round(p.pathDev)} px of the path.`,detail:'Measured along the whole slide.'});
+      if(p.phrase)f.push({text:`Copying the phrase took ${p.phrase.corrections} correction${p.phrase.corrections===1?'':'s'}.`,detail:`${p.phrase.errors} difference${p.phrase.errors===1?'':'s'} remained at the end.`});
+      v.findings=f.length?f:[{text:'Not enough to go on yet.',detail:'All exercises were skipped — standard settings will be proposed.'}];
+    }
+    if(scr==='settings'){
+      const L=layout(st.keySize),sc=320/KBW;v.prevH=Math.round(L.height*sc);v.showCorrPrev=st.correction;
+      v.prevKeys=L.keys.map(k=>({x:k.x*sc,y:k.y*sc,w:k.w*sc,h:k.h*sc,label:k.label,bg:(k.label.length>1||k.id===','||k.id==='.')?'var(--color-neutral-300)':'var(--color-bg)',fs:k.label.length>1&&k.id!=='bs'?12:16}));
+      const o=this.offsetNow();const onoff=(id)=>[true,false].map(b=>({label:b?'On':'Off',checked:st[id]===b,pick:()=>this.setSetting(id,b)}));
+      v.settingsList=[
+        {id:'keySize',name:'Key size and spacing',basis:`${Math.round(p.cluster*100)}% close-target accuracy`,desc:`${st.keySize} keys, ${SIZES[st.keySize].gap} px apart. Bigger keys trade space on screen for fewer near-misses.`,opts:Object.keys(SIZES).map(k=>({label:k,checked:st.keySize===k,pick:()=>this.setSetting('keySize',k)}))},
+        {id:'offset',name:'Touch interpretation',basis:'From target taps',desc:`Reads each touch ${Math.abs(o.dx).toFixed(0)} px ${o.dx>=0?'left':'right'} and ${Math.abs(o.dy).toFixed(0)} px ${o.dy>=0?'up':'down'} of where it lands, to match where you aim.`,opts:onoff('offset')},
+        {id:'repeat',name:'Repeat handling',basis:'From double taps',desc:'Ignores a second contact on the same key within 120 ms. Deliberate double letters still type.',opts:onoff('repeat')},
+        {id:'tolerance',name:'Tap tolerance',basis:'From touch and release',desc:`A tap still counts if your finger moves up to ${st.tolPx} px before lifting.`,opts:onoff('tolerance')},
+        {id:'correction',name:'Correction controls',basis:'From phrase copying',desc:'Large Undo, Delete word and Backspace buttons above the keys.',opts:onoff('correction')}];
+    }
+    if(scr==='compare'){
+      const b=s.res.base||{},q=s.res.pers||{};const cmp=(x,y)=>y<x-0.05?'var(--color-accent-700)':y>x+0.05?'var(--color-accent-2-700)':'var(--color-text)';
+      v.metrics=[{name:'Errors left',b:b.errors,p:q.errors,color:cmp(b.errors,q.errors)},{name:'Corrections',b:b.corrections,p:q.corrections,color:cmp(b.corrections,q.corrections)},{name:'Time',b:`${(b.time||0).toFixed(1)} s`,p:`${(q.time||0).toFixed(1)} s`,color:cmp(b.time,q.time)}];
+      const better=(q.errors<b.errors)+(q.corrections<b.corrections)+(q.time<b.time),worse=(q.errors>b.errors)+(q.corrections>b.corrections)+(q.time>b.time);
+      if(q.errors>b.errors){v.verdict='Yours didn’t help this time.';v.verdictSub='More errors with the personalized keyboard. Turn off a setting below, or change them and check again.';}
+      else if(better>=2&&worse===0){v.verdict='Your keyboard helped.';v.verdictSub='Fewer mistakes than the standard keyboard, on a phrase you hadn’t seen.';}
+      else{v.verdict='Mixed results.';v.verdictSub='Some measures improved and some didn’t. Settings without evidence of helping are marked below.';}
+      const ev=[{name:`Key size · ${st.keySize}`,text:`Errors went from ${b.errors} to ${q.errors}.`,weak:false}];
+      if(st.offset)ev.push({name:'Touch interpretation',text:`Moved ${q.corrected} of ${q.taps} taps onto the key you aimed for${q.hurt?`, and ${q.hurt} off it`:''}.`,weak:q.hurt>=q.corrected,off:()=>this.setSetting('offset',false)});
+      if(st.repeat)ev.push({name:'Repeat handling',text:q.blocked?`Blocked ${q.blocked} accidental extra contact${q.blocked>1?'s':''}.`:'No extra contacts happened, so it had nothing to do.',weak:!q.blocked,off:()=>this.setSetting('repeat',false)});
+      if(st.correction)ev.push({name:'Correction controls',text:`You made ${q.corrections} correction${q.corrections===1?'':'s'} with the keyboard.`,weak:false});
+      if(st.tolerance)ev.push({name:'Tap tolerance',text:'Not measured in this check.',weak:false});
+      v.evidence=ev;
+    }
+    if(scr==='enable'){
+      v.en0=s.enableStep===0;v.en1=s.enableStep===1;v.en2=s.enableStep===2;v.dialog=s.dialog;v.notEnabled=!s.enabled;v.notChosen=s.chosen!=='TypeParkinson';
+      v.openSys=()=>this.setState({enableStep:1});v.toChoose=()=>this.setState({enableStep:2});
+      v.dlgCancel=()=>this.setState({dialog:false});v.dlgOk=()=>this.setState({dialog:false,enabled:true});
+      const row=(name,sub,on,toggle)=>({name,sub,toggle,track:on?'var(--color-accent)':'var(--color-neutral-400)',knob:on?21:3});
+      v.sysRows=[row('Gboard','Multilingual typing',true,()=>{}),row('TypeParkinson','Personalized keyboard',s.enabled,()=>s.enabled?this.setState({enabled:false}):this.setState({dialog:true}))];
+      v.kbChoices=['Gboard','TypeParkinson'].map(c=>({label:c,checked:s.chosen===c,pick:()=>this.setState({chosen:c})}));
+    }
+    if(scr==='home'){
+      v.homeSummary=`${st.keySize} keys · personalized for your ${s.hand.toLowerCase().replace('both / varies','hands')}`;
+      v.mini=plot(p.taps,120,1.4,6);const d=dirText(p.dx,p.dy);v.profileLine=d?`Touches usually land slightly ${d}.`:'Touches land close to centre.';
+      v.hasToday=!!s.today;if(s.today){const dd=dirText(s.today.dx,s.today.dy);v.todayText=`Adjusted for today${dd?`: touches landing ${dd}`:''}.`;}
+      v.clearToday=()=>this.setState({today:null});
+      const o=this.offsetNow();
+      v.homeSettings=[{name:'Key size',val:st.keySize},{name:'Touch interpretation',val:st.offset?`${Math.abs(o.dx).toFixed(0)} px ${o.dx>=0?'left':'right'}, ${Math.abs(o.dy).toFixed(0)} px ${o.dy>=0?'up':'down'}`:'Off'},{name:'Repeat handling',val:st.repeat?'120 ms':'Off'},{name:'Tap tolerance',val:st.tolerance?`${st.tolPx} px`:'Off'},{name:'Correction controls',val:st.correction?'On':'Off'}];
+    }
+    if(scr==='recalResult'){
+      const t=s.recalTaps.length?s.recalTaps:this.demoTaps().slice(0,6);const td={dx:mean(t.map(x=>x.dx)),dy:mean(t.map(x=>x.dy))};const shift=Math.hypot(td.dx-p.dx,td.dy-p.dy);
+      const mk=(taps,label,color)=>({...plot(taps,140,1.6,7),label,color});
+      v.recalPlots=[mk(p.taps,'Usual','var(--color-neutral-600)'),mk(t,'Today','var(--color-accent)')];
+      v.recalHead=shift>4?'Today looks a little different.':'Today looks like usual.';
+      const ddx=td.dx-p.dx,ddy=td.dy-p.dy;const dd=dirText(ddx,ddy);
+      v.recalSub=shift>4?`Touches are landing about ${Math.round(shift)} px further ${dd||'off centre'} than usual. TypeParkinson can read touches differently today — the keys stay exactly where they are.`:'Your usual settings should work well. You can still adjust for today if typing feels off.';
+      v.applyToday=()=>{this.setState({today:td});this.go('home');};
+    }
+    return v;
+  }
+}
+</script>
+</body>
+</html>
