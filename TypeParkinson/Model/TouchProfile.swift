@@ -127,6 +127,24 @@ struct TouchProfile: Codable, Equatable {
     }
 }
 
+extension TouchProfile {
+    /// A plausible profile for exploring the app before doing the exercises:
+    /// touches land low and to the right, close targets are harder, some taps bounce.
+    static let sample = TouchProfile(
+        hand: .right,
+        taps: [
+            (false, 9.1, 4.2, true), (true, 4.3, -1.8, true), (false, 11.6, 6.9, true), (true, 14.2, 1.1, false),
+            (false, 6.0, 8.3, true), (true, 3.1, 3.5, true), (false, 8.8, -2.4, true), (true, 16.5, 5.0, false),
+            (false, 5.2, 0.6, true), (true, 7.7, 4.9, true),
+        ].map { TapSample(isCluster: $0.0, dx: $0.1, dy: $0.2, hit: $0.3) },
+        doubleTaps: [.init(interval: 0.31, contacts: 2), .init(interval: 0.28, contacts: 3),
+                     .init(interval: 0.35, contacts: 2), .init(interval: 0.30, contacts: 3)],
+        holds: [.init(duration: 0.41, movement: 7), .init(duration: 0.38, movement: 9),
+                .init(duration: 0.52, movement: 6), .init(duration: 0.44, movement: 8)],
+        pathDeviation: 8.6,
+        phrase: PhraseResult(errors: 3, corrections: 5, time: 24))
+}
+
 /// "low and to the right", "high", … or nil when the offset is negligible.
 func directionText(_ offset: CGVector) -> String? {
     let horizontal = offset.dx > 3 ? "to the right" : offset.dx < -3 ? "to the left" : ""

@@ -24,6 +24,8 @@ struct CheckResult: Equatable {
 @Observable
 final class AppModel {
     enum Screen: String {
+        case onboarding
+        case signUp
         case welcome
         case exercises
         case recalibration
@@ -44,6 +46,8 @@ final class AppModel {
     private(set) var checkResult: CheckResult?
     private(set) var todayTaps: [TapSample] = []
     private(set) var isSetupComplete: Bool
+    /// Signed up with the placeholder account and still showing the sample profile.
+    private(set) var usesSampleData: Bool
     /// The profile screen was opened from home rather than straight after the exercises.
     private(set) var isViewingSavedProfile = false
 
@@ -54,6 +58,8 @@ final class AppModel {
     private enum Keys {
         static let profile = "touchProfile"
         static let setupComplete = "setupComplete"
+        static let signedUp = "signedUp"
+        static let usesSampleData = "usesSampleData"
     }
 
     init() {
@@ -63,8 +69,13 @@ final class AppModel {
         self.profile = profile
         self.hand = profile?.hand ?? .right
         self.isSetupComplete = complete
+        self.usesSampleData = defaults.bool(forKey: Keys.usesSampleData)
         self.settings = SharedStore.loadSettings() ?? profile?.proposedSettings() ?? KeyboardSettings()
-        self.screen = complete ? .home : .welcome
+        if !defaults.bool(forKey: Keys.signedUp) {
+            self.screen = .onboarding
+        } else {
+            self.screen = complete ? .home : .welcome
+        }
         #if targetEnvironment(simulator)
         self.simulateTremor = true
         #else
@@ -78,6 +89,29 @@ final class AppModel {
         #endif
     }
 
+    // MARK: Onboarding
+
+    func finishOnboarding() {
+        screen = .signUp
+    }
+
+    /// Placeholder until accounts exist: nothing entered is stored or sent.
+    /// Fills the app with the sample profile and goes straight to home.
+    func signUp() {
+        let sample = TouchProfile.sample
+        profile = sample
+        hand = sample.hand
+        save(profile: sample)
+        settings = sample.proposedSettings()
+        SharedStore.save(settings)
+        usesSampleData = true
+        isSetupComplete = true
+        defaults.set(true, forKey: Keys.signedUp)
+        defaults.set(true, forKey: Keys.usesSampleData)
+        defaults.set(true, forKey: Keys.setupComplete)
+        screen = .home
+    }
+
     // MARK: Setup
 
     func startExercises() {
@@ -86,6 +120,8 @@ final class AppModel {
 
     func finishExercises(_ newProfile: TouchProfile) {
         isViewingSavedProfile = false
+        usesSampleData = false
+        defaults.set(false, forKey: Keys.usesSampleData)
         profile = newProfile
         settings = newProfile.proposedSettings()
         checkResult = nil
@@ -177,18 +213,7 @@ final class AppModel {
 extension AppModel {
     func loadDemo(_ demo: Screen) {
         let simulator = TremorSimulator(strength: 1)
-        let taps = (0..<10).map { i in
-            let d = simulator.tapDisplacement()
-            return TapSample(isCluster: i % 2 == 1, dx: d.dx, dy: d.dy, hit: hypot(d.dx, d.dy) < (i % 2 == 1 ? 14 : 26))
-        }
-        let profile = TouchProfile(
-            hand: .right, taps: taps,
-            doubleTaps: [.init(interval: 0.31, contacts: 2), .init(interval: 0.28, contacts: 3),
-                         .init(interval: 0.35, contacts: 2), .init(interval: 0.30, contacts: 3)],
-            holds: [.init(duration: 0.41, movement: 7), .init(duration: 0.38, movement: 9),
-                    .init(duration: 0.52, movement: 6), .init(duration: 0.44, movement: 8)],
-            pathDeviation: 8.6,
-            phrase: PhraseResult(errors: 3, corrections: 5, time: 24))
+        let profile = TouchProfile.sample
         self.profile = profile
         settings = profile.proposedSettings()
         checkResult = CheckResult(
@@ -200,6 +225,7 @@ extension AppModel {
             return TapSample(isCluster: false, dx: d.dx + 6, dy: d.dy + 5, hit: false)
         }
         isSetupComplete = [.home, .recalResult].contains(demo)
+        usesSampleData = demo == .home
         screen = demo
     }
 }

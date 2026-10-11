@@ -15,6 +15,8 @@ struct ContentView: View {
 
     @ViewBuilder private var screen: some View {
         switch model.screen {
+        case .onboarding: OnboardingView()
+        case .signUp: SignUpView()
         case .welcome: WelcomeView()
         case .exercises: ExerciseFlowView(recalibration: false)
         case .recalibration: ExerciseFlowView(recalibration: true)

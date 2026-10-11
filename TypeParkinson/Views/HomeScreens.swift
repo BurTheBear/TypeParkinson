@@ -23,6 +23,20 @@ struct HomeView: View {
                 }
             }
 
+            if model.usesSampleData {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("You’re looking at sample data.").font(Theme.serif(.body, weight: .semibold))
+                    Text("Run the touch exercises to build a keyboard from your own touches. It takes about three minutes.")
+                        .font(Theme.serif(.subheadline))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Button("Personalize my keyboard") { model.startExercises() }
+                        .buttonStyle(TPButtonStyle(minHeight: 44, fullWidth: false))
+                }
+                .padding(14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Theme.accent100, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
+            }
+
             VStack(alignment: .leading, spacing: 8) {
                 Button("Typing feels different today") { model.startRecalibration() }
                     .buttonStyle(TPButtonStyle(minHeight: 72))

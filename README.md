@@ -18,3 +18,7 @@ Open `TypeParkinson.xcodeproj` and run the **TypeParkinson** scheme. Debug build
 To open a screen directly with sample data, add a launch argument such as `-demoScreen proposal` (also `exercises`, `profile`, `check`, `compare`, `enable`, `home`, `recalResult`). Debug builds only.
 
 To use the keyboard: Settings → Apps → TypeParkinson → Keyboards → turn on TypeParkinson. It doesn't need Full Access.
+
+## First launch
+
+Onboarding (four pages) → sign up → home. Sign-up is a placeholder: no account is created and nothing entered is stored or sent. It loads a sample touch profile so the app can be explored straight away; **Personalize my keyboard** on home runs the real exercises. Use `-demoScreen onboarding` or `-demoScreen signUp` to open those screens directly.
