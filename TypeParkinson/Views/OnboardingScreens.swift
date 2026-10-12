@@ -87,8 +87,8 @@ struct OnboardingView: View {
             FootNote("The keys themselves never move. Once you approve a layout it stays put, so your fingers can learn where everything is.")
         default:
             Heading(kicker: "Privacy",
-                    title: "Your touches stay on this phone.",
-                    subtitle: "Your touch profile never leaves this phone. TypeParkinson doesn’t save what you type, and the keyboard doesn’t ask for Full Access.")
+                    title: "Your touches stay yours.",
+                    subtitle: "Your touch profile is kept on your device — and, if you sign in, in your own iCloud. TypeParkinson has no servers. The keyboard never saves what you type and doesn’t ask for Full Access.")
             FootNote("TypeParkinson describes how your touches behave. It isn’t a medical device, doesn’t assess or diagnose any condition, and isn’t a substitute for advice from a clinician.")
         }
     }
@@ -110,57 +110,6 @@ struct OnboardingView: View {
         VStack(spacing: 8) {
             TouchPlot(taps: taps, size: 130, scale: 1.6, dot: 7, color: color)
             Text(label).font(Theme.serif(.footnote)).foregroundStyle(Theme.secondaryText)
-        }
-    }
-}
-
-/// Placeholder sign-up. Accounts aren't connected yet, so nothing entered here
-/// is stored or sent: continuing loads sample data and opens the app.
-struct SignUpView: View {
-    @Environment(AppModel.self) private var model
-    @State private var name = ""
-    @State private var email = ""
-    @State private var password = ""
-
-    var body: some View {
-        Page {
-            Heading(kicker: "Create your account",
-                    title: "Sign up",
-                    subtitle: "Keep your touch profile and keyboard settings with you.")
-            VStack(alignment: .leading, spacing: 16) {
-                field("Name") {
-                    TextField("Your name", text: $name)
-                        .textContentType(.name)
-                }
-                field("Email") {
-                    TextField("you@example.com", text: $email)
-                        .textContentType(.emailAddress)
-                        #if os(iOS)
-                        .keyboardType(.emailAddress)
-                        .textInputAutocapitalization(.never)
-                        #endif
-                        .autocorrectionDisabled()
-                }
-                field("Password") {
-                    SecureField("At least 8 characters", text: $password)
-                }
-            }
-            FootNote("Accounts aren’t connected yet. Continuing opens the app with sample data so you can look around; you can run the touch exercises any time to build your own keyboard.")
-        } footer: {
-            Button("Create account") { model.signUp() }.buttonStyle(.primary)
-            Button("Back") { model.screen = .onboarding }.buttonStyle(.ghost())
-        }
-    }
-
-    private func field(_ label: String, @ViewBuilder input: () -> some View) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(label).font(Theme.serif(.caption)).foregroundStyle(Theme.secondaryText)
-            input()
-                .font(Theme.serif(.body))
-                .padding(.horizontal, 14)
-                .frame(minHeight: 48)
-                .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
-                .overlay(RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Theme.divider))
         }
     }
 }

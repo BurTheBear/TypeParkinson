@@ -13,6 +13,9 @@ struct Page<Content: View, Footer: View>: View {
                 .frame(maxWidth: .infinity)
         }
         .scrollBounceBehavior(.basedOnSize)
+        .safeAreaInset(edge: .top, spacing: 0) {
+            Color.clear.frame(height: 0).background(Theme.bg)
+        }
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 8) { footer }
                 .padding(.horizontal, 22)
@@ -77,7 +80,7 @@ struct FootNote: View {
 
 // MARK: Buttons
 
-enum TPButtonKind { case primary, secondary, ghost }
+enum TPButtonKind { case primary, secondary, destructive, ghost }
 
 struct TPButtonStyle: ButtonStyle {
     var kind: TPButtonKind = .primary
@@ -104,7 +107,7 @@ struct TPButtonStyle: ButtonStyle {
                 .foregroundStyle(foreground)
                 .background(background, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
                 .overlay {
-                    if kind == .secondary {
+                    if kind == .secondary || kind == .destructive {
                         RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Theme.divider)
                     }
                 }
@@ -116,6 +119,7 @@ struct TPButtonStyle: ButtonStyle {
             switch kind {
             case .primary: Theme.bg
             case .secondary: Theme.text
+            case .destructive: Theme.warning
             case .ghost: Theme.accent
             }
         }
@@ -125,6 +129,7 @@ struct TPButtonStyle: ButtonStyle {
             switch kind {
             case .primary: return pressed ? Theme.accent700 : Theme.accent
             case .secondary: return pressed ? Theme.text.opacity(0.14) : .clear
+            case .destructive: return pressed ? Theme.warning.opacity(0.14) : .clear
             case .ghost: return pressed ? Theme.accent.opacity(0.18) : .clear
             }
         }
@@ -135,6 +140,9 @@ extension ButtonStyle where Self == TPButtonStyle {
     static var primary: TPButtonStyle { TPButtonStyle() }
     static func secondary(minHeight: CGFloat = 48, fullWidth: Bool = true) -> TPButtonStyle {
         TPButtonStyle(kind: .secondary, minHeight: minHeight, fullWidth: fullWidth)
+    }
+    static func destructive(minHeight: CGFloat = 44, fullWidth: Bool = false) -> TPButtonStyle {
+        TPButtonStyle(kind: .destructive, minHeight: minHeight, fullWidth: fullWidth)
     }
     static func ghost(minHeight: CGFloat = 44) -> TPButtonStyle {
         TPButtonStyle(kind: .ghost, minHeight: minHeight, fullWidth: false)

@@ -8,7 +8,19 @@ struct HomeView: View {
         let profile = model.profile ?? TouchProfile()
         Page {
             VStack(alignment: .leading, spacing: 8) {
-                Kicker("TypeParkinson")
+                HStack {
+                    Kicker("TypeParkinson")
+                    Spacer()
+                    Button { model.screen = .settings } label: {
+                        Image(systemName: "gearshape")
+                            .font(.system(size: 20))
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .foregroundStyle(Theme.accent)
+                    .accessibilityLabel("Settings")
+                }
+                .padding(.vertical, -10)
                 Text("Your keyboard is ready.").font(Theme.serif(.largeTitle, weight: .semibold))
                 HStack(spacing: 8) {
                     Text("Approved")
@@ -21,20 +33,6 @@ struct HomeView: View {
                         .font(Theme.serif(.footnote))
                         .foregroundStyle(Theme.secondaryText)
                 }
-            }
-
-            if model.usesSampleData {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("You’re looking at sample data.").font(Theme.serif(.body, weight: .semibold))
-                    Text("Run the touch exercises to build a keyboard from your own touches. It takes about three minutes.")
-                        .font(Theme.serif(.subheadline))
-                        .fixedSize(horizontal: false, vertical: true)
-                    Button("Personalize my keyboard") { model.startExercises() }
-                        .buttonStyle(TPButtonStyle(minHeight: 44, fullWidth: false))
-                }
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Theme.accent100, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
             }
 
             VStack(alignment: .leading, spacing: 8) {
@@ -87,9 +85,9 @@ struct HomeView: View {
                 Button("Keyboard not showing up?") { model.screen = .enable }.buttonStyle(.ghost())
             }
 
-            DemoModeToggle()
-
-            FootNote("Your touch profile never leaves this phone. TypeParkinson doesn’t save what you type.")
+            FootNote(model.account == nil
+                     ? "Your touch profile stays on this device. TypeParkinson doesn’t save what you type."
+                     : "Your touch profile is kept on this device and in your iCloud. TypeParkinson doesn’t save what you type.")
         }
     }
 

@@ -38,7 +38,7 @@ struct EnableView: View {
                     .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
             }
 
-            FootNote("iOS warns that any keyboard could collect what you type. TypeParkinson keeps your touch profile on this phone and never saves your messages.")
+            FootNote("iOS warns that any keyboard could collect what you type. Without Full Access, the TypeParkinson keyboard can’t send anything anywhere, and it never saves what you type.")
         } footer: {
             Button(model.isSetupComplete ? "Done" : "Finish setup") { model.finishSetup() }.buttonStyle(.primary)
         }

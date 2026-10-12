@@ -4,6 +4,13 @@ enum CorrectionAction {
     case undo, deleteWord, backspace
 }
 
+enum ShiftState {
+    case off
+    /// Capitalises the next letter only.
+    case once
+    case capsLock
+}
+
 /// Simulated imprecision for demos on the simulator, where a mouse is too precise.
 struct TouchSimulation {
     /// A fixed displacement applied to the whole of one touch.
@@ -18,30 +25,43 @@ struct TouchSimulation {
 struct KeyboardView: View {
     var size: KeySize
     var behavior: KeyboardBehavior = .standard
-    var systemKeys = false
+    var options = KeyboardLayout.Options()
     var showsCorrectionBar = false
-    var isShifted = false
+    var shift: ShiftState = .off
     var simulation: TouchSimulation?
     var onPress: (KeyPress) -> Void = { _ in }
     var onBlockedRepeat: () -> Void = {}
     var onCorrection: (CorrectionAction) -> Void = { _ in }
+    /// Called repeatedly while delete is held down; nil turns hold-to-repeat off.
+    var onRepeatDelete: (() -> Void)?
 
     @State private var interpreter = KeyTouchInterpreter()
     @State private var pressed: [AnyHashable: String] = [:]
     @State private var displacements: [AnyHashable: CGVector] = [:]
+    @State private var repeatTasks: [AnyHashable: Task<Void, Never>] = [:]
+    /// Touches that already deleted by repeating, so lifting them types nothing more.
+    @State private var repeated: Set<AnyHashable> = []
+
+    /// Hold this long before delete starts repeating, then repeat at this interval.
+    /// The delay is longer than usual so a slow release doesn't erase text.
+    static let repeatDelay: Duration = .milliseconds(800)
+    static let repeatInterval: Duration = .milliseconds(110)
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: options.compact ? 4 : 8) {
             if showsCorrectionBar {
-                CorrectionBar(onCorrection: onCorrection)
+                CorrectionBar(compact: options.compact, onCorrection: onCorrection)
             }
             GeometryReader { geo in
-                let layout = KeyboardLayout(size: size, width: geo.size.width, systemKeys: systemKeys)
+                let layout = KeyboardLayout(size: size, width: geo.size.width, options: options)
                 ZStack {
                     ForEach(layout.keys) { key in
-                        KeyCap(key: key, isPressed: pressed.values.contains(key.id), isShifted: isShifted)
+                        KeyCap(key: key, isPressed: pressed.values.contains(key.id), shift: shift)
                             .frame(width: key.frame.width, height: key.frame.height)
                             .position(x: key.frame.midX, y: key.frame.midY)
+                            .accessibilityAction {
+                                onPress(KeyPress(key: key, uncorrectedKey: key))
+                            }
                     }
                 }
                 .frame(width: geo.size.width, height: layout.height)
@@ -53,7 +73,11 @@ struct KeyboardView: View {
                 )
                 .accessibilityElement(children: .contain)
             }
-            .frame(height: size.keyboardHeight)
+            .frame(height: size.keyboardHeight(compact: options.compact))
+        }
+        .onDisappear {
+            repeatTasks.values.forEach { $0.cancel() }
+            repeatTasks = [:]
         }
     }
 
@@ -69,12 +93,17 @@ struct KeyboardView: View {
                     if let simulation { displacements[id] = simulation.displacement() }
                     interpreter.began(id, at: simulated(event.location, id), time: now)
                 }
-                pressed[id] = interpreter.currentKey(id, layout: layout, behavior: behavior)?.id
+                let key = interpreter.currentKey(id, layout: layout, behavior: behavior)
+                pressed[id] = key?.id
+                updateRepeat(id, onDelete: key?.action == .backspace)
             case .ended:
                 guard interpreter.isTracking(id) else { continue }
                 let point = simulated(event.location, id)
-                pressed[id] = nil
-                displacements[id] = nil
+                finish(id)
+                if repeated.remove(id) != nil {
+                    interpreter.cancel(id)
+                    continue
+                }
                 deliver(interpreter.ended(id, at: point, time: now, layout: layout, behavior: behavior))
                 if let simulation, Double.random(in: 0..<1) < simulation.extraContactChance {
                     let ghost = AnyHashable(UUID())
@@ -83,10 +112,33 @@ struct KeyboardView: View {
                 }
             case .cancelled:
                 interpreter.cancel(id)
-                pressed[id] = nil
-                displacements[id] = nil
+                finish(id)
+                repeated.remove(id)
             @unknown default:
                 break
+            }
+        }
+    }
+
+    private func finish(_ id: AnyHashable) {
+        pressed[id] = nil
+        displacements[id] = nil
+        repeatTasks.removeValue(forKey: id)?.cancel()
+    }
+
+    /// Starts repeating once a touch has rested on delete long enough; stops if it slides off.
+    private func updateRepeat(_ id: AnyHashable, onDelete: Bool) {
+        guard let onRepeatDelete, onDelete else {
+            repeatTasks.removeValue(forKey: id)?.cancel()
+            return
+        }
+        guard repeatTasks[id] == nil else { return }
+        repeatTasks[id] = Task {
+            try? await Task.sleep(for: Self.repeatDelay)
+            while !Task.isCancelled {
+                repeated.insert(id)
+                onRepeatDelete()
+                try? await Task.sleep(for: Self.repeatInterval)
             }
         }
     }
@@ -108,28 +160,46 @@ struct KeyboardView: View {
 private struct KeyCap: View {
     let key: Key
     let isPressed: Bool
-    let isShifted: Bool
+    let shift: ShiftState
 
     var body: some View {
         RoundedRectangle(cornerRadius: Theme.cornerRadius)
-            .fill(isPressed ? Theme.accent300 : (key.isLetter ? Theme.bg : Theme.neutral300))
+            .fill(isPressed ? Theme.accent300 : (key.isInput ? Theme.bg : Theme.neutral300))
             .shadow(color: .black.opacity(0.18), radius: 0, x: 0, y: 1)
             .overlay { label }
             .foregroundStyle(Theme.text)
             .accessibilityElement()
             .accessibilityLabel(accessibilityName)
+            .accessibilityValue(key.action == .shift ? shiftDescription : "")
             .accessibilityAddTraits(.isKeyboardKey)
     }
+
+    private var isUppercase: Bool { shift != .off && key.isLetter }
 
     @ViewBuilder private var label: some View {
         switch key.action {
         case .backspace: Image(systemName: "delete.left").font(.system(size: 18))
-        case .shift: Image(systemName: isShifted ? "shift.fill" : "shift").font(.system(size: 18))
+        case .shift:
+            Image(systemName: shift == .capsLock ? "capslock.fill" : shift == .once ? "shift.fill" : "shift")
+                .font(.system(size: 18))
         case .nextKeyboard: Image(systemName: "globe").font(.system(size: 18))
-        case .space, .returnKey: Text(key.label).font(Theme.serif(size: 14))
+        case .space, .returnKey, .mode:
+            Text(key.label)
+                .font(Theme.serif(size: 14))
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+                .padding(.horizontal, 2)
         case .character:
-            Text(isShifted && key.isLetter ? key.label.uppercased() : key.label)
+            Text(isUppercase ? key.label.uppercased() : key.label)
                 .font(Theme.serif(size: 20))
+        }
+    }
+
+    private var shiftDescription: String {
+        switch shift {
+        case .off: "Off"
+        case .once: "On"
+        case .capsLock: "Caps lock"
         }
     }
 
@@ -138,14 +208,29 @@ private struct KeyCap: View {
         case .backspace: "Delete"
         case .shift: "Shift"
         case .nextKeyboard: "Next keyboard"
-        case .returnKey: "Return"
+        case .returnKey: key.label.capitalized
         case .space: "Space"
-        case .character(let c): c == "," ? "Comma" : c == "." ? "Period" : c
+        case .mode(.letters): "Letters"
+        case .mode(.numbers): "Numbers"
+        case .mode(.symbols): "More symbols"
+        case .mode(.numberPad): "Number pad"
+        case .character(let c):
+            switch c {
+            case ",": "Comma"
+            case ".": "Period"
+            case "'": "Apostrophe"
+            case "\"": "Quote"
+            case "-": "Hyphen"
+            case "/": "Slash"
+            case "@": "At"
+            default: isUppercase ? c.uppercased() : c
+            }
         }
     }
 }
 
 private struct CorrectionBar: View {
+    var compact = false
     let onCorrection: (CorrectionAction) -> Void
 
     var body: some View {
@@ -162,11 +247,12 @@ private struct CorrectionBar: View {
                 .font(Theme.serif(size: 15, weight: .semibold))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
-                .frame(maxWidth: .infinity, minHeight: 48)
+                .frame(maxWidth: .infinity, minHeight: compact ? 34 : 48)
                 .background(Theme.bg, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
                 .overlay(RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Theme.divider))
         }
         .buttonStyle(.plain)
         .foregroundStyle(Theme.text)
+        .accessibilityLabel(action == .backspace ? "Backspace" : title)
     }
 }
