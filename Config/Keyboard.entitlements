@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>group.devplaceholder.J42KEV6W.TypeParkinson</string>
+		<string>group.com.pranavatreya.typeparkinson</string>
 	</array>
 </dict>
 </plist>

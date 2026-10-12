@@ -16,7 +16,7 @@ struct WelcomeView: View {
             }
             DemoModeToggle()
         } footer: {
-            FootNote("You can pause or skip any exercise. Your touch profile stays on this phone.")
+            FootNote("You can pause or skip any exercise. Your touch profile stays on your device.")
             Button("Start exercises") { model.startExercises() }.buttonStyle(.primary)
         }
     }
