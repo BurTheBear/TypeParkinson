@@ -26,6 +26,12 @@ struct CheckView: View {
             }
             .id(round)
         }
+        .background {
+            ZStack(alignment: .top) {
+                Theme.bg.ignoresSafeArea()
+                AuraWash(height: 280)
+            }
+        }
     }
 }
 
@@ -47,39 +53,32 @@ struct CompareView: View {
         return Page {
             Heading(kicker: "Check results", title: verdict.title, subtitle: verdict.detail)
 
-            Grid(alignment: .leading, horizontalSpacing: 16, verticalSpacing: 10) {
-                GridRow {
-                    Text("")
-                    Text("Standard").font(Theme.serif(.subheadline, weight: .semibold))
-                    Text("Yours").font(Theme.serif(.subheadline, weight: .semibold))
-                }
-                Divider().gridCellUnsizedAxes(.horizontal)
-                metricRow("Errors left", Double(base.errors), Double(mine.errors), "\(base.errors)", "\(mine.errors)")
-                metricRow("Corrections", Double(base.corrections), Double(mine.corrections), "\(base.corrections)", "\(mine.corrections)")
-                metricRow("Time", base.time, mine.time,
-                          String(format: "%.1f s", base.time), String(format: "%.1f s", mine.time))
+            HStack(spacing: Theme.Space.s3) {
+                metricTile("Errors", base: Double(base.errors), mine: Double(mine.errors), decimals: 0, unit: nil)
+                metricTile("Fixes", base: Double(base.corrections), mine: Double(mine.corrections), decimals: 0, unit: nil)
+                metricTile("Seconds", base: base.time, mine: mine.time, decimals: 1, unit: nil)
             }
-            .font(Theme.serif(.body))
-            .monospacedDigit()
+            .fixedSize(horizontal: false, vertical: true)
 
-            VStack(alignment: .leading, spacing: 16) {
-                Text("What each setting did").font(Theme.serif(.title3, weight: .semibold))
+            VStack(alignment: .leading, spacing: Theme.Space.s3) {
+                Text("What each setting did").font(Theme.rounded(.title3, weight: .bold))
                 ForEach(evidence(result)) { item in
-                    HStack(alignment: .top, spacing: 12) {
+                    HStack(alignment: .top, spacing: Theme.Space.s3) {
+                        IconBadge(symbol: symbol(for: item.name), color: Theme.accent, size: 38)
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(item.name).font(Theme.serif(.body, weight: .semibold))
+                            Text(item.name).font(Theme.font(.body, weight: .semibold))
                             Text(item.text)
-                                .font(Theme.serif(.subheadline))
+                                .font(Theme.font(.subheadline))
                                 .foregroundStyle(Theme.secondaryText)
                                 .fixedSize(horizontal: false, vertical: true)
                         }
-                        Spacer()
+                        Spacer(minLength: 0)
                         if let turnOff = item.turnOff {
                             Button("Turn off", action: turnOff).buttonStyle(.secondary(minHeight: 40, fullWidth: false))
                         }
                     }
-                    .padding(14)
-                    .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
+                    .padding(Theme.Space.s4)
+                    .background(Theme.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
                 }
             }
         } footer: {
@@ -91,13 +90,51 @@ struct CompareView: View {
         }
     }
 
-    private func metricRow(_ name: String, _ base: Double, _ mine: Double, _ baseText: String, _ mineText: String) -> some View {
-        GridRow {
-            Text(name)
-            Text(baseText)
-            Text(mineText)
-                .fontWeight(.semibold)
-                .foregroundStyle(mine < base - 0.05 ? Theme.accent700 : mine > base + 0.05 ? Theme.warning : Theme.text)
+    /// Yours in big type, the standard keyboard underneath, and an arrow when yours did better or worse.
+    private func metricTile(_ name: String, base: Double, mine: Double, decimals: Int, unit: String?) -> some View {
+        let better = mine < base - 0.05, worse = mine > base + 0.05
+        let format: (Double) -> String = { $0.formatted(.number.precision(.fractionLength(decimals))) + (unit.map { " \($0)" } ?? "") }
+        return VStack(alignment: .leading, spacing: 4) {
+            Text(name.uppercased())
+                .font(Theme.font(.caption2, weight: .heavy))
+                .tracking(0.5)
+                .lineLimit(1)
+                .foregroundStyle(Theme.secondaryText)
+            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                Text(format(mine))
+                    .font(Theme.rounded(.title, weight: .heavy))
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+                    .foregroundStyle(better ? Theme.positive : worse ? Theme.warning : Theme.text)
+                if better || worse {
+                    Image(systemName: better ? "arrow.down" : "arrow.up")
+                        .font(.system(size: 13, weight: .heavy))
+                        .foregroundStyle(better ? Theme.positive : Theme.warning)
+                }
+            }
+            Text("Standard \(format(base))")
+                .font(Theme.font(.caption))
+                .foregroundStyle(Theme.secondaryText)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .padding(Theme.Space.s3)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(name): yours \(format(mine)), standard \(format(base))")
+    }
+
+    private func symbol(for setting: String) -> String {
+        switch setting {
+        case let s where s.hasPrefix("Key size"): "keyboard"
+        case "Touch interpretation": "scope"
+        case "Repeat handling": "repeat"
+        case "Smart correction": "wand.and.stars"
+        case "Brush filter": "hand.raised.slash"
+        case "Correction controls": "arrow.uturn.backward"
+        default: "hand.point.up.left"
         }
     }
 
@@ -146,6 +183,21 @@ struct CompareView: View {
             let n = mine.phrase.corrections
             items.append(Evidence(name: "Correction controls",
                                   text: "You made \(n) correction\(n == 1 ? "" : "s") with the keyboard."))
+        }
+        if settings.smartCorrectionEnabled {
+            let fixed = mine.autoCorrected
+            items.append(Evidence(
+                name: "Smart correction",
+                text: fixed > 0 ? "Worked out and fixed \(fixed) word\(fixed == 1 ? "" : "s") from where your touches landed."
+                                : "Every word came out as you meant it, so it had nothing to fix."))
+        }
+        if settings.brushFilterEnabled {
+            let ignored = mine.ignoredBrushes
+            items.append(Evidence(
+                name: "Brush filter",
+                text: ignored > 0 ? "Ignored \(ignored) brief brush\(ignored == 1 ? "" : "es") that would have typed a stray letter."
+                                  : "No brief brushes happened this time.",
+                turnOff: ignored == 0 && mine.phrase.errors > result.standard.phrase.errors ? { model.settings.brushFilterEnabled = false } : nil))
         }
         if settings.toleranceEnabled {
             items.append(Evidence(name: "Tap tolerance", text: "Not measured in this check."))

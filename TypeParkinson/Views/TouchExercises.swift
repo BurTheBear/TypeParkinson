@@ -16,13 +16,19 @@ struct ExerciseArea<Content: View>: View {
                     content(geo.size)
                         .frame(width: geo.size.width, height: geo.size.height)
                     Text(message)
-                        .font(Theme.serif(.subheadline))
+                        .font(Theme.font(.subheadline))
                         .foregroundStyle(Theme.secondaryText)
                         .multilineTextAlignment(.center)
                         .padding(14)
                         .accessibilityAddTraits(.updatesFrequently)
                 }
-                .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
+                .background {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous).fill(Theme.card)
+                        DotGrid().clipShape(RoundedRectangle(cornerRadius: Theme.cardRadius, style: .continuous))
+                    }
+                    .shadow(color: .black.opacity(0.06), radius: 12, y: 4)
+                }
                 .onTouches(
                     began: { began($0, $1, geo.size) },
                     moved: { moved($0, $1, geo.size) },
@@ -30,7 +36,7 @@ struct ExerciseArea<Content: View>: View {
                 )
             }
             Text(progress)
-                .font(Theme.serif(.caption))
+                .font(Theme.font(.caption))
                 .foregroundStyle(Theme.secondaryText)
         }
     }
@@ -49,7 +55,32 @@ private func centre(_ size: CGSize) -> CGPoint {
 }
 
 private func dotView(_ color: Color, _ radius: CGFloat, at point: CGPoint) -> some View {
-    Circle().fill(color).frame(width: radius * 2, height: radius * 2).position(point)
+    Circle()
+        .fill(RadialGradient(colors: [color.opacity(0.85), color], center: .topLeading, startRadius: 0, endRadius: radius * 2))
+        .overlay(Circle().stroke(.white.opacity(0.35), lineWidth: radius > 20 ? 2 : 1).padding(radius > 20 ? 6 : 2))
+        .frame(width: radius * 2, height: radius * 2)
+        .shadow(color: color.opacity(0.4), radius: radius * 0.5, y: radius * 0.15)
+        .position(point)
+}
+
+/// A faint grid of dots: the surface the exercises are drawn on.
+struct DotGrid: View {
+    var body: some View {
+        Canvas { context, size in
+            let step: CGFloat = 22
+            var y = step / 2
+            while y < size.height {
+                var x = step / 2
+                while x < size.width {
+                    context.fill(Path(ellipseIn: CGRect(x: x - 1.2, y: y - 1.2, width: 2.4, height: 2.4)),
+                                 with: .color(Theme.neutral300))
+                    x += step
+                }
+                y += step
+            }
+        }
+        .accessibilityHidden(true)
+    }
 }
 
 private func after(milliseconds: Int, _ action: @escaping () -> Void) {

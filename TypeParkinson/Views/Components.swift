@@ -1,28 +1,32 @@
 import SwiftUI
 
-/// Scrolling page with the mockup's 22pt margins and an optional pinned footer.
+/// Scrolling page for the setup flow, with an optional pinned footer.
 struct Page<Content: View, Footer: View>: View {
     @ViewBuilder var content: Content
     @ViewBuilder var footer: Footer
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) { content }
-                .padding(22)
+            VStack(alignment: .leading, spacing: Theme.Space.s6) { content }
+                .padding(Theme.Space.s5)
                 .frame(maxWidth: 560, alignment: .leading)
                 .frame(maxWidth: .infinity)
         }
         .scrollBounceBehavior(.basedOnSize)
-        .safeAreaInset(edge: .top, spacing: 0) {
-            Color.clear.frame(height: 0).background(Theme.bg)
+        .background {
+            ZStack(alignment: .top) {
+                Theme.bg.ignoresSafeArea()
+                AuraWash()
+            }
         }
         .safeAreaInset(edge: .bottom) {
-            VStack(spacing: 8) { footer }
-                .padding(.horizontal, 22)
-                .padding(.vertical, 12)
+            VStack(spacing: Theme.Space.s2) { footer }
+                .padding(.horizontal, Theme.Space.s5)
+                .padding(.top, Theme.Space.s3)
+                .padding(.bottom, Theme.Space.s2)
                 .frame(maxWidth: 560)
                 .frame(maxWidth: .infinity)
-                .background(Theme.bg)
+                .background(.bar)
         }
     }
 }
@@ -39,9 +43,13 @@ struct Kicker: View {
 
     var body: some View {
         Text(text.uppercased())
-            .font(Theme.serif(.caption, weight: .semibold))
-            .tracking(1)
-            .foregroundStyle(Theme.accent700)
+            .font(Theme.font(.caption, weight: .heavy))
+            .tracking(0.8)
+            .foregroundStyle(Theme.accent600)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+            .background(.white.opacity(0.7), in: Capsule())
+            .overlay(Capsule().stroke(Theme.accent.opacity(0.18)))
     }
 }
 
@@ -51,14 +59,15 @@ struct Heading: View {
     var subtitle: String?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: Theme.Space.s2) {
             if let kicker { Kicker(kicker) }
             Text(title)
-                .font(Theme.serif(.largeTitle, weight: .semibold))
+                .font(Theme.rounded(size: 34, weight: .heavy))
                 .fixedSize(horizontal: false, vertical: true)
+                .accessibilityAddTraits(.isHeader)
             if let subtitle {
                 Text(subtitle)
-                    .font(Theme.serif(.body))
+                    .font(Theme.font(.body))
                     .foregroundStyle(Theme.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -72,7 +81,7 @@ struct FootNote: View {
 
     var body: some View {
         Text(text)
-            .font(Theme.serif(.footnote))
+            .font(Theme.font(.footnote))
             .foregroundStyle(Theme.secondaryText)
             .fixedSize(horizontal: false, vertical: true)
     }
@@ -84,11 +93,13 @@ enum TPButtonKind { case primary, secondary, destructive, ghost }
 
 struct TPButtonStyle: ButtonStyle {
     var kind: TPButtonKind = .primary
-    var minHeight: CGFloat = 52
+    var minHeight: CGFloat = 54
     var fullWidth = true
+    /// Fill for primary buttons; the accent unless an activity has its own colour.
+    var tint: Color = Theme.accent
 
     func makeBody(configuration: Configuration) -> some View {
-        StyledButton(configuration: configuration, kind: kind, minHeight: minHeight, fullWidth: fullWidth)
+        StyledButton(configuration: configuration, kind: kind, minHeight: minHeight, fullWidth: fullWidth, tint: tint)
     }
 
     private struct StyledButton: View {
@@ -96,41 +107,52 @@ struct TPButtonStyle: ButtonStyle {
         let kind: TPButtonKind
         let minHeight: CGFloat
         let fullWidth: Bool
+        let tint: Color
         @Environment(\.isEnabled) private var isEnabled
 
         var body: some View {
             configuration.label
-                .font(Theme.serif(.body, weight: .semibold))
+                .font(Theme.font(.body, weight: .semibold))
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, kind == .ghost ? 4 : 16)
+                .padding(.horizontal, kind == .ghost ? 4 : 18)
                 .frame(maxWidth: fullWidth ? .infinity : nil, minHeight: minHeight)
                 .foregroundStyle(foreground)
-                .background(background, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
+                .background(background, in: shape)
                 .overlay {
                     if kind == .secondary || kind == .destructive {
-                        RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Theme.divider)
+                        shape.stroke(kind == .destructive ? Theme.warning.opacity(0.4) : Theme.divider, lineWidth: 1)
                     }
                 }
+                .shadow(color: kind == .primary && isEnabled ? tint.opacity(0.35) : .clear, radius: 12, y: 6)
                 .contentShape(Rectangle())
+                .scaleEffect(configuration.isPressed && kind != .ghost ? 0.97 : 1)
+                .animation(.spring(duration: 0.2), value: configuration.isPressed)
                 .opacity(isEnabled ? 1 : 0.45)
+        }
+
+        /// Full-width primary actions are pills; smaller ones keep a rounded rectangle.
+        private var shape: AnyShape {
+            kind == .primary && fullWidth && minHeight >= 50
+                ? AnyShape(Capsule())
+                : AnyShape(RoundedRectangle(cornerRadius: Theme.controlRadius, style: .continuous))
         }
 
         private var foreground: Color {
             switch kind {
-            case .primary: Theme.bg
+            case .primary: .white
             case .secondary: Theme.text
             case .destructive: Theme.warning
-            case .ghost: Theme.accent
+            case .ghost: tint
             }
         }
 
         private var background: Color {
             let pressed = configuration.isPressed
             switch kind {
-            case .primary: return pressed ? Theme.accent700 : Theme.accent
-            case .secondary: return pressed ? Theme.text.opacity(0.14) : .clear
-            case .destructive: return pressed ? Theme.warning.opacity(0.14) : .clear
-            case .ghost: return pressed ? Theme.accent.opacity(0.18) : .clear
+            case .primary: return pressed ? tint.opacity(0.85) : tint
+            case .secondary: return pressed ? Theme.neutral300 : Theme.card
+            case .destructive: return pressed ? Theme.warning.opacity(0.14) : Theme.card
+            case .ghost: return pressed ? tint.opacity(0.12) : .clear
             }
         }
     }
@@ -138,47 +160,56 @@ struct TPButtonStyle: ButtonStyle {
 
 extension ButtonStyle where Self == TPButtonStyle {
     static var primary: TPButtonStyle { TPButtonStyle() }
+    static func primary(tint: Color, minHeight: CGFloat = 54) -> TPButtonStyle {
+        TPButtonStyle(minHeight: minHeight, tint: tint)
+    }
     static func secondary(minHeight: CGFloat = 48, fullWidth: Bool = true) -> TPButtonStyle {
         TPButtonStyle(kind: .secondary, minHeight: minHeight, fullWidth: fullWidth)
     }
     static func destructive(minHeight: CGFloat = 44, fullWidth: Bool = false) -> TPButtonStyle {
         TPButtonStyle(kind: .destructive, minHeight: minHeight, fullWidth: fullWidth)
     }
-    static func ghost(minHeight: CGFloat = 44) -> TPButtonStyle {
-        TPButtonStyle(kind: .ghost, minHeight: minHeight, fullWidth: false)
+    static func ghost(minHeight: CGFloat = 44, tint: Color = Theme.accent) -> TPButtonStyle {
+        TPButtonStyle(kind: .ghost, minHeight: minHeight, fullWidth: false, tint: tint)
     }
 }
 
 // MARK: Segmented choice
 
-/// The mockup's bordered segmented control.
+/// Large-target segmented control: every segment is at least 44 pt tall.
 struct SegmentedChoice<Value: Hashable>: View {
     let options: [(label: String, value: Value)]
     @Binding var selection: Value
+    var tint: Color = Theme.accent
 
     var body: some View {
-        HStack(spacing: 0) {
-            ForEach(Array(options.enumerated()), id: \.offset) { index, option in
-                if index > 0 { Theme.divider.frame(width: 1) }
+        HStack(spacing: 4) {
+            ForEach(Array(options.enumerated()), id: \.offset) { _, option in
                 let selected = option.value == selection
-                Button { selection = option.value } label: {
+                Button {
+                    withAnimation(.snappy(duration: 0.2)) { selection = option.value }
+                } label: {
                     Text(option.label)
-                        .font(Theme.serif(.subheadline))
+                        .font(Theme.font(.subheadline, weight: selected ? .semibold : .regular))
                         .lineLimit(1)
                         .minimumScaleFactor(0.75)
-                        .padding(.horizontal, 12)
-                        .frame(minHeight: 44)
-                        .foregroundStyle(selected ? Theme.bg : Theme.text)
-                        .background(selected ? Theme.accent : .clear)
+                        .padding(.horizontal, 10)
+                        .frame(maxWidth: .infinity, minHeight: 44)
+                        .foregroundStyle(selected ? .white : Theme.text)
+                        .background {
+                            if selected {
+                                RoundedRectangle(cornerRadius: Theme.cornerRadius - 2, style: .continuous).fill(tint)
+                            }
+                        }
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
+        .padding(4)
+        .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius + 2, style: .continuous))
         .fixedSize(horizontal: false, vertical: true)
-        .clipShape(RoundedRectangle(cornerRadius: 2))
-        .overlay(RoundedRectangle(cornerRadius: 2).stroke(Theme.divider))
     }
 }
 
@@ -198,35 +229,42 @@ struct TouchPlot: View {
     var dot: CGFloat = 10
     /// Colours every dot the same instead of by hit / miss.
     var color: Color?
+    var background: Color = Theme.surface
 
     var body: some View {
         let centre = size / 2
         let mean = taps.meanOffset
         ZStack {
-            Circle().stroke(Theme.divider).frame(width: size * 0.6, height: size * 0.6)
-            Theme.divider.frame(width: 1, height: size)
-            Theme.divider.frame(width: size, height: 1)
+            ForEach([0.85, 0.6, 0.35], id: \.self) { fraction in
+                Circle()
+                    .stroke(Theme.neutral400.opacity(0.5), lineWidth: 1)
+                    .frame(width: size * fraction, height: size * fraction)
+            }
+            Theme.neutral400.opacity(0.4).frame(width: 1, height: size)
+            Theme.neutral400.opacity(0.4).frame(width: size, height: 1)
+            Circle().fill(Theme.neutral400.opacity(0.25)).frame(width: size * 0.12, height: size * 0.12)
             ForEach(Array(taps.enumerated()), id: \.offset) { _, tap in
                 Circle()
                     .fill(color ?? (tap.hit ? Theme.accent : Theme.neutral600))
                     .frame(width: dot, height: dot)
+                    .overlay(Circle().stroke(background, lineWidth: 1.5))
                     .position(clamped(centre + tap.dx * scale, centre + tap.dy * scale))
             }
             if !taps.isEmpty {
                 Circle()
-                    .stroke(Theme.text, lineWidth: 2)
-                    .frame(width: dot + 8, height: dot + 8)
+                    .stroke(Theme.text, lineWidth: 2.5)
+                    .frame(width: dot + 10, height: dot + 10)
                     .position(clamped(centre + mean.dx * scale, centre + mean.dy * scale))
             }
         }
         .frame(width: size, height: size)
-        .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
+        .background(background, in: RoundedRectangle(cornerRadius: Theme.cornerRadius + 4, style: .continuous))
         .accessibilityElement()
         .accessibilityLabel("Plot of \(taps.count) touches around the target centre")
     }
 
     private func clamped(_ x: CGFloat, _ y: CGFloat) -> CGPoint {
-        let inset = dot / 2
+        let inset = dot / 2 + 2
         return CGPoint(x: min(max(x, inset), size - inset), y: min(max(y, inset), size - inset))
     }
 }
@@ -238,7 +276,7 @@ struct PlotLegend: View {
             item(Circle().fill(Theme.neutral600), "Missed")
             item(Circle().stroke(Theme.text, lineWidth: 2), "Average")
         }
-        .font(Theme.serif(.caption))
+        .font(Theme.font(.caption))
         .foregroundStyle(Theme.secondaryText)
     }
 
@@ -267,25 +305,18 @@ private struct TouchCapture: ViewModifier {
     let began: (AnyHashable, CGPoint) -> Void
     let moved: (AnyHashable, CGPoint) -> Void
     let ended: (AnyHashable, CGPoint) -> Void
-    @State private var active: Set<AnyHashable> = []
 
     func body(content: Content) -> some View {
         content
-            .contentShape(Rectangle())
-            .gesture(SpatialEventGesture().onChanged(handle).onEnded(handle))
-    }
-
-    private func handle(_ events: SpatialEventCollection) {
-        for event in events {
-            let id = AnyHashable(event.id)
-            switch event.phase {
-            case .active:
-                if active.insert(id).inserted { began(id, event.location) } else { moved(id, event.location) }
-            case .ended, .cancelled:
-                if active.remove(id) != nil { ended(id, event.location) }
-            @unknown default:
-                break
+            .overlay {
+                MultiTouchSurface { event in
+                    let id = AnyHashable(event.id)
+                    switch event.phase {
+                    case .began: began(id, event.location)
+                    case .moved: moved(id, event.location)
+                    case .ended, .cancelled: ended(id, event.location)
+                    }
+                }
             }
-        }
     }
 }
