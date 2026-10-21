@@ -425,6 +425,8 @@
 				INFOPLIST_KEY_CFBundleDisplayName = TypeParkinson;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "TypeParkinson listens only during the voice exercise to measure how loud your voice is. Nothing is recorded or kept.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "The tremor meter reads the motion sensors for ten seconds to measure how your hand shakes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -465,6 +467,8 @@
 				INFOPLIST_KEY_CFBundleDisplayName = TypeParkinson;
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "TypeParkinson listens only during the voice exercise to measure how loud your voice is. Nothing is recorded or kept.";
+				INFOPLIST_KEY_NSMotionUsageDescription = "The tremor meter reads the motion sensors for ten seconds to measure how your hand shakes.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

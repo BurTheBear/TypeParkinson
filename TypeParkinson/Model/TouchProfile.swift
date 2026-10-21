@@ -58,18 +58,24 @@ struct TouchProfile: Codable, Equatable {
 
     var meanHoldMovement: Double? { holds.map { $0.map(\.movement).mean } }
 
-    /// The keyboard the profile suggests, before the user changes anything.
-    func proposedSettings() -> KeyboardSettings {
+    /// The keyboard the profile suggests, before the user changes anything,
+    /// tuned to the touch pattern when one was estimated.
+    func proposedSettings(pattern: TouchPattern? = nil) -> KeyboardSettings {
         var settings = KeyboardSettings()
         settings.keySize = (clusterHitRate < 0.8 || singleHitRate < 0.9) ? .large : .standard
+        if pattern == .suddenMovements { settings.keySize = .extraLarge }
         let offset = meanOffset
         settings.offsetEnabled = hypot(offset.dx, offset.dy) > 3
         settings.offsetX = offset.dx
         settings.offsetY = offset.dy
-        settings.repeatFilterEnabled = (extraContacts ?? 1) > 0
+        settings.repeatFilterEnabled = (extraContacts ?? 1) > 0 || pattern == .tremor
         settings.toleranceEnabled = true
-        settings.tolerance = max(12, ((meanHoldMovement ?? 6) * 1.6).rounded())
+        settings.tolerance = max(pattern == .slowness ? 18 : 12, ((meanHoldMovement ?? 6) * 1.6).rounded())
         settings.correctionBarEnabled = true
+        settings.brushFilterEnabled = pattern == .tremor || pattern == .suddenMovements
+        settings.smartCorrectionEnabled = true
+        settings.pattern = pattern
+        settings.touchModel = TouchModel(taps: taps, pattern: pattern)
         return settings
     }
 
@@ -188,4 +194,21 @@ func levenshtein(_ a: String, _ b: String) -> Int {
         previous = current
     }
     return previous[b.count]
+}
+
+extension TouchModel {
+    /// The starting model from the exercises' tap samples.
+    init(taps: [TapSample], pattern: TouchPattern? = nil) {
+        guard !taps.isEmpty else {
+            self.init()
+            return
+        }
+        let mean = taps.meanOffset
+        let sx = sqrt(taps.map { pow($0.dx - mean.dx, 2) }.mean)
+        let sy = sqrt(taps.map { pow($0.dy - mean.dy, 2) }.mean)
+        // Ten taps underestimate the spread; widen it, and more for patterns that vary day to day.
+        let widen = 1.35 * (pattern?.spreadFactor ?? 1)
+        self.init(meanX: mean.dx, meanY: mean.dy,
+                  sigmaX: Self.clamp(sx * widen), sigmaY: Self.clamp(sy * widen), samples: taps.count)
+    }
 }

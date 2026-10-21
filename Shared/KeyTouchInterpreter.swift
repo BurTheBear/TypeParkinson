@@ -9,6 +9,8 @@ struct KeyboardBehavior: Equatable {
     var repeatWindow: TimeInterval?
     /// Drift (in points) allowed before lifting while still keeping the key first touched.
     var tolerance: CGFloat?
+    /// A touch that lifts sooner than this is a finger brushing past, not a press.
+    var minimumPress: TimeInterval?
 
     static let standard = KeyboardBehavior()
 }
@@ -17,6 +19,12 @@ struct KeyPress {
     let key: Key
     /// What the touch would have selected without the offset correction.
     let uncorrectedKey: Key?
+    /// Where the finger actually was, before any correction, for smart correction to decode.
+    var point: CGPoint? = nil
+    /// When the finger lifted (system uptime), to tell bounces from deliberate double letters.
+    var time: TimeInterval = ProcessInfo.processInfo.systemUptime
+    /// The layout the press was made on, for the letter keys' positions.
+    var layout: KeyboardLayout? = nil
 }
 
 /// Tracks individual touches (several can be down at once) and decides which
@@ -25,6 +33,8 @@ final class KeyTouchInterpreter {
     enum Outcome {
         case press(KeyPress)
         case blockedRepeat
+        /// Lifted too quickly to be deliberate.
+        case ignoredBrush
         case none
     }
 
@@ -68,13 +78,17 @@ final class KeyTouchInterpreter {
         let aim = aimed(touch, behavior: behavior)
         guard let key = layout.key(at: aim.corrected) else { return .none }
 
+        // A brush doesn't count as a press, so it also can't start a repeat window.
+        if let minimum = behavior.minimumPress, time - touch.downTime < minimum {
+            return .ignoredBrush
+        }
         if let window = behavior.repeatWindow, let last = lastPress,
            last.keyID == key.id, touch.downTime - last.upTime < window {
             lastPress = (key.id, time)
             return .blockedRepeat
         }
         lastPress = (key.id, time)
-        return .press(KeyPress(key: key, uncorrectedKey: layout.key(at: aim.raw)))
+        return .press(KeyPress(key: key, uncorrectedKey: layout.key(at: aim.raw), point: aim.raw, time: time, layout: layout))
     }
 
     private func aimed(_ touch: Touch, behavior: KeyboardBehavior) -> (raw: CGPoint, corrected: CGPoint) {
