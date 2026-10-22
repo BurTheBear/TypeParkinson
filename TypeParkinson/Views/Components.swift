@@ -109,25 +109,34 @@ struct TPButtonStyle: ButtonStyle {
         let fullWidth: Bool
         let tint: Color
         @Environment(\.isEnabled) private var isEnabled
+        @Environment(AppModel.self) private var model
 
         var body: some View {
-            configuration.label
+            let label = configuration.label
                 .font(Theme.font(.body, weight: .semibold))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, kind == .ghost ? 4 : 18)
                 .frame(maxWidth: fullWidth ? .infinity : nil, minHeight: minHeight)
                 .foregroundStyle(foreground)
-                .background(background, in: shape)
-                .overlay {
-                    if kind == .secondary || kind == .destructive {
-                        shape.stroke(kind == .destructive ? Theme.warning.opacity(0.4) : Theme.divider, lineWidth: 1)
-                    }
+            Group {
+                // Ghost buttons are plain links; Liquid Glass is reserved for buttons with a shape.
+                if model.liquidGlassEnabled, kind != .ghost {
+                    label.glassEffect(glass, in: shape)
+                } else {
+                    label
+                        .background(background, in: shape)
+                        .overlay {
+                            if kind == .secondary || kind == .destructive {
+                                shape.stroke(kind == .destructive ? Theme.warning.opacity(0.4) : Theme.divider, lineWidth: 1)
+                            }
+                        }
+                        .shadow(color: kind == .primary && isEnabled ? tint.opacity(0.35) : .clear, radius: 12, y: 6)
                 }
-                .shadow(color: kind == .primary && isEnabled ? tint.opacity(0.35) : .clear, radius: 12, y: 6)
-                .contentShape(Rectangle())
-                .scaleEffect(configuration.isPressed && kind != .ghost ? 0.97 : 1)
-                .animation(.spring(duration: 0.2), value: configuration.isPressed)
-                .opacity(isEnabled ? 1 : 0.45)
+            }
+            .contentShape(Rectangle())
+            .scaleEffect(configuration.isPressed && kind != .ghost ? 0.97 : 1)
+            .animation(.spring(duration: 0.2), value: configuration.isPressed)
+            .opacity(isEnabled ? 1 : 0.45)
         }
 
         /// Full-width primary actions are pills; smaller ones keep a rounded rectangle.
@@ -153,6 +162,14 @@ struct TPButtonStyle: ButtonStyle {
             case .secondary: return pressed ? Theme.neutral300 : Theme.card
             case .destructive: return pressed ? Theme.warning.opacity(0.14) : Theme.card
             case .ghost: return pressed ? tint.opacity(0.12) : .clear
+            }
+        }
+
+        private var glass: Glass {
+            switch kind {
+            case .primary: .regular.tint(tint).interactive()
+            case .destructive: .regular.tint(Theme.warning).interactive()
+            case .secondary, .ghost: .regular.interactive()
             }
         }
     }

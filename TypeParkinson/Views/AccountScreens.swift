@@ -89,6 +89,7 @@ struct SettingsView: View {
                 accountSection
                 keyboardSection
                 appearanceSection
+                appLookSection
                 reminderSection
                 speechSection
                 aboutSection
@@ -234,6 +235,18 @@ struct SettingsView: View {
             Text("Keyboard look")
         } footer: {
             Text(model.settings.theme.summary)
+        }
+        .listRowBackground(Theme.card)
+    }
+
+    private var appLookSection: some View {
+        Section {
+            toggle("Liquid Glass buttons", symbol: "sparkles", color: Theme.accent,
+                   value: model.liquidGlassEnabled) { v in withAnimation { model.liquidGlassEnabled = v } }
+        } header: {
+            Text("App look")
+        } footer: {
+            Text("Buttons take on the translucent Liquid Glass look instead of the solid one. Off by default for the clearest contrast.")
         }
         .listRowBackground(Theme.card)
     }

@@ -63,6 +63,11 @@ final class AppModel {
     var simulateTremor: Bool
     var simulator: TremorSimulator { TremorSimulator(strength: simulateTremor ? 1 : 0) }
 
+    /// Buttons render with the Liquid Glass material instead of the solid look.
+    var liquidGlassEnabled: Bool {
+        didSet { defaults.set(liquidGlassEnabled, forKey: Keys.liquidGlassEnabled) }
+    }
+
     // MARK: Everyday features
 
     /// Which tab is showing once setup is done.
@@ -90,6 +95,7 @@ final class AppModel {
         static let accountStepComplete = "accountStepComplete"
         static let account = "appleAccount"
         static let modified = "modified"
+        static let liquidGlassEnabled = "liquidGlassEnabled"
         static let reminderEnabled = "reminderEnabled"
         static let reminderHour = "reminderHour"
         static let reminderMinute = "reminderMinute"
@@ -126,6 +132,7 @@ final class AppModel {
             SharedStore.save(settings)
         }
         self.settings = settings
+        self.liquidGlassEnabled = defaults.bool(forKey: Keys.liquidGlassEnabled)
         if !defaults.bool(forKey: Keys.accountStepComplete) {
             self.screen = .onboarding
         } else {

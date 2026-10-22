@@ -1,15 +1,15 @@
 import SwiftUI
 
-/// First launch: what TypeParkinson does, in five pages over the Aura.
+/// First launch: what TypeParkinson does, in six pages over the Aura.
 struct OnboardingView: View {
     @Environment(AppModel.self) private var model
     @State private var page = 0
 
-    private let pageCount = 5
+    private let pageCount = 6
 
     var body: some View {
         ZStack {
-            AuraBackground(mood: page == 2 ? .calm : page == 4 ? .calm : .neutral)
+            AuraBackground(mood: page == 2 ? .calm : page == 5 ? .calm : .neutral)
                 .ignoresSafeArea()
             VStack(spacing: 0) {
                 HStack {
@@ -118,6 +118,17 @@ struct OnboardingView: View {
                     bubble("speaker.wave.2.fill", "Speak", Theme.speakColor)
                     bubble("rectangle.portrait.on.rectangle.portrait.fill", "Show card", Theme.typingColor)
                     bubble("pills.fill", "Medication", Theme.medsColor)
+                }
+            }
+        case 4:
+            OnboardingPage(title: "Try Liquid Glass.",
+                           body: "Buttons can use the translucent Liquid Glass material instead of the solid look. It’s off by default, for the clearest contrast. Turn it on here or any time later in Settings.") {
+                VStack(spacing: Theme.Space.s3) {
+                    Button("Example button") {}.buttonStyle(.primary)
+                    Button("Another one") {}.buttonStyle(.secondary())
+                    SegmentedChoice(onOff: Binding(
+                        get: { model.liquidGlassEnabled },
+                        set: { value in withAnimation { model.liquidGlassEnabled = value } }))
                 }
             }
         default:
