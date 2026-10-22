@@ -8,19 +8,7 @@ struct HomeView: View {
         let profile = model.profile ?? TouchProfile()
         Page {
             VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Kicker("TypeParkinson")
-                    Spacer()
-                    Button { model.screen = .settings } label: {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 20))
-                            .frame(width: 44, height: 44)
-                            .contentShape(Rectangle())
-                    }
-                    .foregroundStyle(Theme.accent)
-                    .accessibilityLabel("Settings")
-                }
-                .padding(.vertical, -10)
+                Kicker("TypeParkinson")
                 Text("Your keyboard is ready.").font(Theme.serif(.largeTitle, weight: .semibold))
                 HStack(spacing: 8) {
                     Text("Approved")

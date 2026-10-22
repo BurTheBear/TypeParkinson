@@ -10,6 +10,9 @@ struct ContentView: View {
             .background(Theme.bg.ignoresSafeArea())
             .foregroundStyle(Theme.text)
             .tint(Theme.accent)
+            .safeAreaInset(edge: .bottom) {
+                if showsBottomBar { BottomBar() }
+            }
             .environment(model)
             .animation(.easeInOut(duration: 0.2), value: model.screen)
             .task { await model.verifyAppleCredential() }
@@ -27,6 +30,16 @@ struct ContentView: View {
             } message: {
                 Text(model.notice ?? "")
             }
+    }
+
+    /// Home base: Home, Settings, and a saved profile viewed from Home. Everything else
+    /// (onboarding, the setup wizard, exercises, recalibration) is its own self-contained flow.
+    private var showsBottomBar: Bool {
+        switch model.screen {
+        case .home, .settings: true
+        case .profile: model.isViewingSavedProfile
+        default: false
+        }
     }
 
     @ViewBuilder private var screen: some View {

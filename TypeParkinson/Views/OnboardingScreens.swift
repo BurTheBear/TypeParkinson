@@ -5,7 +5,7 @@ struct OnboardingView: View {
     @Environment(AppModel.self) private var model
     @State private var page = 0
 
-    private let pageCount = 4
+    private let pageCount = 5
 
     var body: some View {
         Page {
@@ -74,6 +74,17 @@ struct OnboardingView: View {
                 step(4, "Type anywhere", "Turn it on once and use it in every app.")
             }
         case 2:
+            Heading(kicker: "Make it yours",
+                    title: "Try Liquid Glass.",
+                    subtitle: "Buttons and cards can use the translucent Liquid Glass material instead of the plain, solid look. It’s off by default, for the clearest contrast — turn it on here or any time later in Settings.")
+            VStack(spacing: 14) {
+                Button("Example button") {}.buttonStyle(.primary)
+                Button("Another one") {}.buttonStyle(.secondary())
+                SegmentedChoice(onOff: Binding(
+                    get: { model.liquidGlassEnabled },
+                    set: { value in withAnimation { model.liquidGlassEnabled = value } }))
+            }
+        case 3:
             Heading(kicker: "Every day after",
                     title: "Typing feels different today?",
                     subtitle: "Hands aren’t the same every morning. One button runs a six-tap check and compares today with your usual. If your touches are landing somewhere new, TypeParkinson reads them differently for the day.")

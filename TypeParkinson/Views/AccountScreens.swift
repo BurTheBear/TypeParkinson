@@ -100,6 +100,16 @@ struct SettingsView: View {
                 }
             }
 
+            section("Appearance") {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Liquid Glass").font(Theme.serif(.body, weight: .semibold))
+                    FootNote("Buttons and cards take on the translucent Liquid Glass look instead of the plain, solid one. Off by default for the clearest contrast.")
+                    SegmentedChoice(onOff: Binding(
+                        get: { model.liquidGlassEnabled },
+                        set: { model.liquidGlassEnabled = $0 }))
+                }
+            }
+
             section("Keyboard") {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Hold delete to keep deleting").font(Theme.serif(.body, weight: .semibold))

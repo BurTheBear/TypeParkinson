@@ -97,22 +97,31 @@ struct TPButtonStyle: ButtonStyle {
         let minHeight: CGFloat
         let fullWidth: Bool
         @Environment(\.isEnabled) private var isEnabled
+        @Environment(AppModel.self) private var model
 
         var body: some View {
-            configuration.label
+            let label = configuration.label
                 .font(Theme.serif(.body, weight: .semibold))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, kind == .ghost ? 4 : 16)
                 .frame(maxWidth: fullWidth ? .infinity : nil, minHeight: minHeight)
                 .foregroundStyle(foreground)
-                .background(background, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
-                .overlay {
-                    if kind == .secondary || kind == .destructive {
-                        RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Theme.divider)
-                    }
+            Group {
+                // Ghost buttons are plain links; Liquid Glass is reserved for buttons with a shape.
+                if model.liquidGlassEnabled, kind != .ghost {
+                    label.glassEffect(glass, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
+                } else {
+                    label
+                        .background(background, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
+                        .overlay {
+                            if kind == .secondary || kind == .destructive {
+                                RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Theme.divider)
+                            }
+                        }
                 }
-                .contentShape(Rectangle())
-                .opacity(isEnabled ? 1 : 0.45)
+            }
+            .contentShape(Rectangle())
+            .opacity(isEnabled ? 1 : 0.45)
         }
 
         private var foreground: Color {
@@ -133,6 +142,14 @@ struct TPButtonStyle: ButtonStyle {
             case .ghost: return pressed ? Theme.accent.opacity(0.18) : .clear
             }
         }
+
+        private var glass: Glass {
+            switch kind {
+            case .primary: .regular.tint(Theme.accent).interactive()
+            case .destructive: .regular.tint(Theme.warning).interactive()
+            case .secondary, .ghost: .regular.interactive()
+            }
+        }
     }
 }
 
@@ -146,6 +163,46 @@ extension ButtonStyle where Self == TPButtonStyle {
     }
     static func ghost(minHeight: CGFloat = 44) -> TPButtonStyle {
         TPButtonStyle(kind: .ghost, minHeight: minHeight, fullWidth: false)
+    }
+}
+
+// MARK: Bottom bar
+
+/// Persistent navigation shown over home base (Home, Settings, and a saved profile):
+/// jump straight to Settings or back into the reconfigure flow without going home first.
+struct BottomBar: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        let bar = HStack(spacing: 0) {
+            item("house", "Home", isCurrent: model.screen == .home) { model.screen = .home }
+            item("slider.horizontal.3", "Reconfigure", isCurrent: false) { model.screen = .proposal }
+            item("gearshape", "Settings", isCurrent: model.screen == .settings) { model.screen = .settings }
+        }
+        .padding(.top, 8)
+        .padding(.bottom, 4)
+        Group {
+            if model.liquidGlassEnabled {
+                bar.glassEffect(.regular, in: Rectangle())
+            } else {
+                bar.background(Theme.surface)
+                    .overlay(alignment: .top) { Theme.divider.frame(height: 1) }
+            }
+        }
+    }
+
+    private func item(_ systemImage: String, _ label: String, isCurrent: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            VStack(spacing: 4) {
+                Image(systemName: systemImage).font(.system(size: 20))
+                Text(label).font(Theme.serif(.caption2))
+            }
+            .frame(maxWidth: .infinity, minHeight: 48)
+            .foregroundStyle(isCurrent ? Theme.accent : Theme.secondaryText)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isCurrent ? .isSelected : [])
     }
 }
 

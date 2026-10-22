@@ -60,6 +60,11 @@ final class AppModel {
     var simulateTremor: Bool
     var simulator: TremorSimulator { TremorSimulator(strength: simulateTremor ? 1 : 0) }
 
+    /// Buttons and cards render with the Liquid Glass material instead of the flat "broadsheet" look.
+    var liquidGlassEnabled: Bool {
+        didSet { defaults.set(liquidGlassEnabled, forKey: Keys.liquidGlassEnabled) }
+    }
+
     private let defaults = UserDefaults.standard
     private enum Keys {
         static let profile = "touchProfile"
@@ -67,6 +72,7 @@ final class AppModel {
         static let accountStepComplete = "accountStepComplete"
         static let account = "appleAccount"
         static let modified = "modified"
+        static let liquidGlassEnabled = "liquidGlassEnabled"
     }
 
     init() {
@@ -80,6 +86,7 @@ final class AppModel {
             .flatMap { try? JSONDecoder().decode(AppleAccount.self, from: $0) }
         self.modified = defaults.object(forKey: Keys.modified) as? Date ?? .distantPast
         self.settings = SharedStore.loadSettings() ?? profile?.proposedSettings() ?? KeyboardSettings()
+        self.liquidGlassEnabled = defaults.bool(forKey: Keys.liquidGlassEnabled)
         if !defaults.bool(forKey: Keys.accountStepComplete) {
             self.screen = .onboarding
         } else {

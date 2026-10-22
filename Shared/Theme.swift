@@ -30,11 +30,11 @@ enum Theme {
     static let cornerRadius: CGFloat = 4
 
     static func serif(_ style: Font.TextStyle, weight: Font.Weight = .regular) -> Font {
-        .system(style, design: .serif, weight: weight)
+        .system(style, design: .default, weight: weight)
     }
 
     static func serif(size: CGFloat, weight: Font.Weight = .regular) -> Font {
-        .system(size: size, weight: weight, design: .serif)
+        .system(size: size, weight: weight, design: .default)
     }
 }
 
