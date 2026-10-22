@@ -3,18 +3,15 @@ import SwiftUI
 struct ContentView: View {
     @State private var model = AppModel()
     @Environment(\.scenePhase) private var scenePhase
+    private let router = AppRouter.shared
 
     var body: some View {
         screen
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Theme.bg.ignoresSafeArea())
-            .foregroundStyle(Theme.text)
             .tint(Theme.accent)
-            .safeAreaInset(edge: .bottom) {
-                if showsBottomBar { BottomBar() }
-            }
             .environment(model)
-            .animation(.easeInOut(duration: 0.2), value: model.screen)
+            .animation(.easeInOut(duration: 0.25), value: model.screen)
             .task { await model.verifyAppleCredential() }
             .task { await model.observeCloudChanges() }
             .task { await model.observeCredentialRevocation() }
@@ -22,24 +19,17 @@ struct ContentView: View {
                 if phase == .active {
                     CloudStore.refresh()
                     model.pullFromCloud()
+                    model.activity.reload()
+                    followPendingRoute()
                 }
             }
+            .onChange(of: router.pending) { _, _ in followPendingRoute() }
             .alert("TypeParkinson", isPresented: Binding(get: { model.notice != nil },
                                                          set: { if !$0 { model.notice = nil } })) {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(model.notice ?? "")
             }
-    }
-
-    /// Home base: Home, Settings, and a saved profile viewed from Home. Everything else
-    /// (onboarding, the setup wizard, exercises, recalibration) is its own self-contained flow.
-    private var showsBottomBar: Bool {
-        switch model.screen {
-        case .home, .settings: true
-        case .profile: model.isViewingSavedProfile
-        default: false
-        }
     }
 
     @ViewBuilder private var screen: some View {
@@ -54,10 +44,43 @@ struct ContentView: View {
         case .check: CheckView()
         case .compare: CompareView()
         case .enable: EnableView()
-        case .home: HomeView()
+        case .home, .settings: MainTabView()
         case .recalResult: RecalResultView()
-        case .settings: SettingsView()
         }
+    }
+
+    /// Siri, Shortcuts and the reminder set a route; follow it once we're in front.
+    private func followPendingRoute() {
+        guard scenePhase == .active, let route = router.pending else { return }
+        router.pending = nil
+        model.follow(route)
+    }
+}
+
+/// The everyday app, once setup is done.
+struct MainTabView: View {
+    @Environment(AppModel.self) private var model
+
+    var body: some View {
+        @Bindable var model = model
+        TabView(selection: $model.tab) {
+            Tab("Today", systemImage: "newspaper", value: AppTab.today) {
+                TodayView()
+            }
+            Tab("Practice", systemImage: "hand.draw", value: AppTab.practice) {
+                PracticeView()
+            }
+            Tab("Speak", systemImage: "text.bubble", value: AppTab.speak) {
+                SpeakView()
+            }
+            Tab("Progress", systemImage: "chart.xyaxis.line", value: AppTab.progress) {
+                ProgressScreen()
+            }
+            Tab("Settings", systemImage: "gearshape", value: AppTab.settings) {
+                SettingsView()
+            }
+        }
+        .tint(Theme.accent)
     }
 }
 

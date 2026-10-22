@@ -1,69 +1,96 @@
 import SwiftUI
 
-/// Copy a phrase with the in-app keyboard. Used by the fifth exercise and both
-/// rounds of the check.
+/// Copy a phrase with the in-app keyboard. Used by the fifth exercise, both
+/// rounds of the check, and typing practice.
 struct TypingTaskView: View {
     let target: String
-    /// `nil` types on a standard keyboard.
+    /// `nil` types on a standard keyboard: no personal settings, no smart correction.
     var settings: KeyboardSettings?
     var simulation: TouchSimulation?
     let onFinish: (TypingOutcome) -> Void
 
-    @State private var typed = ""
-    @State private var history: [String] = []
-    @State private var corrections = 0
-    @State private var startTime: Date?
+    @State private var composer: TextComposer
     @State private var outcome = TypingOutcome(phrase: PhraseResult(errors: 0, corrections: 0, time: 0))
 
+    init(target: String, settings: KeyboardSettings? = nil, simulation: TouchSimulation? = nil,
+         onFinish: @escaping (TypingOutcome) -> Void) {
+        self.target = target
+        self.settings = settings
+        self.simulation = simulation
+        self.onFinish = onFinish
+        // The phrases are lower case, so no automatic capitals; no word suggestions,
+        // so the comparison measures typing rather than picking.
+        _composer = State(initialValue: TextComposer(settings: settings, suggestions: false, autoCapitalize: false))
+    }
+
     var body: some View {
-        VStack(spacing: 16) {
-            VStack(alignment: .leading, spacing: 12) {
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Type this")
-                        .font(Theme.serif(.caption))
+        VStack(spacing: Theme.Space.s4) {
+            VStack(alignment: .leading, spacing: Theme.Space.s3) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("TYPE THIS")
+                        .font(Theme.font(.caption, weight: .bold))
+                        .tracking(0.6)
                         .foregroundStyle(Theme.secondaryText)
                     Text(target)
-                        .font(Theme.serif(.title3))
+                        .font(Theme.rounded(.title3, weight: .semibold))
                 }
                 Text(typedText)
-                    .font(Theme.serif(.title3))
-                    .frame(maxWidth: .infinity, minHeight: 56, alignment: .topLeading)
-                    .padding(14)
-                    .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
-                    .accessibilityLabel("Typed so far: \(typed)")
+                    .font(Theme.font(.title3))
+                    .frame(maxWidth: .infinity, minHeight: 60, alignment: .topLeading)
+                    .padding(Theme.Space.s4)
+                    .background(Theme.card, in: RoundedRectangle(cornerRadius: Theme.controlRadius, style: .continuous))
+                    .accessibilityLabel("Typed so far: \(composer.text)")
                 HStack {
                     Text(statsText)
-                        .font(Theme.serif(.caption))
+                        .font(Theme.font(.footnote))
                         .foregroundStyle(Theme.secondaryText)
+                        .contentTransition(.numericText())
                     Spacer()
                     Button("Done", action: finish)
                         .buttonStyle(TPButtonStyle(minHeight: 44, fullWidth: false))
-                        .disabled(typed.isEmpty)
+                        .disabled(composer.isEmpty)
                 }
             }
-            .padding(.horizontal, 22)
+            .padding(.horizontal, Theme.Space.s5)
 
             Spacer(minLength: 0)
 
-            KeyboardView(
-                size: settings?.keySize ?? .standard,
-                behavior: settings?.behavior ?? .standard,
-                showsCorrectionBar: settings?.correctionBarEnabled ?? false,
-                simulation: simulation,
-                onPress: press,
-                onBlockedRepeat: { outcome.blockedRepeats += 1 },
-                onCorrection: correct
-            )
+            VStack(spacing: 6) {
+                if settings?.smartCorrectionEnabled == true, composer.correction != nil {
+                    SuggestionBar(suggestions: [], correction: composer.correction, showsPhrasesButton: false,
+                                  isShowingPhrases: false, palette: theme.palette,
+                                  onPick: { _ in }, onTogglePhrases: {},
+                                  onRevert: { composer.revertCorrection(to: nil) },
+                                  onPickAlternative: { composer.revertCorrection(to: $0) })
+                        .transition(.opacity)
+                }
+                KeyboardView(
+                    size: settings?.keySize ?? .standard,
+                    behavior: settings?.behavior ?? .standard,
+                    showsCorrectionBar: settings?.correctionBarEnabled ?? false,
+                    theme: theme,
+                    largeLabels: settings?.largeLabels ?? false,
+                    showsKeyPreview: settings?.keyPreviewEnabled ?? false,
+                    simulation: simulation,
+                    onPress: press,
+                    onBlockedRepeat: { outcome.blockedRepeats += 1 },
+                    onIgnoredBrush: { outcome.ignoredBrushes += 1 },
+                    onCorrection: { composer.correct($0) }
+                )
+            }
             .padding(.horizontal, 4)
             .padding(.vertical, 8)
-            .background(Theme.neutral200)
+            .background(theme.palette.background)
+            .animation(.easeOut(duration: 0.15), value: composer.correction)
         }
     }
+
+    private var theme: KeyboardTheme { settings?.theme ?? .classic }
 
     private var typedText: AttributedString {
         let expected = Array(target)
         var result = AttributedString()
-        for (i, c) in typed.enumerated() {
+        for (i, c) in composer.text.enumerated() {
             var piece = AttributedString(String(c))
             if i >= expected.count || expected[i] != c {
                 piece.foregroundColor = Theme.warning
@@ -77,68 +104,35 @@ struct TypingTaskView: View {
     }
 
     private var statsText: String {
-        "\(corrections) correction\(corrections == 1 ? "" : "s")" + (startTime == nil ? " · timer starts on first key" : "")
+        let n = composer.manualCorrections
+        var parts = ["\(n) correction\(n == 1 ? "" : "s")"]
+        if composer.autoCorrections > 0 {
+            parts.append("\(composer.autoCorrections) fixed for you")
+        }
+        if composer.startTime == nil { parts.append("timer starts on first key") }
+        return parts.joined(separator: " · ")
     }
 
     private func press(_ press: KeyPress) {
         outcome.taps += 1
-        if let uncorrected = press.uncorrectedKey, uncorrected.id != press.key.id, typed.count < target.count {
-            let expected = String(Array(target)[typed.count])
+        let position = composer.text.count
+        if let uncorrected = press.uncorrectedKey, uncorrected.id != press.key.id, position < target.count {
+            let expected = String(Array(target)[position])
             if press.key.id == expected {
                 outcome.corrected += 1
             } else if uncorrected.id == expected {
                 outcome.hurt += 1
             }
         }
-        switch press.key.action {
-        case .character(let c): append(c)
-        case .space: append(" ")
-        case .backspace: deleteLast()
-        default: break
-        }
-    }
-
-    private func correct(_ action: CorrectionAction) {
-        switch action {
-        case .backspace:
-            deleteLast()
-        case .undo:
-            guard let previous = history.popLast() else { return }
-            typed = previous
-            corrections += 1
-        case .deleteWord:
-            guard !typed.isEmpty else { return }
-            remember()
-            let spaces = typed.reversed().prefix { $0 == " " }.count
-            let word = typed.dropLast(spaces).reversed().prefix { $0 != " " }.count
-            typed.removeLast(word + spaces)
-            corrections += 1
-        }
-    }
-
-    private func append(_ text: String) {
-        if startTime == nil { startTime = .now }
-        remember()
-        typed += text
-    }
-
-    private func deleteLast() {
-        guard !typed.isEmpty else { return }
-        remember()
-        typed.removeLast()
-        corrections += 1
-    }
-
-    private func remember() {
-        history.append(typed)
-        if history.count > 60 { history.removeFirst() }
+        composer.press(press)
     }
 
     private func finish() {
+        outcome.autoCorrected = composer.autoCorrections
         outcome.phrase = PhraseResult(
-            errors: levenshtein(typed.trimmingCharacters(in: .whitespaces), target),
-            corrections: corrections,
-            time: startTime.map { Date.now.timeIntervalSince($0) } ?? 0
+            errors: levenshtein(composer.text.trimmingCharacters(in: .whitespacesAndNewlines).lowercased(), target),
+            corrections: composer.manualCorrections,
+            time: composer.startTime.map { Date.now.timeIntervalSince($0) } ?? 0
         )
         onFinish(outcome)
     }

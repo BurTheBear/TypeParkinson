@@ -13,6 +13,37 @@ enum Exercise: Int, CaseIterable {
         }
     }
 
+    var symbol: String {
+        switch self {
+        case .tap: "scope"
+        case .doubleTap: "hand.tap.fill"
+        case .hold: "hand.point.up.left.fill"
+        case .path: "scribble.variable"
+        case .type: "keyboard.fill"
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .tap: Theme.checkColor
+        case .doubleTap: Theme.tappingColor
+        case .hold: Theme.tremorColor
+        case .path: Theme.spiralColor
+        case .type: Theme.typingColor
+        }
+    }
+
+    /// What the exercise tells the keyboard.
+    var measures: String {
+        switch self {
+        case .tap: "Where your touches land around a target"
+        case .doubleTap: "Whether taps register more than once"
+        case .hold: "How far your finger drifts while it rests"
+        case .path: "How steadily you slide"
+        case .type: "How you type a short phrase"
+        }
+    }
+
     var hint: String {
         switch self {
         case .tap: "Tap the blue circle each time it appears. Some sit close to others."
@@ -44,14 +75,14 @@ struct TaskHeader: View {
             .frame(minHeight: 40)
             HStack(spacing: 4) {
                 ForEach(Array(segments.enumerated()), id: \.offset) { _, color in
-                    RoundedRectangle(cornerRadius: 2).fill(color).frame(height: 3)
+                    Capsule().fill(color).frame(height: 6)
                 }
             }
             .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {
-                Text(title).font(Theme.serif(.title2, weight: .semibold))
+                Text(title).font(Theme.font(.title2, weight: .semibold))
                 Text(hint)
-                    .font(Theme.serif(.subheadline))
+                    .font(Theme.font(.subheadline))
                     .foregroundStyle(Theme.secondaryText)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -84,6 +115,12 @@ struct ExerciseFlowView: View {
         }
         .overlay {
             if paused { pauseOverlay }
+        }
+        .background {
+            ZStack(alignment: .top) {
+                Theme.bg.ignoresSafeArea()
+                AuraWash(height: 280)
+            }
         }
     }
 
@@ -130,9 +167,9 @@ struct ExerciseFlowView: View {
 
     private var pauseOverlay: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Paused").font(Theme.serif(.largeTitle, weight: .semibold))
+            Text("Paused").font(Theme.font(.largeTitle, weight: .semibold))
             Text("Take as long as you need. Nothing you’ve done so far is lost.")
-                .font(Theme.serif(.body))
+                .font(Theme.font(.body))
                 .padding(.bottom, 8)
             Button("Resume") { paused = false }.buttonStyle(.primary)
             Button("Skip this exercise", action: skip).buttonStyle(.secondary())

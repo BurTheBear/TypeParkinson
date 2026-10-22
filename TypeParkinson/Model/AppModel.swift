@@ -14,6 +14,9 @@ struct TypingOutcome: Equatable {
     var corrected = 0
     var hurt = 0
     var blockedRepeats = 0
+    var ignoredBrushes = 0
+    /// Words smart correction fixed.
+    var autoCorrected = 0
     var taps = 0
 }
 
@@ -60,10 +63,30 @@ final class AppModel {
     var simulateTremor: Bool
     var simulator: TremorSimulator { TremorSimulator(strength: simulateTremor ? 1 : 0) }
 
-    /// Buttons and cards render with the Liquid Glass material instead of the flat "broadsheet" look.
+    /// Buttons render with the Liquid Glass material instead of the solid look.
     var liquidGlassEnabled: Bool {
         didSet { defaults.set(liquidGlassEnabled, forKey: Keys.liquidGlassEnabled) }
     }
+
+    // MARK: Everyday features
+
+    /// Which tab is showing once setup is done.
+    var tab: AppTab = .today
+    /// An activity Practice should open as soon as it appears (from Today, Siri or a shortcut).
+    var practiceRequest: PracticeActivity?
+    /// Check-ins and practice results, kept on this device.
+    let activity: ActivityStore
+    let speaker = Speaker()
+    /// Saved phrases for Speak and the keyboard's Phrases button.
+    private(set) var phrases: [QuickPhrase]
+    /// Things said aloud recently in Speak, newest first.
+    private(set) var recentlySpoken: [String]
+    private(set) var reminderEnabled: Bool
+    private(set) var reminderTime: DateComponents
+    /// The person's medication schedule, for reminders and timing insights.
+    private(set) var medications: [Medication]
+    /// The medication sheet is open (from Today, or a reminder).
+    var showingMedications = false
 
     private let defaults = UserDefaults.standard
     private enum Keys {
@@ -73,9 +96,24 @@ final class AppModel {
         static let account = "appleAccount"
         static let modified = "modified"
         static let liquidGlassEnabled = "liquidGlassEnabled"
+        static let reminderEnabled = "reminderEnabled"
+        static let reminderHour = "reminderHour"
+        static let reminderMinute = "reminderMinute"
+        static let recentlySpoken = "recentlySpoken"
+        static let medications = "medications"
     }
 
-    init() {
+    init(activity: ActivityStore = .shared) {
+        self.activity = activity
+        self.phrases = SharedStore.loadPhrases() ?? QuickPhrase.starters
+        self.recentlySpoken = UserDefaults.standard.stringArray(forKey: Keys.recentlySpoken) ?? []
+        self.reminderEnabled = UserDefaults.standard.bool(forKey: Keys.reminderEnabled)
+        var time = DateComponents()
+        time.hour = UserDefaults.standard.object(forKey: Keys.reminderHour) as? Int ?? 9
+        time.minute = UserDefaults.standard.object(forKey: Keys.reminderMinute) as? Int ?? 0
+        self.reminderTime = time
+        self.medications = UserDefaults.standard.data(forKey: Keys.medications)
+            .flatMap { try? JSONDecoder().decode([Medication].self, from: $0) } ?? []
         let profile = defaults.data(forKey: Keys.profile)
             .flatMap { try? JSONDecoder().decode(TouchProfile.self, from: $0) }
         let complete = defaults.bool(forKey: Keys.setupComplete) && profile != nil
@@ -85,7 +123,15 @@ final class AppModel {
         self.account = defaults.data(forKey: Keys.account)
             .flatMap { try? JSONDecoder().decode(AppleAccount.self, from: $0) }
         self.modified = defaults.object(forKey: Keys.modified) as? Date ?? .distantPast
-        self.settings = SharedStore.loadSettings() ?? profile?.proposedSettings() ?? KeyboardSettings()
+        var settings = SharedStore.loadSettings() ?? profile?.proposedSettings() ?? KeyboardSettings()
+        if settings.touchModel == nil, let profile, complete {
+            // Approved before smart correction existed: give the keyboard this person's touch model.
+            let estimate = PatternClassifier.classify(PatternClassifier.features(profile: profile, log: activity.log))
+            settings.pattern = estimate.evidence >= 2 ? estimate.primary : nil
+            settings.touchModel = TouchModel(taps: profile.taps, pattern: settings.pattern)
+            SharedStore.save(settings)
+        }
+        self.settings = settings
         self.liquidGlassEnabled = defaults.bool(forKey: Keys.liquidGlassEnabled)
         if !defaults.bool(forKey: Keys.accountStepComplete) {
             self.screen = .onboarding
@@ -153,10 +199,21 @@ final class AppModel {
 
     /// Deletes everything on this device and starts over.
     func deleteLocalData() {
-        for key in [Keys.profile, Keys.setupComplete, Keys.accountStepComplete, Keys.account, Keys.modified] {
+        for key in [Keys.profile, Keys.setupComplete, Keys.accountStepComplete, Keys.account, Keys.modified,
+                    Keys.reminderEnabled, Keys.reminderHour, Keys.reminderMinute, Keys.recentlySpoken, Keys.medications] {
             defaults.removeObject(forKey: key)
         }
         SharedStore.clear()
+        activity.clear()
+        Reminders.cancel()
+        speaker.stop()
+        phrases = QuickPhrase.starters
+        recentlySpoken = []
+        reminderEnabled = false
+        medications = []
+        Task { _ = await MedicationReminders.schedule([]) }
+        tab = .today
+        practiceRequest = nil
         account = nil
         profile = nil
         hand = .right
@@ -248,12 +305,22 @@ final class AppModel {
         screen = .exercises
     }
 
+    /// The touch pattern from the exercises plus recent practice.
+    var patternEstimate: TouchPatternEstimate? {
+        guard let profile else { return nil }
+        return PatternClassifier.classify(PatternClassifier.features(profile: profile, log: activity.log))
+    }
+
     func finishExercises(_ newProfile: TouchProfile) {
         isViewingSavedProfile = false
         profile = newProfile
-        settings = newProfile.proposedSettings()
+        let estimate = PatternClassifier.classify(PatternClassifier.features(profile: newProfile, log: activity.log))
+        settings = newProfile.proposedSettings(pattern: estimate.evidence >= 2 ? estimate.primary : nil)
         checkResult = nil
         save(profile: newProfile)
+        if newProfile.taps.count >= 3 {
+            activity.add(CheckInRecord(taps: newProfile.taps, feeling: nil, adjustedKeyboard: false, isSetup: true))
+        }
         changed()
         screen = .profile
     }
@@ -308,14 +375,109 @@ final class AppModel {
         screen = .recalResult
     }
 
-    func applyToday() {
+    func applyToday(feeling: Feeling?) {
         let offset = todayTaps.meanOffset
         updateKeyboard { $0.todayOffset = .init(x: offset.dx, y: offset.dy, date: .now) }
+        activity.add(CheckInRecord(taps: todayTaps, feeling: feeling, adjustedKeyboard: true))
+        tab = .today
+        screen = .home
+    }
+
+    func keepUsual(feeling: Feeling?) {
+        activity.add(CheckInRecord(taps: todayTaps, feeling: feeling, adjustedKeyboard: false))
+        tab = .today
         screen = .home
     }
 
     func clearToday() {
         updateKeyboard { $0.todayOffset = nil }
+    }
+
+    func open(_ tab: AppTab) {
+        self.tab = tab
+        screen = .home
+    }
+
+    func startPractice(_ activity: PracticeActivity) {
+        practiceRequest = activity
+        open(.practice)
+    }
+
+    /// Siri, Shortcuts and the reminder land here. Before setup is done, there's nothing to open.
+    func follow(_ route: AppRouter.Route) {
+        guard isSetupComplete, [.home, .settings, .profile, .recalResult].contains(screen) else { return }
+        switch route {
+        case .dailyCheck: startRecalibration()
+        case .speak: open(.speak)
+        case .practice(let activity): startPractice(activity)
+        case .progress: open(.progress)
+        case .medications:
+            showingMedications = true
+            open(.today)
+        }
+    }
+
+    // MARK: Phrases and speech
+
+    func savePhrases(_ phrases: [QuickPhrase]) {
+        self.phrases = phrases
+        SharedStore.save(phrases: phrases)
+    }
+
+    func speak(_ text: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        speaker.speak(trimmed)
+        recentlySpoken.removeAll { $0 == trimmed }
+        recentlySpoken.insert(trimmed, at: 0)
+        recentlySpoken = Array(recentlySpoken.prefix(8))
+        defaults.set(recentlySpoken, forKey: Keys.recentlySpoken)
+    }
+
+    func clearRecentlySpoken() {
+        recentlySpoken = []
+        defaults.removeObject(forKey: Keys.recentlySpoken)
+    }
+
+    // MARK: Medication
+
+    /// Saves the schedule and its reminders. Returns false when notifications are off.
+    @discardableResult
+    func saveMedications(_ medications: [Medication]) async -> Bool {
+        self.medications = medications
+        defaults.set(try? JSONEncoder().encode(medications), forKey: Keys.medications)
+        return await MedicationReminders.schedule(medications)
+    }
+
+    func logDose(_ medication: Medication, at date: Date = .now) {
+        activity.add(DoseRecord(date: date, medicationID: medication.id, name: medication.name))
+    }
+
+    /// Doses logged today, for each medication.
+    func dosesToday(_ medication: Medication) -> [DoseRecord] {
+        activity.log.doses.filter { $0.medicationID == medication.id && Calendar.current.isDateInToday($0.date) }
+    }
+
+    // MARK: Reminder
+
+    /// Returns false when notifications are turned off for the app in Settings.
+    @discardableResult
+    func setReminder(enabled: Bool, time: DateComponents? = nil) async -> Bool {
+        if let time {
+            reminderTime = time
+            defaults.set(time.hour ?? 9, forKey: Keys.reminderHour)
+            defaults.set(time.minute ?? 0, forKey: Keys.reminderMinute)
+        }
+        guard enabled else {
+            reminderEnabled = false
+            defaults.set(false, forKey: Keys.reminderEnabled)
+            Reminders.cancel()
+            return true
+        }
+        let ok = await Reminders.schedule(hour: reminderTime.hour ?? 9, minute: reminderTime.minute ?? 0)
+        reminderEnabled = ok
+        defaults.set(ok, forKey: Keys.reminderEnabled)
+        return ok
     }
 
     var todayOffset: KeyboardSettings.TodayOffset? {
@@ -348,20 +510,36 @@ extension AppModel {
         let simulator = TremorSimulator(strength: 1)
         let profile = TouchProfile.sample
         self.profile = profile
-        settings = profile.proposedSettings()
+        settings = profile.proposedSettings(pattern: PatternClassifier.classify(PatternClassifier.features(profile: profile)).primary)
+        SharedStore.save(settings)
         checkResult = CheckResult(
             standard: TypingOutcome(phrase: PhraseResult(errors: 4, corrections: 6, time: 21.3)),
             personal: TypingOutcome(phrase: PhraseResult(errors: 1, corrections: 2, time: 17.8),
-                                    corrected: 6, hurt: 1, blockedRepeats: 2, taps: 34))
+                                    corrected: 6, hurt: 1, blockedRepeats: 2, ignoredBrushes: 1, autoCorrected: 2, taps: 34))
         todayTaps = (0..<6).map { _ in
             let d = simulator.tapDisplacement()
             return TapSample(isCluster: false, dx: d.dx + 6, dy: d.dy + 5, hit: false)
         }
         isSetupComplete = [.home, .recalResult, .settings].contains(demo)
-        if demo == .settings, defaults.bool(forKey: "demoSignedIn") {
+        if defaults.bool(forKey: "demoSignedIn") {
             account = AppleAccount(userID: "demo", name: "Alex Morgan")
         }
-        screen = demo
+        if isSetupComplete, activity.log.isEmpty {
+            activity.replace(with: .sample())
+        }
+        if isSetupComplete, medications.isEmpty {
+            medications = [Medication(id: UUID(uuidString: "6E0C4F3A-6B1C-4C5B-9C55-7A1A0F6B2D11") ?? UUID(),
+                                      name: "Carbidopa-levodopa", times: [MedTime(hour: 8, minute: 0), MedTime(hour: 14, minute: 0)])]
+        }
+        if let name = defaults.string(forKey: "demoTab"), let demoTab = AppTab(rawValue: name) {
+            tab = demoTab
+        }
+        if demo == .settings {
+            tab = .settings
+            screen = .home
+        } else {
+            screen = demo
+        }
     }
 }
 #endif

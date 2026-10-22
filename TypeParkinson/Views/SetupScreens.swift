@@ -11,8 +11,25 @@ struct WelcomeView: View {
                     subtitle: "Five short exercises, about three minutes. There are no right answers — the keyboard adapts to whatever you do.")
             VStack(alignment: .leading, spacing: 10) {
                 Text("Hold the phone the way you usually do. Which hand will you tap with?")
-                    .font(Theme.serif(.subheadline))
+                    .font(Theme.font(.subheadline, weight: .semibold))
                 SegmentedChoice(options: Hand.allCases.map { ($0.rawValue, $0) }, selection: $model.hand)
+            }
+            Card(spacing: 0) {
+                ForEach(Array(Exercise.allCases.enumerated()), id: \.offset) { index, exercise in
+                    HStack(spacing: Theme.Space.s3) {
+                        IconBadge(symbol: exercise.symbol, color: exercise.color, size: 38)
+                        VStack(alignment: .leading, spacing: 1) {
+                            Text(exercise.title).font(Theme.font(.subheadline, weight: .semibold))
+                            Text(exercise.measures).font(Theme.font(.caption)).foregroundStyle(Theme.secondaryText)
+                        }
+                        Spacer(minLength: 0)
+                        Text("\(index + 1)")
+                            .font(Theme.rounded(.subheadline, weight: .heavy))
+                            .foregroundStyle(Theme.neutral400)
+                    }
+                    .padding(.vertical, 10)
+                    if index < Exercise.allCases.count - 1 { Divider().padding(.leading, 50) }
+                }
             }
             DemoModeToggle()
         } footer: {
@@ -31,9 +48,9 @@ struct DemoModeToggle: View {
         @Bindable var model = model
         Toggle(isOn: $model.simulateTremor) {
             VStack(alignment: .leading, spacing: 2) {
-                Text("Simulate tremor (demo)").font(Theme.serif(.subheadline, weight: .semibold))
+                Text("Simulate tremor (demo)").font(Theme.font(.subheadline, weight: .semibold))
                 Text("Adds a simulated offset, jitter and occasional extra contact to every touch in the exercises and checks.")
-                    .font(Theme.serif(.caption))
+                    .font(Theme.font(.caption))
                     .foregroundStyle(Theme.secondaryText)
             }
         }
@@ -57,13 +74,16 @@ struct ProfileView: View {
             VStack(alignment: .leading, spacing: 16) {
                 ForEach(profile.findings, id: \.self) { finding in
                     VStack(alignment: .leading, spacing: 2) {
-                        Text(finding.text).font(Theme.serif(.body, weight: .semibold))
+                        Text(finding.text).font(Theme.font(.body, weight: .semibold))
                         Text(finding.detail)
-                            .font(Theme.serif(.subheadline))
+                            .font(Theme.font(.subheadline))
                             .foregroundStyle(Theme.secondaryText)
                     }
                     .fixedSize(horizontal: false, vertical: true)
                 }
+            }
+            if let estimate = model.patternEstimate, estimate.evidence >= 2 {
+                PatternCard(estimate: estimate)
             }
             FootNote("These describe how your touches behaved today. They aren’t a medical assessment and say nothing about any condition.")
         } footer: {
@@ -114,6 +134,14 @@ struct ProposalView: View {
                            description: "Keeps the key you first touched if your finger drifts up to \(settings.tolerance.points) before lifting.") {
                     SegmentedChoice(onOff: $model.settings.toleranceEnabled)
                 }
+                SettingRow(name: "Smart correction", basis: settings.pattern.map { "For \($0.name.lowercased())" } ?? "From your taps",
+                           description: "Works out each word from where your touches landed and fixes it when it’s sure. Undo puts back exactly what you typed.") {
+                    SegmentedChoice(onOff: $model.settings.smartCorrectionEnabled)
+                }
+                SettingRow(name: "Ignore brief brushes", basis: "From double taps",
+                           description: "Ignores touches that lift in under \(Int(settings.brushDuration * 1000)) ms: a finger brushing past a key on the way to another.") {
+                    SegmentedChoice(onOff: $model.settings.brushFilterEnabled)
+                }
                 SettingRow(name: "Correction controls", basis: "From phrase copying",
                            description: "Large Undo, Delete word and Backspace buttons above the keys.") {
                     SegmentedChoice(onOff: $model.settings.correctionBarEnabled)
@@ -137,12 +165,12 @@ private struct SettingRow<Control: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline) {
-                Text(name).font(Theme.serif(.body, weight: .semibold))
+                Text(name).font(Theme.font(.body, weight: .semibold))
                 Spacer()
-                Text(basis).font(Theme.serif(.caption)).foregroundStyle(Theme.secondaryText)
+                Text(basis).font(Theme.font(.caption)).foregroundStyle(Theme.secondaryText)
             }
             Text(description)
-                .font(Theme.serif(.subheadline))
+                .font(Theme.font(.subheadline))
                 .foregroundStyle(Theme.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             control

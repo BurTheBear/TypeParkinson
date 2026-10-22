@@ -30,9 +30,9 @@ struct EnableView: View {
             #endif
 
             VStack(alignment: .leading, spacing: 8) {
-                Text("Try it here").font(Theme.serif(.body, weight: .semibold))
+                Text("Try it here").font(Theme.font(.body, weight: .semibold))
                 TextField("Tap here, then the globe key", text: $tryText, axis: .vertical)
-                    .font(Theme.serif(.title3))
+                    .font(Theme.font(.title3))
                     .lineLimit(2...4)
                     .padding(14)
                     .background(Theme.surface, in: RoundedRectangle(cornerRadius: Theme.cornerRadius))
@@ -46,8 +46,8 @@ struct EnableView: View {
 
     private func step(_ number: Int, _ text: String) -> some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text("\(number)").font(Theme.serif(.body, weight: .semibold)).foregroundStyle(Theme.accent)
-            Text(text).font(Theme.serif(.body)).fixedSize(horizontal: false, vertical: true)
+            Text("\(number)").font(Theme.font(.body, weight: .semibold)).foregroundStyle(Theme.accent)
+            Text(text).font(Theme.font(.body)).fixedSize(horizontal: false, vertical: true)
         }
     }
 }
