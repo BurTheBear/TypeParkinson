@@ -20,7 +20,7 @@ Keep following the user's overnight request after publication: inspect the exist
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked at the start of the 4 AM pass: 0% current window used after the ordinary reset, 11% weekly used. Check again before substantial final work. No credits or paid reset were used.
+Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked at the start of the 5 AM pass: 2% current window used, 12% weekly used. Check again before substantial final work. No credits or paid reset were used.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -60,3 +60,10 @@ Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, co
 - Scheduling continues attempting the remaining times after an add error, but reports failure if any request throws. The editor keeps the saved local schedule and shows a retry notice without closing; denied permission retains its separate Settings notice. An empty schedule still clears reminders without requesting permission.
 - Reviewed all result branches and call sites; git diff --check passes. No native build, installation or native test execution occurred. Injected-error and real notification checks are documented in VALIDATION.md and remain pending. Film, website and media are untouched; continue using draft PR #7.
 - No additional candidate has been established. Future passes should review only concrete source evidence or new PR feedback; avoid speculative features or changes just to fill the overnight window.
+
+## October 24, 5 AM — tapping session timing
+
+- Reviewed the existing spiral, tapping, typing and sensor analysis functions and their call sites. Left their scoring unchanged. PR #7 remains open and draft with no new comments; branch was clean before the pass.
+- Found that tapping accepted events until the next 50 ms timer callback, even if their timestamps exceeded the ten-second deadline. Added the deadline check to the touch handler before counting a tap. A late tap finishes the session without entering its event list.
+- Added a cancellation check after the timer sleep: a cancelled timer must not continue into result saving when the screen closes. Finishing now cancels the timer and guards against a repeated save.
+- Source diff and git diff --check reviewed; no native build, installation or native tests run. Manual deadline, dismissal and retry checks are in VALIDATION.md. Film, website and media remain unchanged. No additional issue has been established.
