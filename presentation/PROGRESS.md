@@ -10,7 +10,7 @@ Continue in this repository on branch `presentation`; do not create another app 
 
 - Deterministic 94-second film in `animation.template.html`, packaged offline `animation.html` (about 1.58 MB), and render tools with no npm dependencies.
 - Real captures: Today, Practice, Progress, Speak, onboarding, tremor sample session and voice sample session. System keyboard correction is illustrated using cases from existing tests; accessibility activation deliberately provides no raw touch locations and therefore does not demonstrate spatial autocorrection. Do not present the failed AX-driven `tje` capture as correction footage.
-- Final MP4 verified by ffprobe and full decode: H.264, 1920×1080, 30 fps, 2,820 frames, 94 seconds, 8,063,698 bytes, no audio. Privacy wording is explicitly scoped to the keyboard.
+- Final MP4 verified by ffprobe and full decode: H.264, 1920×1080, 30 fps, 2,820 frames, 94 seconds, 8,067,314 bytes, no audio. Privacy wording is explicitly scoped to the keyboard.
 - Existing docs website replaced with Aura landing page, WebP screenshots, film, interactive correction demo, transcript, preserved privacy/support URLs, revised privacy details.
 - Browser checks so far: 390px and 320px no horizontal overflow; no broken loaded images or console errors; all four demo examples and undo pass; actual keyboard Space preserves capitalization; all demo keys >=44px in both dimensions.
 - Existing app improvements in source: CSV includes tremor/voice/dose records, stable decimal points, quoted user-entered medication details, spreadsheet formula protection; PDF adds sensor/dose summaries and counts those practice sessions. Regression tests added to existing SmartFeatureTests.swift (not run: user prohibits native rebuild).
@@ -18,13 +18,13 @@ Continue in this repository on branch `presentation`; do not create another app 
 
 ## Current publication state
 
-Final film and website checks are complete; details are in VALIDATION.md. The final 1080p film is 94 seconds and 8,063,698 bytes, with a 3,509,194-byte 720p website copy. Playback controls, video backward seeking and reduced-motion slides pass. Native changes remain deliberately unbuilt. Published to the fork and opened draft upstream PR #7: https://github.com/pranav-atreya10/TypeParkinson/pull/7. It targets main from BurTheBear:presentation. Pranav must review, validate native changes and merge. Update this same PR during overnight follow-ups.
+Final film and website checks are complete; details are in VALIDATION.md. The final 1080p film is 94 seconds and 8,067,314 bytes, with a 3,506,874-byte 720p website copy. Playback controls, video backward seeking and reduced-motion slides pass. Native changes remain deliberately unbuilt. Published to the fork and opened draft upstream PR #7: https://github.com/pranav-atreya10/TypeParkinson/pull/7. It targets main from BurTheBear:presentation. Pranav must review, validate native changes and merge. Update this same PR during overnight follow-ups.
 
 Keep following the user's overnight request after publication: inspect the existing app for concrete correctness/accessibility issues and update the same branch/PR when justified. Avoid speculative features, new apps, native builds, duplicate PRs and routine status messages. The user extended work throughout the day; stop the updated daytime heartbeat at or after 7 PM October 24 America/New_York. Check usage before substantial work; preserve allowance to save progress.
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson daytime work), hourly in this chat, continues until 7 PM October 24 America/New_York. Usage checked during the film revision: 32% current window used, 16% weekly used. Check again before substantial final work. No credits or paid reset were used.
+Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson daytime work), hourly in this chat, continues until 7 PM October 24 America/New_York. Usage last checked during daytime review: 4% current window used after the ordinary reset, 19% weekly used. Check again before substantial final work. No credits or paid reset were used.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -78,6 +78,13 @@ Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson day
 - Removed scene counters and repeated slide layouts. Added bevelled keys, a camera pullback, a large iPhone reveal, masked typography, individual glyph movement during corrections, fixed-key touch contours, tracking device shots and cleaner cuts/iris/push transitions.
 - Recovered the original /tmp voice and tremor recordings. Voice now shows the meter reaching the loud zone; tremor shows recording followed by its result. Captures remain explicitly sample data. No native builds or installations.
 - Reviewed every scene, 32 motion samples, nine final frames and live browser playback. Fixed caption occlusion, a mis-anchored target callout, clipped space bar, device/subtitle collisions and unreadable screen hold timing. An early 540p draft is ignored in preview/ and predates final transition/sensor refinements; do not present that draft as the delivery film.
-- Revised 1080p30 master: 94 seconds, 2,820 frames, H.264, no audio, 8,063,698 bytes; full decode passes. Website 720p30 copy: 3,509,194 bytes. Offline HTML about 1.58 MB. Updated website poster and transcript.
+- Revised 1080p30 master: 94 seconds, 2,820 frames, H.264, no audio, 8,067,314 bytes; full decode passes. Website 720p30 copy: 3,506,874 bytes. Offline HTML about 1.58 MB. Updated website poster and transcript.
 - Deterministic seek, arrows, Space and reduced-motion checks pass; live replay and 320px player controls checked (all controls >=44px, no horizontal overflow). Renderer has preview, selectable still times and poster modes. Native regression tests remain unrun.
 - Continue meaningful visual review and incorporate user feedback during daytime follow-ups. Preserve the finished assets, existing website and native fixes; no speculative features or edits just to fill time. The revised film is technically checked, not yet approved by the user.
+
+## October 24, daytime — correction-to-toolkit cut
+
+- PR #7 remains open and draft with no new comments; source and fork were clean before the pass. Reviewed encoded frames at 47.8, 47.966 and 48.2 seconds. The final correction reverted from “the” to “teh” just before the camera push and remained wrong during the outgoing shot.
+- Fixed the local example clock so the final example holds instead of restarting on a modulo boundary. No layout, camera, copy or native app changes. Poster and transcript remain accurate and unchanged.
+- Added an actual rendered-pixel regression over the final word region at 47.8 and 47.99 seconds. It failed before the fix and passes after it. Deterministic seeking, arrows, Space and reduced-motion slides also pass.
+- Re-exported the 94-second 1080p30 master (8,067,314 bytes) and matching 720p30 website copy (3,506,874 bytes). Both fully decode without errors. Encoded frames at 47.966 and 48.2 seconds now visibly retain “the”. Publishing to the same PR; poster and transcript are unchanged because those scenes did not change.

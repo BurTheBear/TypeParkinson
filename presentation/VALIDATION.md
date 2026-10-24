@@ -6,9 +6,9 @@ Film revision checked October 24, 2026, on branch `presentation`. Website baseli
 
 - `node presentation/tools/render.mjs test`: deterministic backward seeking passes for both illustrated and video scenes; arrow controls, Space pause/play, and Reduce Motion manual slides pass.
 - Reviewed every scene, 32 dense motion samples and nine final frames; also checked live browser playback. Corrected caption overlap, touch-target callout geometry, phone framing, screen hold timing and transition text collisions before export. Recut original sensor recordings to show the active voice meter and the tremor result rather than idle/countdown footage.
-- Full 1080p export: H.264, 1920×1080, 30/1 fps, 2,820 frames, 94 seconds, 8,063,698 bytes, no audio stream.
+- Full 1080p export: H.264, 1920×1080, 30/1 fps, 2,820 frames, 94 seconds, 8,067,314 bytes, no audio stream.
 - Full revised 1080p video decoded with ffmpeg; no decode errors. An encoded correction frame was visually inspected for text and gradient quality.
-- Website copy: H.264, 1280×720 at 30 fps, 2,820 frames, 94 seconds, 3,509,194 bytes, no audio. Poster regenerated from the revised product reveal with Chrome’s WebP encoder. Transcript updated to match the new scenes. Full website-copy decode also passes.
+- Website copy: H.264, 1280×720 at 30 fps, 2,820 frames, 94 seconds, 3,506,874 bytes, no audio. Poster regenerated from the revised product reveal with Chrome’s WebP encoder. Transcript updated to match the new scenes. Full website-copy decode also passes.
 - All media is embedded in `animation.html`; no network requests or font downloads are needed. Packaged HTML is about 1.58 MB.
 
 ## Revised HTML player
@@ -79,3 +79,9 @@ Before merge, verify successful saves, denied permission and removing the final 
 Source-only change: the touch handler checks the ten-second deadline before counting each event; the timer checks cancellation immediately after sleeping; finish cancels its timer and rejects repeated saves. Scoring calculations are unchanged. git diff --check passes; native builds and tests have not been run.
 
 Before merge, run a full tapping session and confirm one result is saved. In a native debug session, delay the timer callback beyond ten seconds, then tap: that tap must finish the session without being counted. Close a session just before completion and confirm no cancelled result is added. Use Again for two sessions and confirm each has a fresh ten-second window and exactly one history entry. Check that the first tap still starts and counts normally.
+
+## Final correction hold — October 24 daytime
+
+Encoded-frame review found the last correction restarting just before the 48-second cut: “the” became “teh” during the outgoing shot. The final example now keeps its local clock and holds the corrected word through the transition. A rendered white-pixel mask of the final word at 47.8 and 47.99 seconds failed before the fix and passes after it; the test requires a nonempty word region. Existing deterministic seeking, scene/Space controls and reduced-motion checks still pass.
+
+Re-exported both delivery copies, checked their H.264 / 30 fps / 2,820-frame / 94-second / no-audio metadata and decoded both completely without errors. Encoded frames at 47.966 and 48.2 seconds visibly show “the”. Poster and transcript remain accurate; the native app is unchanged.

@@ -73,7 +73,8 @@ function scene3(t){stage(t+22);const learned=S(t,6.8,1.6);headline(t<7?'Your tou
  alpha(E(t,8.4),()=>caption('A personal model of your touch offset and spread.',940,'#d6e4ff'));
  caption('Illustrated touches. The keys stay in place.',1015,'#7e8da9')
 }
-function scene4(t){stage(t+34);const first=t<6,idx=first?0:Math.min(3,1+Math.floor((t-6)/2.65)),p=first?t:(t-6)%2.65;const pairs=[['tje','the'],['hellloo','hello'],['tomorow','tomorrow'],['teh','the']];const [raw,correct]=pairs[idx],f=S(p,first?2.8:.8,first?1.1:.85);
+// The final example keeps its own clock through the outgoing shot; it must not loop.
+function scene4(t){stage(t+34);const first=t<6,idx=first?0:Math.min(3,1+Math.floor((t-6)/2.65)),p=first?t:t-6-(idx-1)*2.65;const pairs=[['tje','the'],['hellloo','hello'],['tomorow','tomorrow'],['teh','the']];const [raw,correct]=pairs[idx],f=S(p,first?2.8:.8,first?1.1:.85);
  alpha(1-S(t,5.1,.6),()=>headline('A small slip.',960,204,64,E(t,0,.7),'#aabbd8','center',500));alpha(S(t,5.7,.5),()=>headline('Your intention, understood.',960,204,64,E(t,5.7,.7),'#d3def1','center',500));
  const typed=first&&p<2.2?raw.slice(0,Math.max(0,Math.floor((p-.4)*2))):raw;
  morphWord(typed,first&&p<2.2?typed:correct,f,960,490,first?250:190);
