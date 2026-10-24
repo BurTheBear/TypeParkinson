@@ -6,7 +6,7 @@ Continue in this repository on branch `presentation`; do not create another app 
 
 - Deterministic 94-second film in `animation.template.html`, packaged offline `animation.html` (about 1.7 MB), and render tools with no npm dependencies.
 - Real captures: Today, Practice, Progress, Speak, onboarding, tremor sample session and voice sample session. System keyboard correction is illustrated using cases from existing tests; accessibility activation deliberately provides no raw touch locations and therefore does not demonstrate spatial autocorrection. Do not present the failed AX-driven `tje` capture as correction footage.
-- First full MP4 verified by ffprobe: H.264, 1920×1080, 30 fps, 2820 frames, 94 seconds, 4,054,632 bytes, no audio. Final pass now rerendering to scope privacy wording explicitly to the keyboard.
+- Final MP4 verified by ffprobe and full decode: H.264, 1920×1080, 30 fps, 2,820 frames, 94 seconds, 4,073,710 bytes, no audio. Privacy wording is explicitly scoped to the keyboard.
 - Existing docs website replaced with Aura landing page, WebP screenshots, film, interactive correction demo, transcript, preserved privacy/support URLs, revised privacy details.
 - Browser checks so far: 390px and 320px no horizontal overflow; no broken loaded images or console errors; all four demo examples and undo pass; actual keyboard Space preserves capitalization; all demo keys >=44px in both dimensions.
 - Existing app improvements in source: CSV includes tremor/voice/dose records, stable decimal points, quoted user-entered medication details, spreadsheet formula protection; PDF adds sensor/dose summaries and counts those practice sessions. Regression tests added to existing SmartFeatureTests.swift (not run: user prohibits native rebuild).
@@ -20,4 +20,13 @@ Keep following the user's overnight request after publication: inspect the exist
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, stops itself on completion or after 7 AM October 24 America/New_York. Usage last checked: 36% current window used, 7% weekly used. Check again before substantial final work.
+Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked: 48% current window used, 9% weekly used. Check again before substantial final work.
+
+## October 24, shortly after midnight — keyboard review
+
+- PR #7 remains open, draft and mergeable, with no new comments. Working tree was clean on presentation before this pass.
+- Found source evidence that system-keyboard Undo retained old edits across dismissal and replayed them without document/cursor checks. Added per-edit document ID and before/after context guards, stale-edit invalidation before keyboard actions, and transient-text clearing on appearance/disappearance. Word-validation caches are also cleared while the numerical touch model is preserved.
+- Selection replacements/deletions now remember the actual selected text; Delete word removes a selection once rather than continuing left of it. Hold-delete also records a selected range correctly.
+- Confirmed the proxy documentIdentifier, selectedText and context API names against the installed Apple UIKit SDK headers. Added one decoder cache/learning regression test. No native compilation or test execution occurred. Manual device scenarios are appended to VALIDATION.md.
+- Website local links/assets check, JavaScript syntax and git diff whitespace checks still pass. Presentation/video/site media preserved.
+- Next focused candidate: hold-delete boundaries. Shared KeyboardView suppresses the final press after repeating, and has no release callback; TextComposer snapshots each repeat while the extension can combine separate consecutive holds. Investigate that source path before changing it.

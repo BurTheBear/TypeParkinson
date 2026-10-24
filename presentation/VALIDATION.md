@@ -28,3 +28,18 @@ Native app builds and tests were **not run**, per the user's explicit instructio
 Four export regression tests were added for empty history, sensor/dose inclusion, CSV punctuation/newlines and spreadsheet-formula protection. They still require execution in Xcode. Microphone startup error handling, countdown cancellation and the revised PDF layout require native verification.
 
 Physical-device follow-up remains: keyboard in other apps, App Group sharing, real motion sensors, microphone input and failure handling, countdown cancellation, medication “Took it” action, PDF layout and CSV exports. Pranav must merge the PR and confirm GitHub Pages deployment from `main` /docs.
+
+## Overnight keyboard review — October 24
+
+Source-only update: Undo entries now retain the document ID and cursor context at the end of each edit. A mismatch, selection or unavailable non-empty context prevents stale Undo. Closing the keyboard clears the edit stack, touch sequence, correction suggestions and cached word-validity decisions. Selection replacement/deletion records retain the selected text for restoration. The numerical touch model remains intact. Proxy API names were checked against the installed UIKit SDK headers. One decoder cache/learning regression test was added, but was **not run**.
+
+Manual native checks still required:
+
+1. Type a short word and Undo repeatedly at the same cursor. Restore both one-character deletions and a full hold-delete, including deletion to an empty field.
+2. Type in one field, switch to a second field with identical text, and tap Undo. Neither field should change from the stale Undo.
+3. Move the caret or edit text through the host app, then tap Undo. It should leave unrelated text alone. New typing at that position should have its own Undo history.
+4. Select a word, type a replacement or pick a suggestion, then Undo. Restore the selected text with neighboring text unchanged.
+5. Select all text starting at the beginning of the field, use Delete word, then Undo. Remove the selection once and restore it in full.
+6. Hide/reopen or switch away from the keyboard, then Undo. Previous-session text must not be restored. Verify personal touch learning still loads.
+
+These changes are in draft PR #7 and remain unbuilt, per instruction. No claim is made that the native scenarios or added Swift tests have passed.

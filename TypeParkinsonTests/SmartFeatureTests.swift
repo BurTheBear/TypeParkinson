@@ -74,6 +74,18 @@ import Testing
                                                   keyCenters: centers))
         #expect(decoded.best == "the")
     }
+
+    @Test func clearingTransientWordsPreservesPersonalLearning() throws {
+        let model = TouchModel(meanX: 30, meanY: 0, sigmaX: 7, sigmaY: 7, samples: 50)
+        let decoder = IntentDecoder(model: model, strength: 0.6)
+        let input = touches("tje", nudges: [0: CGVector(dx: 30, dy: 0), 2: CGVector(dx: 30, dy: 0)])
+        let before = try #require(decoder.decode(input, keyCenters: centers))
+        #expect(before.best == "the")
+        decoder.clearTransientText()
+        #expect(decoder.model == model)
+        let after = try #require(decoder.decode(input, keyCenters: centers))
+        #expect(after.best == "the")
+    }
 }
 
 @Suite struct TouchModelTests {
