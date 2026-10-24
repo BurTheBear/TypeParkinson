@@ -8,7 +8,8 @@ struct MedicationSheet: View {
     @Environment(AppModel.self) private var model
     @Environment(\.dismiss) private var dismiss
     @State private var medications: [Medication] = []
-    @State private var notificationsOff = false
+    @State private var reminderResult = MedicationReminders.ScheduleResult.scheduled
+    @State private var showReminderIssue = false
     @State private var isSaving = false
 
     var body: some View {
@@ -82,21 +83,27 @@ struct MedicationSheet: View {
                             .filter { !$0.name.isEmpty && !$0.times.isEmpty }
                         Task {
                             defer { isSaving = false }
-                            let ok = await model.saveMedications(cleaned)
-                            if ok { dismiss() } else { notificationsOff = true }
+                            reminderResult = await model.saveMedications(cleaned)
+                            if reminderResult == .scheduled { dismiss() } else { showReminderIssue = true }
                         }
                     }
                     .fontWeight(.semibold)
                     .disabled(isSaving)
                 }
             }
-            .alert("Reminders are off", isPresented: $notificationsOff) {
-                Button("Open Settings") {
-                    if let url = URL(string: UIApplication.openNotificationSettingsURLString) { UIApplication.shared.open(url) }
+            .alert(reminderResult == .notificationsOff ? "Reminders are off" : "Reminders couldn’t be set", isPresented: $showReminderIssue) {
+                if reminderResult == .notificationsOff {
+                    Button("Open Settings") {
+                        if let url = URL(string: UIApplication.openNotificationSettingsURLString) { UIApplication.shared.open(url) }
+                    }
+                    Button("OK", role: .cancel) { dismiss() }
+                } else {
+                    Button("OK", role: .cancel) { }
                 }
-                Button("OK", role: .cancel) { dismiss() }
             } message: {
-                Text("Your schedule is saved, but reminders need notifications allowed for TypeParkinson in Settings.")
+                Text(reminderResult == .notificationsOff
+                     ? "Your schedule is saved, but reminders need notifications allowed for TypeParkinson in Settings."
+                     : "Your schedule is saved, but some reminders couldn’t be set. Please try saving again.")
             }
             .onAppear { medications = model.medications }
         }

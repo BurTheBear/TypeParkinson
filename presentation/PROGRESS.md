@@ -20,7 +20,7 @@ Keep following the user's overnight request after publication: inspect the exist
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked: 65% current window used, 11% weekly used. Check again before substantial final work.
+Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked at the start of the 4 AM pass: 0% current window used after the ordinary reset, 11% weekly used. Check again before substantial final work. No credits or paid reset were used.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -52,4 +52,11 @@ Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, co
 - Enlarged the plain Remove dose icon to a 44×44-point minimum hit area and Add a time to a 44-point minimum height, keeping their existing styling and accessibility labels.
 - Source confirmed that Save immediately persists the schedule before awaiting reminder replacement. Repeated taps could launch overlapping updates. Added a synchronous saving guard, disabled Save and schedule editing while it runs, and a Saving… label. The flag clears after completion, including the notifications-off path.
 - Reviewed the focused source diff and ran git diff --check. These UI paths remain unbuilt and require the manual native checks in VALIDATION.md. Film, website, media and other app source are unchanged. PR #7 remains the publication target.
-- Next review, if usage permits: notification scheduling error handling. It currently suppresses individual notification-add errors while returning success; inspect concrete failure behavior before deciding whether a change is justified. Do not invent medical behavior or broaden the app.
+- Notification scheduling errors were reviewed in the following pass.
+
+## October 24, 4 AM — reminder scheduling results
+
+- Source confirmed that medication scheduling suppressed notification-add errors and returned success. Authorization errors were also indistinguishable from denied permission. Replaced the Boolean result with scheduled / notificationsOff / failed and updated all call sites.
+- Scheduling continues attempting the remaining times after an add error, but reports failure if any request throws. The editor keeps the saved local schedule and shows a retry notice without closing; denied permission retains its separate Settings notice. An empty schedule still clears reminders without requesting permission.
+- Reviewed all result branches and call sites; git diff --check passes. No native build, installation or native test execution occurred. Injected-error and real notification checks are documented in VALIDATION.md and remain pending. Film, website and media are untouched; continue using draft PR #7.
+- No additional candidate has been established. Future passes should review only concrete source evidence or new PR feedback; avoid speculative features or changes just to fill the overnight window.
