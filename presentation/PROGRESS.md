@@ -20,7 +20,7 @@ Keep following the user's overnight request after publication: inspect the exist
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked: 53% current window used, 9% weekly used. Check again before substantial final work.
+Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked: 60% current window used, 10% weekly used. Check again before substantial final work.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -37,4 +37,12 @@ Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, co
 - Added an explicit onRepeatDeleteStart signal after the hold threshold. Speak and the extension start a new Undo group from that signal. TextComposer remembers the pre-hold text once, clears obsolete correction chips during repeated deletion, and breaks the group if another edit occurs. Short taps and cancellation before the threshold do not signal a repeat start.
 - Added four regression cases for one-hold restoration, independent holds, an intervening edit and clearing a stale correction chip. All new native tests remain unrun, and no native rebuild/installation occurred. Changes target the same draft PR #7.
 - Reviewed all callback wiring and changed source paths; git diff --check passes. Film, website and media are untouched.
-- Next narrow review candidate: BigNumber in DesignKit guards its entrance animation for Reduce Motion but its onChange(value) path still animates; check that and related shared press feedback against the existing accessibility setting.
+- Reduce Motion number/control paths were reviewed in the following pass.
+
+## October 24, 2 AM — Reduce Motion review
+
+- Source confirmed that BigNumber guarded its entrance but not later value changes; shared button styles always shrank/sprang, practice carousel tiles scaled with scrolling, and FeelingPicker always bounced its icon.
+- Added existing accessibilityReduceMotion environment checks to these components. Reduced motion uses immediate numeric updates and identity text transitions, stable button/tile sizes, non-animated segmented/feeling selection, and no feeling-symbol bounce. Press feedback remains through colour/opacity, with the existing Aura palette and Liquid Glass option preserved. Normal-motion paths retain their previous animations. Aura mood colour changes also stop animating under Reduce Motion.
+- Verified ContentTransition.identity and symbolEffectsRemoved API availability in the installed SwiftUI SDK interfaces. Reviewed the source diff and ran git diff --check. No native build, installation or native test execution occurred. Manual on/off and live-toggle scenarios are in VALIDATION.md. Film and website/media are unchanged.
+- PR #7 was open, draft and mergeable with no new comments at the start of this pass. Continue updating that PR, not another one.
+- Next narrow candidate: the icon-only Remove dose button in MedicationSheet has no explicit minimum hit area. Review that and nearby icon-only controls for a concrete target-size fix; preserve all user content and Pranav’s styling.
