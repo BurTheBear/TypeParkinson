@@ -330,3 +330,49 @@ import Testing
         #expect(jumps.keySize == .extraLarge)
     }
 }
+
+// MARK: - Care-team exports
+
+@MainActor
+@Suite(.serialized) struct ReportExportTests {
+    private func contents(_ log: ActivityLog) throws -> String {
+        let url = try #require(ReportBuilder.csv(log: log))
+        defer { try? FileManager.default.removeItem(at: url) }
+        return try String(contentsOf: url, encoding: .utf8)
+    }
+
+    @Test func anEmptyHistoryHasOnlyTheColumnHeader() throws {
+        #expect(try contents(ActivityLog()) == "date,activity,measure,value,unit,detail")
+    }
+
+    @Test func sensorAndMedicationHistoryAreIncluded() throws {
+        let date = Date(timeIntervalSince1970: 1_800_000_000)
+        var log = ActivityLog()
+        log.tremor = [TremorRecord(date: date, hand: .right,
+                                  result: TremorResult(frequency: 5.2, amplitude: 34.9, posture: .rest, duration: 10, spectrum: []))]
+        log.voice = [VoiceRecord(date: date, result: VoiceResult(level: 0.7, inTarget: 0.8, steadiness: 0.9, duration: 5))]
+        log.doses = [DoseRecord(date: date, medicationID: UUID(), name: "Carbidopa-levodopa")]
+        let csv = try contents(log)
+        #expect(csv.contains(",tremor,strongest shake rate,5.200,Hz,"))
+        #expect(csv.contains(",tremor,shake strength,34.900,mg,"))
+        #expect(csv.contains(",voice,time in loud zone,80.000,%,"))
+        #expect(csv.contains(",voice,voiced duration,5.000,s,"))
+        #expect(csv.contains(",medication,logged dose,1.000,entry,\"Carbidopa-levodopa\""))
+        #expect(csv.split(separator: "\n").count == 9)
+    }
+
+    @Test func medicationPunctuationAndLineBreaksStayInOneField() throws {
+        var log = ActivityLog()
+        log.doses = [DoseRecord(date: .now, medicationID: UUID(), name: "Medicine, \"morning\"\nwith food")]
+        let csv = try contents(log)
+        #expect(csv.hasSuffix("\"Medicine, \"\"morning\"\"\nwith food\""))
+    }
+
+    @Test func medicationNamesCannotBecomeSpreadsheetFormulas() throws {
+        for name in ["=1+1", "+SUM(A1)", "-2+3", "@SUM(A1)", "  =1+1", "\t=1+1"] {
+            var log = ActivityLog()
+            log.doses = [DoseRecord(date: .now, medicationID: UUID(), name: name)]
+            #expect(try contents(log).hasSuffix("\"'" + name + "\""))
+        }
+    }
+}
