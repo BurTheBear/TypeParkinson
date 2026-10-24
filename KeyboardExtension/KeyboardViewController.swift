@@ -75,6 +75,7 @@ final class KeyboardViewController: UIInputViewController {
             state: state,
             onPress: { [weak self] in self?.handle($0) },
             onCorrection: { [weak self] in self?.handle($0) },
+            onRepeatDeleteStart: { [weak self] in self?.isHoldingDelete = false },
             onRepeatDelete: { [weak self] in self?.repeatDelete() },
             onPickSuggestion: { [weak self] in self?.pick($0) },
             onPickPhrase: { [weak self] in self?.insertPhrase($0) },
@@ -501,6 +502,7 @@ private struct ExtensionKeyboardView: View {
     let state: KeyboardState
     let onPress: (KeyPress) -> Void
     let onCorrection: (CorrectionAction) -> Void
+    let onRepeatDeleteStart: () -> Void
     let onRepeatDelete: () -> Void
     let onPickSuggestion: (String) -> Void
     let onPickPhrase: (QuickPhrase) -> Void
@@ -539,6 +541,7 @@ private struct ExtensionKeyboardView: View {
                     showsKeyPreview: settings.keyPreviewEnabled,
                     onPress: onPress,
                     onCorrection: onCorrection,
+                    onRepeatDeleteStart: onRepeatDeleteStart,
                     onRepeatDelete: settings.holdToDeleteEnabled ? onRepeatDelete : nil
                 )
             }

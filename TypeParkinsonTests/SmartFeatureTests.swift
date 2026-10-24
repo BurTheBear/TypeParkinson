@@ -388,3 +388,67 @@ import Testing
         }
     }
 }
+
+// MARK: - Hold-to-delete Undo
+
+@MainActor
+@Suite struct TextComposerUndoTests {
+    private func composer() -> TextComposer {
+        TextComposer(settings: nil, smartCorrection: false, suggestions: false, autoCapitalize: false)
+    }
+
+    @Test func oneHoldIsRestoredByOneUndo() {
+        let text = composer()
+        text.insert(phrase: "hello")
+        text.beginRepeatDelete()
+        for _ in 0..<3 { text.repeatDelete() }
+        #expect(text.text == "he")
+        text.correct(.undo)
+        #expect(text.text == "hello")
+    }
+
+    @Test func separateHoldsHaveSeparateUndoGroups() {
+        let text = composer()
+        text.insert(phrase: "hello")
+        text.beginRepeatDelete()
+        for _ in 0..<2 { text.repeatDelete() }
+        text.beginRepeatDelete()
+        text.repeatDelete()
+        #expect(text.text == "he")
+        text.correct(.undo)
+        #expect(text.text == "hel")
+        text.correct(.undo)
+        #expect(text.text == "hello")
+    }
+
+    @Test func editingDuringARepeatStartsANewUndoGroup() {
+        let text = composer()
+        text.insert(phrase: "hello")
+        text.beginRepeatDelete()
+        text.repeatDelete()
+        text.insert(phrase: "again")
+        #expect(text.text == "hell again")
+        text.repeatDelete()
+        text.repeatDelete()
+        #expect(text.text == "hell aga")
+        text.correct(.undo)
+        #expect(text.text == "hell again")
+    }
+
+    @Test func repeatingDeleteClearsAnObsoleteCorrectionChip() throws {
+        let layout = KeyboardLayout(size: .standard, width: 390, options: .init())
+        let text = TextComposer(settings: nil, smartCorrection: true, suggestions: false, autoCapitalize: false)
+        for (index, letter) in "teh".enumerated() {
+            let key = try #require(layout.keys.first { $0.id == String(letter) })
+            text.press(KeyPress(key: key, uncorrectedKey: key,
+                                point: CGPoint(x: key.frame.midX, y: key.frame.midY),
+                                time: Double(index) * 0.4, layout: layout))
+        }
+        let space = try #require(layout.keys.first { $0.action == .space })
+        text.press(KeyPress(key: space, uncorrectedKey: space))
+        _ = try #require(text.correction)
+        text.beginRepeatDelete()
+        text.repeatDelete()
+        #expect(text.correction == nil)
+    }
+}

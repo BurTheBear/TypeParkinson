@@ -43,3 +43,9 @@ Manual native checks still required:
 6. Hide/reopen or switch away from the keyboard, then Undo. Previous-session text must not be restored. Verify personal touch learning still loads.
 
 These changes are in draft PR #7 and remain unbuilt, per instruction. No claim is made that the native scenarios or added Swift tests have passed.
+
+## Hold-to-delete grouping — October 24
+
+Source-only change: the shared keyboard sends a repeat-start event after the hold delay, and both Speak and the extension use it to start a fresh Undo group. Speak now retains one pre-hold snapshot rather than one per deleted character. A later edit starts a fresh group, and repeated deletion clears the old correction chip. The four new Swift regression tests have **not been run**.
+
+Before merging, test in Speak and in the system keyboard: one long hold followed by one Undo; two separate holds followed by two Undos; deletion all the way to an empty field; another edit while repeating; release or slide off before the hold threshold; slide off and back on; and disappearance while holding. Each completed hold must restore only its own deleted block. Confirm a normal tap still deletes exactly one character and no deletion continues after release.

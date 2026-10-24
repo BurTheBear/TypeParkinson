@@ -20,7 +20,7 @@ Keep following the user's overnight request after publication: inspect the exist
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked: 48% current window used, 9% weekly used. Check again before substantial final work.
+Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked: 53% current window used, 9% weekly used. Check again before substantial final work.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -29,4 +29,12 @@ Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, co
 - Selection replacements/deletions now remember the actual selected text; Delete word removes a selection once rather than continuing left of it. Hold-delete also records a selected range correctly.
 - Confirmed the proxy documentIdentifier, selectedText and context API names against the installed Apple UIKit SDK headers. Added one decoder cache/learning regression test. No native compilation or test execution occurred. Manual device scenarios are appended to VALIDATION.md.
 - Website local links/assets check, JavaScript syntax and git diff whitespace checks still pass. Presentation/video/site media preserved.
-- Next focused candidate: hold-delete boundaries. Shared KeyboardView suppresses the final press after repeating, and has no release callback; TextComposer snapshots each repeat while the extension can combine separate consecutive holds. Investigate that source path before changing it.
+- Hold-delete boundary issue was investigated and addressed in the following pass.
+
+## October 24, 1 AM — hold-delete review
+
+- Source confirmed two grouping problems: Speak recorded every repeated deletion separately; the extension kept its hold flag across separate gestures because the repeated gesture suppresses the final ordinary press.
+- Added an explicit onRepeatDeleteStart signal after the hold threshold. Speak and the extension start a new Undo group from that signal. TextComposer remembers the pre-hold text once, clears obsolete correction chips during repeated deletion, and breaks the group if another edit occurs. Short taps and cancellation before the threshold do not signal a repeat start.
+- Added four regression cases for one-hold restoration, independent holds, an intervening edit and clearing a stale correction chip. All new native tests remain unrun, and no native rebuild/installation occurred. Changes target the same draft PR #7.
+- Reviewed all callback wiring and changed source paths; git diff --check passes. Film, website and media are untouched.
+- Next narrow review candidate: BigNumber in DesignKit guards its entrance animation for Reduce Motion but its onChange(value) path still animates; check that and related shared press feedback against the existing accessibility setting.
