@@ -14,10 +14,10 @@ Continue in this repository on branch `presentation`; do not create another app 
 
 ## Current publication state
 
-Final film and website checks are complete; details are in VALIDATION.md. The final 1080p film is 94 seconds and 4,073,710 bytes, with a 1,945,749-byte 720p website copy. Playback controls, video backward seeking and reduced-motion slides pass. Native changes remain deliberately unbuilt. Ready to commit and publish a draft PR for Pranav's review and native validation.
+Final film and website checks are complete; details are in VALIDATION.md. The final 1080p film is 94 seconds and 4,073,710 bytes, with a 1,945,749-byte 720p website copy. Playback controls, video backward seeking and reduced-motion slides pass. Native changes remain deliberately unbuilt. Published to the fork and opened draft upstream PR #7: https://github.com/pranav-atreya10/TypeParkinson/pull/7. It targets main from BurTheBear:presentation. Pranav must review, validate native changes and merge. Update this same PR during overnight follow-ups.
 
 Keep following the user's overnight request after publication: inspect the existing app for concrete correctness/accessibility issues and update the same branch/PR when justified. Avoid speculative features, new apps, native builds, duplicate PRs and routine status messages. Stop this overnight heartbeat after 7 AM October 24 America/New_York. Check usage before substantial work; preserve allowance to save progress.
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, stops itself on completion or after 7 AM October 24 America/New_York. Usage last checked: 25% current window used, 5% weekly used. Check again before substantial final work.
+Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, stops itself on completion or after 7 AM October 24 America/New_York. Usage last checked: 36% current window used, 7% weekly used. Check again before substantial final work.
