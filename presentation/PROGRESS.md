@@ -2,7 +2,7 @@
 
 ## Current priority — cinematic revision, October 24 morning
 
-The user rejected the first animation and selected **cinematic product launch**: close-up keyboard motion, a large moving iPhone, less text. They then authorized continuing throughout the day while away. The existing heartbeat now runs through 7 PM New York time under the name TypeParkinson daytime work. The first cinematic revision is now rendered and validated technically, with a large moving phone, angled key close-ups, individual letter transformations, shorter copy and new transition timing. The user has not yet reviewed this revision. Use their next feedback to guide further visual work. Native rebuilds remain prohibited. Keep updating the same draft PR #7; do not overwrite in-progress edits on a heartbeat.
+The user rejected the first animation and selected **cinematic product launch**: close-up keyboard motion, a large moving iPhone, less text. They then authorized continuing throughout the day while away. The daytime schedule ended after 7 PM New York time; the TypeParkinson daytime work heartbeat is now paused. The first cinematic revision is now rendered and validated technically, with a large moving phone, angled key close-ups, individual letter transformations, shorter copy and new transition timing. The user has not yet reviewed this revision. Use their next feedback to guide further visual work. Native rebuilds remain prohibited. Keep updating the same draft PR #7; do not overwrite in-progress edits on a heartbeat.
 
 Continue in this repository on branch `presentation`; do not create another app or run xcodebuild. The installed simulator app was used for all captures. The initial rebuild was stopped after the user said no rebuilds. No app installation or native rebuild was completed during the task.
 
@@ -24,7 +24,7 @@ Keep following the user's overnight request after publication: inspect the exist
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson daytime work), hourly in this chat, continues until 7 PM October 24 America/New_York. Usage last checked during afternoon review: 16% current window used, 21% weekly used. Check again before substantial final work. No credits or paid reset were used.
+Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson daytime work), PAUSED at the scheduled evening cutoff. Final usage check: 19% current window used, 21% weekly used. Check again before substantial final work. No credits or paid reset were used.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -95,3 +95,11 @@ Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson day
 - Found and reproduced that changing Reduce Motion while playing had no effect until reload. The player now pauses on a settled still of the current chapter immediately; disabling the preference leaves it paused. Added an actual browser preference-change regression, which failed before the fix.
 - Screenshot review at 1920×1080 also confirmed the visible manual controls covered the bottom caption. Manual mode now reserves controls space; capture mode is excluded. Reviewed the corrected screenshot and added layout/hit-area checks at presentation and phone sizes. All browser regression checks pass, including live preference changes.
 - This changes only HTML player behavior and browser checks. Both MP4 copies, the matching poster/transcript, native source and prior native validation limits are preserved. Continue using the same PR, conserving allowance and avoiding speculative edits while awaiting user feedback.
+
+## October 24, 7:26 PM New York — scheduled work finished
+
+- Disabled the existing heartbeat at the authorized evening cutoff; tool result and saved automation state both confirm PAUSED. No further scheduled work will run unless the user resumes it.
+- Verified the presentation branch is clean and matches the fork; PR #7 remains OPEN and DRAFT with no new comments. The last implementation commit is 7a7b788 (live Reduce Motion); all film/player changes and the matching website media are pushed.
+- The revised cinematic master is 94 seconds, 1080p30, silent H.264, 8,067,314 bytes. The website copy, poster and transcript match. Browser motion/controls/accessibility checks and complete decoding of both videos have passed; see VALIDATION.md.
+- The user has not yet reviewed the cinematic revision. Native source changes remain deliberately unbuilt and their Swift tests unrun. Pranav must validate the native changes in Xcode/on a real iPhone before merging, then confirm Pages from main /docs. Existing privacy/support URLs and both credits are preserved.
+- Account usage at closure: 19% current window used, 21% weekly used. No credits or paid resets purchased.
