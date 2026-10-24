@@ -20,7 +20,7 @@ Keep following the user's overnight request after publication: inspect the exist
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked: 60% current window used, 10% weekly used. Check again before substantial final work.
+Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked: 65% current window used, 11% weekly used. Check again before substantial final work.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -45,4 +45,11 @@ Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, co
 - Added existing accessibilityReduceMotion environment checks to these components. Reduced motion uses immediate numeric updates and identity text transitions, stable button/tile sizes, non-animated segmented/feeling selection, and no feeling-symbol bounce. Press feedback remains through colour/opacity, with the existing Aura palette and Liquid Glass option preserved. Normal-motion paths retain their previous animations. Aura mood colour changes also stop animating under Reduce Motion.
 - Verified ContentTransition.identity and symbolEffectsRemoved API availability in the installed SwiftUI SDK interfaces. Reviewed the source diff and ran git diff --check. No native build, installation or native test execution occurred. Manual on/off and live-toggle scenarios are in VALIDATION.md. Film and website/media are unchanged.
 - PR #7 was open, draft and mergeable with no new comments at the start of this pass. Continue updating that PR, not another one.
-- Next narrow candidate: the icon-only Remove dose button in MedicationSheet has no explicit minimum hit area. Review that and nearby icon-only controls for a concrete target-size fix; preserve all user content and Pranav’s styling.
+- The medication controls candidate was reviewed in the following pass.
+
+## October 24, 3 AM — medication editor controls
+
+- Enlarged the plain Remove dose icon to a 44×44-point minimum hit area and Add a time to a 44-point minimum height, keeping their existing styling and accessibility labels.
+- Source confirmed that Save immediately persists the schedule before awaiting reminder replacement. Repeated taps could launch overlapping updates. Added a synchronous saving guard, disabled Save and schedule editing while it runs, and a Saving… label. The flag clears after completion, including the notifications-off path.
+- Reviewed the focused source diff and ran git diff --check. These UI paths remain unbuilt and require the manual native checks in VALIDATION.md. Film, website, media and other app source are unchanged. PR #7 remains the publication target.
+- Next review, if usage permits: notification scheduling error handling. It currently suppresses individual notification-add errors while returning success; inspect concrete failure behavior before deciding whether a change is justified. Do not invent medical behavior or broaden the app.

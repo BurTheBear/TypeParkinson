@@ -9,6 +9,7 @@ struct MedicationSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var medications: [Medication] = []
     @State private var notificationsOff = false
+    @State private var isSaving = false
 
     var body: some View {
         NavigationStack {
@@ -27,6 +28,8 @@ struct MedicationSheet: View {
                                         med.times.remove(at: i)
                                     } label: {
                                         Image(systemName: "minus.circle.fill").foregroundStyle(Theme.warning)
+                                            .frame(minWidth: 44, minHeight: 44)
+                                            .contentShape(Rectangle())
                                     }
                                     .buttonStyle(.plain)
                                     .accessibilityLabel("Remove dose \(i + 1)")
@@ -36,6 +39,8 @@ struct MedicationSheet: View {
                                 med.times.append(MedTime(hour: 12, minute: 0))
                             } label: {
                                 Label("Add a time", systemImage: "plus.circle.fill")
+                                    .frame(minHeight: 44, alignment: .leading)
+                                    .contentShape(Rectangle())
                             }
                             .foregroundStyle(Theme.medsColor)
                             .buttonStyle(.plain)
@@ -63,21 +68,26 @@ struct MedicationSheet: View {
                     }
                 }
             }
+            .disabled(isSaving)
             .navigationTitle("Medication")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancel") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button(isSaving ? "Saving…" : "Save") {
+                        guard !isSaving else { return }
+                        isSaving = true
                         let cleaned = medications
                             .map { Medication(id: $0.id, name: $0.name.trimmingCharacters(in: .whitespaces), times: Array(Set($0.times)).sorted()) }
                             .filter { !$0.name.isEmpty && !$0.times.isEmpty }
                         Task {
+                            defer { isSaving = false }
                             let ok = await model.saveMedications(cleaned)
                             if ok { dismiss() } else { notificationsOff = true }
                         }
                     }
                     .fontWeight(.semibold)
+                    .disabled(isSaving)
                 }
             }
             .alert("Reminders are off", isPresented: $notificationsOff) {
