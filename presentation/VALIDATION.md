@@ -85,3 +85,9 @@ Before merge, run a full tapping session and confirm one result is saved. In a n
 Encoded-frame review found the last correction restarting just before the 48-second cut: “the” became “teh” during the outgoing shot. The final example now keeps its local clock and holds the corrected word through the transition. A rendered white-pixel mask of the final word at 47.8 and 47.99 seconds failed before the fix and passes after it; the test requires a nonempty word region. Existing deterministic seeking, scene/Space controls and reduced-motion checks still pass.
 
 Re-exported both delivery copies, checked their H.264 / 30 fps / 2,820-frame / 94-second / no-audio metadata and decoded both completely without errors. Encoded frames at 47.966 and 48.2 seconds visibly show “the”. Poster and transcript remain accurate; the native app is unchanged.
+
+## Live Reduce Motion preference — October 24 afternoon
+
+The player previously read the preference only when loading. A browser regression reproduced continued playback after enabling Reduce Motion during the film. The player now listens for preference changes, pauses on a settled still in the current chapter and never resumes automatically when the preference is disabled. Manual slides reserve a separate controls area; a full-size screenshot confirmed the illustrated-touch caption is visible instead of covered by controls. Capture mode is excluded from this CSS change, so exported frames are unchanged.
+
+Regression checks cover preference changes while playing, preservation of the current chapter, remaining paused when the preference is disabled, and clear captions/control hit areas at 1920×1080 and 320×693. Existing deterministic seek, correction-hold, arrow/Space and startup manual-slide checks also remain in the suite. Native app and MP4 media are unchanged.

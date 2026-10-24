@@ -24,7 +24,7 @@ Keep following the user's overnight request after publication: inspect the exist
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson daytime work), hourly in this chat, continues until 7 PM October 24 America/New_York. Usage last checked during daytime review: 4% current window used after the ordinary reset, 19% weekly used. Check again before substantial final work. No credits or paid reset were used.
+Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson daytime work), hourly in this chat, continues until 7 PM October 24 America/New_York. Usage last checked during afternoon review: 16% current window used, 21% weekly used. Check again before substantial final work. No credits or paid reset were used.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -87,4 +87,11 @@ Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson day
 - PR #7 remains open and draft with no new comments; source and fork were clean before the pass. Reviewed encoded frames at 47.8, 47.966 and 48.2 seconds. The final correction reverted from “the” to “teh” just before the camera push and remained wrong during the outgoing shot.
 - Fixed the local example clock so the final example holds instead of restarting on a modulo boundary. No layout, camera, copy or native app changes. Poster and transcript remain accurate and unchanged.
 - Added an actual rendered-pixel regression over the final word region at 47.8 and 47.99 seconds. It failed before the fix and passes after it. Deterministic seeking, arrows, Space and reduced-motion slides also pass.
-- Re-exported the 94-second 1080p30 master (8,067,314 bytes) and matching 720p30 website copy (3,506,874 bytes). Both fully decode without errors. Encoded frames at 47.966 and 48.2 seconds now visibly retain “the”. Publishing to the same PR; poster and transcript are unchanged because those scenes did not change.
+- Re-exported the 94-second 1080p30 master (8,067,314 bytes) and matching 720p30 website copy (3,506,874 bytes). Both fully decode without errors. Encoded frames at 47.966 and 48.2 seconds now visibly retain “the”. Published in the same PR; poster and transcript are unchanged because those scenes did not change.
+
+## October 24 afternoon — live player accessibility
+
+- PR #7 is still open and draft with no new comments; branch and fork were clean before this pass. The cinematic revision has not yet received user feedback.
+- Found and reproduced that changing Reduce Motion while playing had no effect until reload. The player now pauses on a settled still of the current chapter immediately; disabling the preference leaves it paused. Added an actual browser preference-change regression, which failed before the fix.
+- Screenshot review at 1920×1080 also confirmed the visible manual controls covered the bottom caption. Manual mode now reserves controls space; capture mode is excluded. Reviewed the corrected screenshot and added layout/hit-area checks at presentation and phone sizes. All browser regression checks pass, including live preference changes.
+- This changes only HTML player behavior and browser checks. Both MP4 copies, the matching poster/transcript, native source and prior native validation limits are preserved. Continue using the same PR, conserving allowance and avoiding speculative edits while awaiting user feedback.

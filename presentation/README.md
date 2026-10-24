@@ -6,7 +6,7 @@ Open `animation.html` in Chrome, Safari or Edge. It works offline and includes t
 - **Left / right**: move between scenes
 - **F**: fullscreen
 - On-screen controls include a timeline and work with the keyboard.
-- With Reduce Motion enabled, it opens paused as a slide presentation. Use the scene arrows to advance.
+- With Reduce Motion enabled, it opens paused as a slide presentation. Use the scene arrows to advance. Turning Reduce Motion on during playback pauses on a still of the current chapter; turning it off leaves playback paused. Manual slides reserve space for the controls so captions stay visible.
 
 `TypeParkinson.mp4` is the delivery film: 1920×1080, 30 fps, H.264, no audio. `animation.template.html` is the editable source; `animation.html` is generated and self-contained.
 
