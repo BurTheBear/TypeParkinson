@@ -1,15 +1,21 @@
 # Validation
 
-Checked October 23, 2026, on branch `presentation`.
+Film revision checked October 24, 2026, on branch `presentation`. Website baseline checks were performed October 23 and local asset/transcript checks repeated for the revision. Native changes remain unbuilt.
 
 ## Presentation
 
 - `node presentation/tools/render.mjs test`: deterministic backward seeking passes for both illustrated and video scenes; arrow controls, Space pause/play, and Reduce Motion manual slides pass.
-- Fifteen rendered review frames inspected, including every scene and each correction example. Text overlaps corrected before final export.
-- Full 1080p export: H.264, 1920×1080, 30/1 fps, 2,820 frames, 94 seconds, 4,073,710 bytes, no audio stream.
-- Full video decoded with ffmpeg; no decode errors.
-- Website copy: H.264, 1280×720, 94 seconds, 1,945,749 bytes, no audio.
-- All media is embedded in `animation.html`; no network requests or font downloads are needed. Packaged HTML is about 1.7 MB.
+- Reviewed every scene, 32 dense motion samples and nine final frames; also checked live browser playback. Corrected caption overlap, touch-target callout geometry, phone framing, screen hold timing and transition text collisions before export. Recut original sensor recordings to show the active voice meter and the tremor result rather than idle/countdown footage.
+- Full 1080p export: H.264, 1920×1080, 30/1 fps, 2,820 frames, 94 seconds, 8,063,698 bytes, no audio stream.
+- Full revised 1080p video decoded with ffmpeg; no decode errors. An encoded correction frame was visually inspected for text and gradient quality.
+- Website copy: H.264, 1280×720 at 30 fps, 2,820 frames, 94 seconds, 3,509,194 bytes, no audio. Poster regenerated from the revised product reveal with Chrome’s WebP encoder. Transcript updated to match the new scenes. Full website-copy decode also passes.
+- All media is embedded in `animation.html`; no network requests or font downloads are needed. Packaged HTML is about 1.58 MB.
+
+## Revised HTML player
+
+- Browser playback advances through the revised scenes without logged console warnings/errors. One-click replay at the end returns to the opening.
+- At 320 CSS px, the page has no horizontal overflow and every button and the timeline input has at least a 44×44 px target. Temporary viewport override was reset afterward. Touch devices keep controls visible.
+- Scene arrows, Space, deterministic graphics/video seeking and reduced-motion manual slides pass after the revised footage and transitions.
 
 ## Website
 

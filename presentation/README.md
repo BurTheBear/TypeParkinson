@@ -1,6 +1,6 @@
 # TypeParkinson presentation
 
-Open `animation.html` in Chrome, Safari or Edge. It works offline and includes the actual app media. The film runs for 94 seconds, silently, so the team can narrate.
+Open `animation.html` in Chrome, Safari or Edge. It works offline and includes the actual app media. The revised cinematic film runs for 94 seconds, silently, so the team can narrate. It uses close-up keys, moving iPhones, masked type and individual letter transformations, with actual simulator footage.
 
 - **Space**: pause or play
 - **Left / right**: move between scenes
@@ -18,20 +18,22 @@ Requires Node 22+, Chrome and ffmpeg, with no npm dependencies.
 node presentation/tools/pack.mjs
 node presentation/tools/render.mjs test
 node presentation/tools/render.mjs stills
+node presentation/tools/render.mjs preview
 node presentation/tools/render.mjs video
+node presentation/tools/render.mjs poster
 python3 presentation/tools/check-site.py
 ```
 
-Set `CHROME` to a Chrome executable on other operating systems. The renderer uses a separate temporary browser profile and DevTools port 9237. Video frames are piped directly to ffmpeg; it doesn't fill the repository with thousands of PNGs. Absolute-time video seeking is awaited before capture. Encoding caps the bitrate to keep the film below 25 MB.
+Set `CHROME` to a Chrome executable on other operating systems. The renderer uses a separate temporary browser profile and DevTools port 9237. Video frames are piped directly to ffmpeg; it doesn't fill the repository with thousands of PNGs. The preview command makes a full 94-second 960×540 / 15 fps draft in the ignored preview directory; video exports 1080p30. Set STILL_TIMES to a comma-separated list of seconds for detailed motion review. Absolute-time video seeking is awaited before capture. Encoding caps the bitrate to keep the film below 25 MB.
 
 ## Presenter notes
 
 | Time | Point to explain |
 | --- | --- |
-| 0–7 | A person knows what they want to say. Tremor and stiffness can make the tap miss that intention. |
+| 0–7 | “See you soon” slips onto neighbouring keys. A person knows what they want to say; tremor and stiffness can make a tap miss that intention. |
 | 7–14 | The Parkinson’s Foundation estimates 1.1 million people in the US live with Parkinson’s. |
 | 14–22 | TypeParkinson builds a personal keyboard around how someone touches the screen. |
-| 22–34 | Setup measures touch offset and spread. A two-dimensional Gaussian helps interpret the intended key. The keys stay put. |
+| 22–34 | Setup measures touch offset and spread. A two-dimensional Gaussian helps interpret the intended key. Illustrated dots and the keys stay put; the model learns around them. |
 | 34–48 | The on-device decoder considers touch likelihood, word frequency, repeats, misses and swaps. The examples correspond to existing decoder tests. Revert is one tap away. |
 | 48–60 | Show the actual Today, Practice and Voice screens. The app also includes Speak, medication reminders and a daily check. |
 | 60–70 | Phone motion samples are windowed and analyzed in frequency space to describe shake strength and rate. This does not diagnose Parkinson’s. |

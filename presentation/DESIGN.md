@@ -1,18 +1,26 @@
-# TypeParkinson presentation
+# Cinematic revision — October 24
 
-Continue the existing app; do not rebuild it. Presentation first, then the existing GitHub Pages site, then focused improvements to the existing app. Work on `presentation`, push to the fork, open an upstream PR; Pranav merges.
+The user rejected version 1 and selected a cinematic product launch. Continue using the existing custom deterministic Canvas renderer and real app captures. No app builds or new app.
 
-## Film
-94 seconds, silent, 1920×1080 at 30 fps. Self-contained HTML uses Canvas with a deterministic `window.__render(t)` and real embedded simulator footage. Space pauses, arrow keys change scene, F enters fullscreen. Reduced motion opens in manual slide mode. Offline system typography.
+## Direction
 
-Aura palette: ink #0A0F1F, ground #F3F4F8, accent #2F5BFF, purple #6E4DFF, cyan #16B8C8. Rounded heavy display type, restrained body text, generous margins. Touch dots carry the narrative: missed intent becomes understood intent. No stock imagery or decorative icons.
+The product is the action: camera moves through a field of bevelled keys, touches accumulate over a fixed target, letters move into intended words, and a large iPhone travels through the actual app. Masked typography carries short thoughts. No scene counters, persistent footers or repeated text-left / phone-right slide layouts.
 
-Scenes: 0–7 typing slips; 7–14 problem; 14–22 Aura reveal; 22–34 personal touch distribution; 34–48 correction; 48–60 real app toolkit; 60–70 motion measurement; 70–80 care-team patterns; 80–86 privacy; 86–94 final credit.
+Ink #080D1B; white #F3F4F8; electric blue #2F5BFF; violet #795DFF; mint #2BE0C8. System sans for precise display type; rounded brand wordmark. Large type and close-up keys, controlled device tilt, metallic edges, soft directional lighting. Dark product stage alternates with two cool light chapters. All sample histories remain labeled.
 
-Credits confirmed: Atharv Sharma & Pranav Atreya. Source checked: Parkinson's Foundation currently estimates 1.1 million Americans living with Parkinson's; use that sourced figure instead of the older handoff estimate. Any sensor charts and app histories are explicitly labeled illustrative or sample data. No diagnostic or clinical-outcome claims.
+## Timing
 
-## Website
-Build within docs/. Hero combines the Aura and the actual personal keyboard screen. Clear product story, four setup steps, interactive illustrated correction demo with revert, practice toolkit, care-team reports, privacy, team. Keep privacy.html and support.html. Use optimized local images, a small film preview, and a link to the full presentation. Mobile has 16px gutters, accessible controls, keyboard focus, and reduced motion.
+0–7: a typed message slips, camera pulls back across keys.
+7–14: the problem and sourced US population estimate.
+14–22: luminous Aura, large iPhone reveal, wordmark.
+22–34: clustered touches, learned offset/spread, fixed keyboard.
+34–48: letters physically reflow through four correction examples.
+48–60: camera tracks across three actual app screens.
+60–70: live trace gives way to spectrum; real tremor clip.
+70–80: progress screen and report fan apart.
+80–86: concise privacy statements and lock.
+86–94: brand, purpose, confirmed team, URL.
 
-## Validation
-Seek every film scene, inspect contact sheet, test deterministic backward seeking and playback controls, render full MP4 and check duration/codec/size. Inspect website at desktop and 390/320px widths, check demo controls and local links. No native build per user instruction. Document device testing still required.
+## Review
+
+Inspect every scene, small transitions and frame sequences. Correct layout/camera errors before rendering. Validate deterministic seeking, controls, reduced-motion manual presentation, full decode and video metadata. Update the website film, poster and transcript to match. Previous validation applies only to version 1 until repeated on the revision. Preserve previous native source fixes and their unbuilt status.

@@ -1,12 +1,16 @@
 # Overnight progress — October 23, 2026
 
+## Current priority — cinematic revision, October 24 morning
+
+The user rejected the first animation and selected **cinematic product launch**: close-up keyboard motion, a large moving iPhone, less text. They then authorized continuing throughout the day while away. The existing heartbeat now runs through 7 PM New York time under the name TypeParkinson daytime work. The first cinematic revision is now rendered and validated technically, with a large moving phone, angled key close-ups, individual letter transformations, shorter copy and new transition timing. The user has not yet reviewed this revision. Use their next feedback to guide further visual work. Native rebuilds remain prohibited. Keep updating the same draft PR #7; do not overwrite in-progress edits on a heartbeat.
+
 Continue in this repository on branch `presentation`; do not create another app or run xcodebuild. The installed simulator app was used for all captures. The initial rebuild was stopped after the user said no rebuilds. No app installation or native rebuild was completed during the task.
 
 ## Completed
 
-- Deterministic 94-second film in `animation.template.html`, packaged offline `animation.html` (about 1.7 MB), and render tools with no npm dependencies.
+- Deterministic 94-second film in `animation.template.html`, packaged offline `animation.html` (about 1.58 MB), and render tools with no npm dependencies.
 - Real captures: Today, Practice, Progress, Speak, onboarding, tremor sample session and voice sample session. System keyboard correction is illustrated using cases from existing tests; accessibility activation deliberately provides no raw touch locations and therefore does not demonstrate spatial autocorrection. Do not present the failed AX-driven `tje` capture as correction footage.
-- Final MP4 verified by ffprobe and full decode: H.264, 1920×1080, 30 fps, 2,820 frames, 94 seconds, 4,073,710 bytes, no audio. Privacy wording is explicitly scoped to the keyboard.
+- Final MP4 verified by ffprobe and full decode: H.264, 1920×1080, 30 fps, 2,820 frames, 94 seconds, 8,063,698 bytes, no audio. Privacy wording is explicitly scoped to the keyboard.
 - Existing docs website replaced with Aura landing page, WebP screenshots, film, interactive correction demo, transcript, preserved privacy/support URLs, revised privacy details.
 - Browser checks so far: 390px and 320px no horizontal overflow; no broken loaded images or console errors; all four demo examples and undo pass; actual keyboard Space preserves capitalization; all demo keys >=44px in both dimensions.
 - Existing app improvements in source: CSV includes tremor/voice/dose records, stable decimal points, quoted user-entered medication details, spreadsheet formula protection; PDF adds sensor/dose summaries and counts those practice sessions. Regression tests added to existing SmartFeatureTests.swift (not run: user prohibits native rebuild).
@@ -14,13 +18,13 @@ Continue in this repository on branch `presentation`; do not create another app 
 
 ## Current publication state
 
-Final film and website checks are complete; details are in VALIDATION.md. The final 1080p film is 94 seconds and 4,073,710 bytes, with a 1,945,749-byte 720p website copy. Playback controls, video backward seeking and reduced-motion slides pass. Native changes remain deliberately unbuilt. Published to the fork and opened draft upstream PR #7: https://github.com/pranav-atreya10/TypeParkinson/pull/7. It targets main from BurTheBear:presentation. Pranav must review, validate native changes and merge. Update this same PR during overnight follow-ups.
+Final film and website checks are complete; details are in VALIDATION.md. The final 1080p film is 94 seconds and 8,063,698 bytes, with a 3,509,194-byte 720p website copy. Playback controls, video backward seeking and reduced-motion slides pass. Native changes remain deliberately unbuilt. Published to the fork and opened draft upstream PR #7: https://github.com/pranav-atreya10/TypeParkinson/pull/7. It targets main from BurTheBear:presentation. Pranav must review, validate native changes and merge. Update this same PR during overnight follow-ups.
 
-Keep following the user's overnight request after publication: inspect the existing app for concrete correctness/accessibility issues and update the same branch/PR when justified. Avoid speculative features, new apps, native builds, duplicate PRs and routine status messages. Stop this overnight heartbeat after 7 AM October 24 America/New_York. Check usage before substantial work; preserve allowance to save progress.
+Keep following the user's overnight request after publication: inspect the existing app for concrete correctness/accessibility issues and update the same branch/PR when justified. Avoid speculative features, new apps, native builds, duplicate PRs and routine status messages. The user extended work throughout the day; stop the updated daytime heartbeat at or after 7 PM October 24 America/New_York. Check usage before substantial work; preserve allowance to save progress.
 
 Credits confirmed: **Atharv Sharma & Pranav Atreya**. Population source checked: Parkinson's Foundation currently estimates 1.1 million Americans. All displayed clinical-looking histories are sample data, labeled; no diagnostic or effectiveness claims.
 
-Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, continues until 7 AM October 24 America/New_York. Usage last checked at the start of the 5 AM pass: 2% current window used, 12% weekly used. Check again before substantial final work. No credits or paid reset were used.
+Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson daytime work), hourly in this chat, continues until 7 PM October 24 America/New_York. Usage checked during the film revision: 32% current window used, 16% weekly used. Check again before substantial final work. No credits or paid reset were used.
 
 ## October 24, shortly after midnight — keyboard review
 
@@ -67,3 +71,13 @@ Automation: heartbeat id `typeparkinson-overnight-work`, hourly in this chat, co
 - Found that tapping accepted events until the next 50 ms timer callback, even if their timestamps exceeded the ten-second deadline. Added the deadline check to the touch handler before counting a tap. A late tap finishes the session without entering its event list.
 - Added a cancellation check after the timer sleep: a cancelled timer must not continue into result saving when the screen closes. Finishing now cancels the timer and guards against a repeated save.
 - Source diff and git diff --check reviewed; no native build, installation or native tests run. Manual deadline, dismissal and retry checks are in VALIDATION.md. Film, website and media remain unchanged. No additional issue has been established.
+
+## October 24 morning — cinematic film revision
+
+- User rejected the previous animation and explicitly chose a cinematic product launch, then authorized continuing all day while away. Revised the existing Canvas film and renderer rather than creating another app or changing native source.
+- Removed scene counters and repeated slide layouts. Added bevelled keys, a camera pullback, a large iPhone reveal, masked typography, individual glyph movement during corrections, fixed-key touch contours, tracking device shots and cleaner cuts/iris/push transitions.
+- Recovered the original /tmp voice and tremor recordings. Voice now shows the meter reaching the loud zone; tremor shows recording followed by its result. Captures remain explicitly sample data. No native builds or installations.
+- Reviewed every scene, 32 motion samples, nine final frames and live browser playback. Fixed caption occlusion, a mis-anchored target callout, clipped space bar, device/subtitle collisions and unreadable screen hold timing. An early 540p draft is ignored in preview/ and predates final transition/sensor refinements; do not present that draft as the delivery film.
+- Revised 1080p30 master: 94 seconds, 2,820 frames, H.264, no audio, 8,063,698 bytes; full decode passes. Website 720p30 copy: 3,509,194 bytes. Offline HTML about 1.58 MB. Updated website poster and transcript.
+- Deterministic seek, arrows, Space and reduced-motion checks pass; live replay and 320px player controls checked (all controls >=44px, no horizontal overflow). Renderer has preview, selectable still times and poster modes. Native regression tests remain unrun.
+- Continue meaningful visual review and incorporate user feedback during daytime follow-ups. Preserve the finished assets, existing website and native fixes; no speculative features or edits just to fill time. The revised film is technically checked, not yet approved by the user.
