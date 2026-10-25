@@ -134,3 +134,13 @@ Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson day
 - Added a concrete Speak fix: refresh correction preferences/calibration after Settings changes without losing message/Undo, clear stale touch coordinates if layout/model changed, and honor suggestions/phrases toggles. Added three behavioral regressions, UNRUN. Native source remains unbuilt.
 - Renderer now writes to an ignored temporary MP4 and renames on success so interrupted renders preserve the last delivered movie.
 - Resumed existing automation typeparkinson-overnight-work as TypeParkinson overnight polish, ACTIVE hourly through 7 AM October 25 America/New_York. No duplicate automation, new app or PR. Last usage: 20% current window /25% weekly used, no credits or paid reset.
+
+## October24night — v2 active implementation checkpoint
+
+Personal repository verified PUBLIC at https://github.com/BurTheBear/TypeParkinson-CAC, defaultbranchpresentation, contains0880f86. All new work MUST push personal FIRST. Existing draft upstreamPR7 still open; do not update fork/upstream until finished.
+
+V2 mandatory RESEARCH.md and STORYBOARD.md completed before animation code. New Three.js0.170.0 offline prototype now in presentation/v2/src + generatedanimation.html. Persistent physical phone, studio environment/materials, realVideoTexture, instancedkeys/contacts, Gaussian surface, extruded corrections, waveform/barcity, frostedcode/architecture/reportpanels, rings, two112s/168stimelines, proceduralOfflineAudioContext score and4sampletemporalaccumulation. This is NOT final/approved. Pass1contactsheet reviewed; corrective lighting/layout/font changes in progress. See REVIEW.md. render.mjs supportsstills/animatic/audio/finalCDPexport; initial960frames~.2-.7seceach.
+
+Fresh app screens/4sclips:today/practice/progress/speak/compare/onboarding. Real physicalsimulatorinputfailednoWindowsAvailable, so freshSpeakisemptycomposer; don'tclaimactualcorrectioncapture. Sensorclipsstillv1samples,labelclearly. Native67testsverified earlierthisnight.
+
+Usage92%current5hused36%weeklyat~23:15NY; reset1792902492(~00:28NY). Save/push checkpoint, use remaining allowance conservatively. No paidcredits/resets. OvernightheartbeatACTIVEthrough7AMOct25. Next: renderpass2andfullanimatic, inspectactualmotion; improvecamera/staginguntilmateriallystronger,threehonestpasses,final1080p60sound+silentpresenter112s,captionedsubmission168s/SRT/VOICEOVER,websiteAFTERfilm. Currentprototypecontainsrequiredobjectsbutneedsvisualpolishandreview. Readfullv2brief,don'toverwritearchivev1.
