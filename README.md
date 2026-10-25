@@ -66,6 +66,6 @@ None of these are compiled into Release builds.
 
 ## Presentation and project website
 
-The [presentation folder](presentation/README.md) contains the silent 94-second film, an offline HTML player and reproducible rendering tools. [Presenter script](presentation/PRESENTER-SCRIPT.md), [CAC alignment](presentation/CAC-ALIGNMENT.md) and [AI-assistance disclosure draft](presentation/AI-ASSISTANCE.md) are prepared for Atharv Sharma and Pranav Atreya to review and rehearse.
+The [presentation folder](presentation/README.md) links the preserved [v1 archive](presentation/v1/README.md) and the active [v2 brief](presentation/v2/BRIEF.md). Current progress is in [presentation/PROGRESS.md](presentation/PROGRESS.md).
 
-The landing page is in [docs/index.html](docs/index.html). Privacy and support retain their existing URLs. These materials do not constitute a CAC application submission or App Store release. Native changes on the presentation branch remain unbuilt by user instruction; see [validation notes](presentation/VALIDATION.md).
+The landing page is in [docs/index.html](docs/index.html). Privacy and support retain their existing URLs. These materials do not constitute a CAC application submission or App Store release. The v2 build/test baseline and remaining hardware checks are in [validation](presentation/v2/VALIDATION.md).

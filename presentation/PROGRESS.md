@@ -1,3 +1,21 @@
+# Active v2 brief — October 24 night
+
+**Read presentation/v2/BRIEF.md completely before acting.** The latest pasted brief supersedes the earlier incremental-polish plan. Build a separate, much stronger Three.js v2 TONIGHT. Keep v1 untouched in presentation/v1/. Mandatory research and STORYBOARD before any new animation code. Two cuts: presenter 90–120s with music/SFX plus silent copy; submission 2:30–2:55 with captions/SRT/VOICEOVER.md. Offline player, deterministic __render(t), 1080p60, 4–8 motion-blur samples, procedural sound, three documented review passes. 4K only if time permits. Website AFTER the film.
+
+User explicitly changed publication order: FIRST create a separate repository under their account, upload everything/new changes there, THEN put the finished work into Pranav’s existing PR. **Created https://github.com/BurTheBear/TypeParkinson-CAC and pushed all current commits through cfa5f46.** `personal` remote points there, branch presentation now tracks personal/presentation. Existing `fork` still BurTheBear/TypeParkinson; origin remains Pranav. Do not create a duplicate PR or push upstream. All future checkpoints go to personal first.
+
+The new v2 brief explicitly says to build the existing app, record fresh footage and show a verified test count. This supersedes the prior no-build instruction; the plan told the user this. Never create another app. Do not display “55 tests passing” unless actually confirmed; use the actual verified count or state verification pending. The existing app now BUILDS and TEST SUCCEEDED:67 tests in13 suites, completed22:45NYOct24. Previously unrun regression cases now pass. See v2/VALIDATION.md; real-device/manual checks remain.
+
+Current environment: Xcode 26.5 17F42; iPhone 17 Pro iOS26.2 booted UDID4ED0F50B-CEC6-4B17-A835-70F32AAF01C7. simctl needs sandbox escalation. Repository creation succeeded; no permission blocker.
+
+Research already explored official 2026 CAC rules/sample rubric, NJ11 participation, Sony Cine/Adobe camera motivation, Tendril Figure02 and IBM z17, BUCK Nothing Playground, Apple Relay transcript, W3C flash/caption guidance, Three.js docs and clinical sources. V2 RESEARCH.md is still to be written and more technical/craft research remains. A CAC winning demo on YouTube was unavailable (account error151); do not claim to have watched it. Tendril main Vimeo embed missing, but its official process stills and some embeds load; actual Figure02 hero screenshot reviewed in IAB. Research tabs:4 YouTube,5 Tendril; original user tabs1–3 preserved.
+
+Overnight heartbeat typeparkinson-overnight-work ACTIVE through7AMOct25NY; update its prompt to the new v2 brief/publication/build instructions. Latest usage44% current5h/28%weekly used. No credits/reset purchases.
+
+---
+
+Earlier v1 record (paths below now live under presentation/v1; do not redo):
+
 # Overnight progress — October 23, 2026
 
 ## Current priority — 3D cinematic pitch revision, October 24 night

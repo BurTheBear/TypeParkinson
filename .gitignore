@@ -4,3 +4,11 @@ presentation/.render-*/
 *.xcuserstate
 presentation/assets/*.png
 presentation/preview/
+
+presentation/v1/preview/
+presentation/v1/frames/
+presentation/v2/preview/
+presentation/v2/frames/
+presentation/v2/node_modules/
+presentation/v2/.render-*/
+presentation/v2/dist/
