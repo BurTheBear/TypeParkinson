@@ -4,7 +4,7 @@ Two speakers, approximately215 words. Rehearse to the chapter changes; use the s
 
 **0–8 · Atharv** — A simple word: hello. When a hand trembles, one intended tap can become several. What if the keyboard adapted to the person?
 
-**8–16 · Pranav** — An estimated1.1million Americans live with Parkinson’s. Tremor and stiffness can make typing harder. Some people also experience a quieter voice.
+**8–16 · Pranav** — An estimated 1.1 million Americans live with Parkinson’s. Tremor and stiffness can make typing harder. Some people also experience a quieter voice.
 
 **16–26 · Atharv** — We’re Atharv Sharma and Pranav Atreya from Livingston High School. TypeParkinson is an iPhone app and system keyboard built with Swift and SwiftUI.
 
@@ -16,7 +16,7 @@ Two speakers, approximately215 words. Rehearse to the chapter changes; use the s
 
 **64–74 · Atharv** — A comparison screen lets you check standard and personal typing. These numbers are demo data, not clinical evidence.
 
-**74–85 · Pranav** — The custom keyboard shares numerical settings through an App Group. Here’s the real Swift scoring code. Our current simulator run passed67automated tests.
+**74–85 · Pranav** — The custom keyboard shares numerical settings through an App Group. Here’s the real Swift scoring code. Our current simulator run passed 67 automated tests.
 
 **85–98 · Atharv** — Daily checks, practice, Speak and progress work together. PDF and CSV exports help you share observations with your care team. Displayed histories are samples.
 

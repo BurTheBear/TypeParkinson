@@ -1,6 +1,6 @@
 # TypeParkinson v2 — in production
 
-The exact brief is BRIEF.md. Research and shot plan were written before animation code. Source is src/, offline generated player is animation.html, Three.js0.170.0 and Nunito are vendored with their licenses. Rebuild using npm ci then npm run build. No network is needed for the generated player.
+The exact brief is BRIEF.md. Research and shot plan were written before animation code. Source is src/, offline generated player is animation.html, Three.js 0.170.0 and Nunito are vendored with their licenses. Rebuild using npm ci then npm run build. No network is needed for the generated player.
 
 Current status: initial physical 3D prototype; final cuts, narration/captions and three review passes remain in progress. Do not mistake this checkpoint for an approved final film. See REVIEW.md and VALIDATION.md.
 

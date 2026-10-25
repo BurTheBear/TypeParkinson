@@ -14,7 +14,7 @@ Reviewed corrected actual frames at2 and44seconds at960wide. Dark metallic keys 
 
 The full112s12fps animatic export is running. Do not yet claim it was watched or that three passes are complete.
 
-## Pass3 — full-resolution staging and export review, October25
+## Pass3 — full-resolution staging and export review, October 25
 
 Reviewed the full112-second animatic as a contact sheet at4-second intervals (pass2-animatic.jpg). It confirms consistent palette and coverage, but shows the original correction/subtitle collision, thin architecture labels, a rectangular Gaussian base and repetitive framing. That sheet predates the following corrections; it is retained as evidence, not presented as a finished cut.
 
@@ -23,3 +23,5 @@ Reviewed actual1920×1080 four-sample frames from the revised renderer at21,31,4
 A one-second1080p60/four-sample benchmark completed successfully. Native Metal rendering was confirmed on AppleM1Max. Browser compositor screenshots were the bottleneck; direct native-resolution canvas export of the same world/editorial layer reduced sampled frame times to66–172ms. JPEG97 is used as an intermediate before H.264; it is not a lower-resolution render. Final export captures clean and captioned frames from the same render clock. The112s presenter cut is derived from the168s master scene-by-scene, preserving its60fps output and matching the presenter script. Optional4K and further experiments were dropped at the user's urgent request.
 
 The final master is rendering. Encoded-film checks, complete decode, caption/SRT checks and final contact sheet remain pending. No physical10-metre viewing test or patient/hardware validation has been performed.
+
+Live controls follow-up: browser review reproduced a blank paused chapter boundary; navigation now seeks into a settled pose. At320px all controls fit in two rows, meet44px targets and avoid the picture. Normal size was restored. These player-only changes do not alter the master already rendering. The final encoded cut is still pending review; the user has rejected the draft aesthetic, so no user approval or subjective quality claim is implied.

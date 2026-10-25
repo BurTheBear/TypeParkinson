@@ -1,10 +1,10 @@
 # TypeParkinson
 
-TypeParkinson measures how someone touches the screen, builds a keyboard around it, checks that the keyboard actually helps, and then keeps learning as they type. Around the keyboard it adds daily tracking of hands and voice, speech for when talking is hard, medication timing, and a report to share with a care team. It's an iPhone and iPad app plus a system keyboard that works in any app.
+TypeParkinson measures how someone touches the screen, builds a keyboard around it, lets them compare standard and personal typing, and then keeps learning as they type. Around the keyboard it adds daily tracking of hands and voice, speech for when talking is hard, medication timing, and a report to share with a care team. It's an iPhone and iPad app plus a system keyboard for supported apps.
 
 ## What it does
 
-**The keyboard (in every app)**
+**The keyboard (in supported apps)**
 - **Personal touch model.** The setup exercises measure where this person's touches land around a key: an average offset and a spread on each axis (`Shared/TouchModel.swift`). The keyboard keeps refining it on the device from every word the person keeps. Only those few numbers are stored, never text.
 - **Smart correction.** At the end of each word, `Shared/IntentDecoder.swift` works out the most likely intended word with Bayes' rule: how likely the touches are under the touch model, times how likely the word is (`Shared/WordList.swift` ranks, with the system dictionary as a fallback). The alignment can drop a shaky double contact, supply a missed letter, or swap two letters, so "tje", "hellloo", "tomorow" and "teh" become "the", "hello", "tomorrow" and "the". A chip puts back exactly what was typed in one tap.
 - **Touch handling for shaky hands.** Offset correction, a repeat filter for bounces, a brush filter for touches that lift too quickly, drift tolerance, a slower hold-to-delete, a large Undo / Delete word bar, a key pop-up, and three themes including high contrast. Touches come straight from UIKit with hardware timestamps (`Shared/MultiTouchSurface.swift`).

@@ -1,0 +1,16 @@
+{
+  "offline": true,
+  "deterministicBackwardSeek": true,
+  "hashes": [
+    "4d27df495450ebfc914f2934807de19f207f5373c10b9b99afb2cf93ec1a7862",
+    "4d27df495450ebfc914f2934807de19f207f5373c10b9b99afb2cf93ec1a7862"
+  ],
+  "submission": {
+    "time": 120,
+    "scene": "engineering",
+    "samples": 4,
+    "width": 960,
+    "height": 540
+  },
+  "passed": true
+}

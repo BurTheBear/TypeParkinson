@@ -9,6 +9,9 @@ filters+=scenes.map((s,i)=>`[vv${i}][aa${i}]`).join('')+`concat=n=${scenes.lengt
 fs.writeFileSync('preview/presenter-filter.txt',filters);
 run(['-i',clean,'-i',score,'-filter_complex_script','preview/presenter-filter.txt','-map','[v]','-map','[a]','-c:v','libx264','-preset','fast','-crf','21','-pix_fmt','yuv420p','-c:a','aac','-b:a','128k','-movflags','+faststart','TypeParkinson-presenter.mp4']);
 run(['-i','TypeParkinson-presenter.mp4','-map','0:v:0','-an','-c:v','copy','-movflags','+faststart','TypeParkinson-presenter-silent.mp4']);
+fs.copyFileSync(score,'score-submission.wav');
 // Preserve a compact procedural soundtrack alongside its reproducible WAV source.
 run(['-i',score,'-c:a','aac','-b:a','160k','score-submission.m4a']);
 for(const f of ['TypeParkinson-submission.mp4','TypeParkinson-presenter.mp4','TypeParkinson-presenter-silent.mp4'])console.log(f,fs.statSync(f).size);
+
+for(const f of ['TypeParkinson-submission.mp4','TypeParkinson-presenter.mp4','TypeParkinson-presenter-silent.mp4']){if(fs.statSync(f).size>50000000){const probe=spawnSync('ffprobe',['-v','error','-show_entries','format=duration','-of','json',f],{encoding:'utf8'});const d=Number(JSON.parse(probe.stdout).format.duration),bitrate=Math.floor(47000000*8/d-140000),tmp='preview/capped-'+path.basename(f);run(['-i',f,'-c:v','libx264','-preset','fast','-b:v',String(bitrate),'-maxrate',String(Math.round(bitrate*1.5)),'-bufsize',String(bitrate*3),'-c:a','aac','-b:a','128k','-movflags','+faststart',tmp]);fs.renameSync(tmp,f);console.log('Capped',f,fs.statSync(f).size);}}
