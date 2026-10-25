@@ -1,3 +1,21 @@
+# October25 evening — ACTIVE manual deadline work
+
+The user needs to record TODAY and explicitly said to do whatever cuts time. Continue finishing the film now; no new native work or design experiments. The expired overnight heartbeat is PAUSED (tool confirmed). Usage allowance has reset and no credits were purchased.
+
+Current branch presentation, personal repo https://github.com/BurTheBear/TypeParkinson-CAC already pushed through055ec42. New source refinements and script/review cleanup are local and need personal push FIRST. Then, after deliverables are finished, push fork/presentation and update SAME upstream draftPR7. Never upstream merge/push.
+
+Full v2 submission render is RUNNING execsession12737, Chromeport9242:168s,1920x1080,60fps,4 actual shutter samples, clean and burned-caption pictures in ONE GPU run, procedural score WAV. Current source/HTML loaded by that job is locked. Output preview/submission-picture.mp4, preview/submission-captioned-picture.mp4, preview/score-submission.wav. Do not run a competing renderer on9242. Direct canvas export is66–172ms/frame in benchmark, far faster than the initial CDP screenshots. User was told roughly20–30min main render plus encoding/checks based on that benchmark.
+
+When complete: run node presentation/v2/tools/finalize.mjs from repo root. It muxes submission, derives112s presenter+silent per scene from the clean master (saves a second GPU render), exports compact score. Then full-decode/ffprobe each, verify sizes<50MB and captions/SRT, inspect final contact sheet/motion, update website film/poster/transcript AFTER film is secure. Keep native67-test result and hardware limits honest. Submission has procedural music/SFX and captions, no recorded student voice; user has VOICEOVER.md and is recording their2:48 narration. Do not change that script/timing casually.
+
+Fresh app captures cover static Today/Practice/Progress/Speak/comparison/onboarding. Physical simulator input failed; correction is an illustrated tested case, not live footage. Sensor recordings remain older simulator samples. Three honest prototype/still reviews are in v2/REVIEW.md; do not pretend a physical viewing-distance test or whole final movie viewing occurred.
+
+Previous automatic save attempt hit account approval-review usage limits at23:08Oct24 and did not execute; no continued overnight work is claimed. Misplaced local script/review/progress notes have now been moved into correct v2/presentation folders. New build script works when called from repo root.
+
+---
+
+Historical progress (superseded by the active state above):
+
 # Active v2 brief — October 24 night
 
 **Read presentation/v2/BRIEF.md completely before acting.** The latest pasted brief supersedes the earlier incremental-polish plan. Build a separate, much stronger Three.js v2 TONIGHT. Keep v1 untouched in presentation/v1/. Mandatory research and STORYBOARD before any new animation code. Two cuts: presenter 90–120s with music/SFX plus silent copy; submission 2:30–2:55 with captions/SRT/VOICEOVER.md. Offline player, deterministic __render(t), 1080p60, 4–8 motion-blur samples, procedural sound, three documented review passes. 4K only if time permits. Website AFTER the film.
@@ -144,3 +162,5 @@ V2 mandatory RESEARCH.md and STORYBOARD.md completed before animation code. New 
 Fresh app screens/4sclips:today/practice/progress/speak/compare/onboarding. Real physicalsimulatorinputfailednoWindowsAvailable, so freshSpeakisemptycomposer; don'tclaimactualcorrectioncapture. Sensorclipsstillv1samples,labelclearly. Native67testsverified earlierthisnight.
 
 Usage92%current5hused36%weeklyat~23:15NY; reset1792902492(~00:28NY). Save/push checkpoint, use remaining allowance conservatively. No paidcredits/resets. OvernightheartbeatACTIVEthrough7AMOct25. Next: renderpass2andfullanimatic, inspectactualmotion; improvecamera/staginguntilmateriallystronger,threehonestpasses,final1080p60sound+silentpresenter112s,captionedsubmission168s/SRT/VOICEOVER,websiteAFTERfilm. Currentprototypecontainsrequiredobjectsbutneedsvisualpolishandreview. Readfullv2brief,don'toverwritearchivev1.
+
+Latest checkpoint af1c8b3 is pushed to personal. Running render execsession53256: full112s960x54012fps animatic preview/animatic-pass2.mp4 (~3–4minrender). It also saved pass2stills. Source now additionally fixescorrection/subtitlecollision and reducesparticle/rippledensity; generatedHTMLrebuiltaftertherenderloaded,soanimaticdoesNOTcontainthesetwofinaltweaks. Pass2stillimages2and44wereactuallyviewed;donotclaimwholefilmwatchedyet. VOICEOVER.md, matching36cueSRT and112spresenter-scriptnowexist. Narration391words/168s; scorehasnospeech. FinalMP4snotyetmade. Needrenderafterreview. Confirmcurrentrendercompletionwithwrite_stdin53256orfilesystemffprobe.
