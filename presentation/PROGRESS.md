@@ -1,8 +1,10 @@
 # Overnight progress — October 23, 2026
 
-## Current priority — cinematic revision, October 24 morning
+## Current priority — 3D cinematic pitch revision, October 24 night
 
-The user rejected the first animation and selected **cinematic product launch**: close-up keyboard motion, a large moving iPhone, less text. They then authorized continuing throughout the day while away. The daytime schedule ended after 7 PM New York time; the TypeParkinson daytime work heartbeat is now paused. The first cinematic revision is now rendered and validated technically, with a large moving phone, angled key close-ups, individual letter transformations, shorter copy and new transition timing. The user has not yet reviewed this revision. Use their next feedback to guide further visual work. Native rebuilds remain prohibited. Keep updating the same draft PR #7; do not overwrite in-progress edits on a heartbeat.
+Latest request: strengthen the film substantially with **3D camera movement**, then polish the existing website, prepare a two-person pitch script and align it to CAC guidance. The user resumed overnight work through 7 AM October 25 New York time; the existing heartbeat is ACTIVE. Current work must be preserved.
+
+Earlier context: the user rejected the first animation and selected **cinematic product launch**: close-up keyboard motion, a large moving iPhone, less text. They then authorized continuing throughout the day while away. The daytime schedule ended after 7 PM New York time; the TypeParkinson daytime work heartbeat is now paused. The first cinematic revision is now rendered and validated technically, with a large moving phone, angled key close-ups, individual letter transformations, shorter copy and new transition timing. The user has not yet reviewed this revision. Use their next feedback to guide further visual work. Native rebuilds remain prohibited. Keep updating the same draft PR #7; do not overwrite in-progress edits on a heartbeat.
 
 Continue in this repository on branch `presentation`; do not create another app or run xcodebuild. The installed simulator app was used for all captures. The initial rebuild was stopped after the user said no rebuilds. No app installation or native rebuild was completed during the task.
 
@@ -103,3 +105,14 @@ Automation: heartbeat id `typeparkinson-overnight-work` (name: TypeParkinson day
 - The revised cinematic master is 94 seconds, 1080p30, silent H.264, 8,067,314 bytes. The website copy, poster and transcript match. Browser motion/controls/accessibility checks and complete decoding of both videos have passed; see VALIDATION.md.
 - The user has not yet reviewed the cinematic revision. Native source changes remain deliberately unbuilt and their Swift tests unrun. Pranav must validate the native changes in Xcode/on a real iPhone before merging, then confirm Pages from main /docs. Existing privacy/support URLs and both credits are preserved.
 - Account usage at closure: 19% current window used, 21% weekly used. No credits or paid resets purchased.
+
+
+## October 24 night — 3D camera / pitch pass in progress
+
+- Latest steering: “breathtaking 3D animation,” animation FIRST, website polish AFTER. Existing app only; no native rebuilds. Credits and school confirmed: Atharv Sharma & Pranav Atreya, freshmen, Livingston High School, New Jersey.
+- Replaced 2D sheared devices with a small world-space perspective renderer: extruded rounded chassis and keys, textured screen meshes, generic illustrated rear device, camera orbit/crane/truck paths, true near/far parallax, view-dependent edge lighting. Retained the 94-second timeline, offline deterministic rendering, sample labels and correction-hold regression.
+- Researched cinematography (Sony Cine and Adobe) and national CAC requirements, published sample rubric, NJ-11 participation. Sources and the local-rubric limitation are in CAC-ALIGNMENT.md and DESIGN.md. Added PRESENTER-SCRIPT.md and AI-ASSISTANCE.md. Do not invent student contributions or claim eligibility is certified. Official sources disagree on the submission deadline time; documented for team verification.
+- Reviewed a motion preview, opening/orbit/tracking frame sequences and full-resolution stills. Fixed triangulation seams, correction-chip/key overlap, and camera-relative callout/ripple anchors. Latest packed player and browser regressions pass. Final master encode was started; website media/poster/transcript and website visual polish are NEXT after it is decoded/reviewed. Do not confuse the older tracked MP4 with the new encode until it completes.
+- Added a concrete Speak fix: refresh correction preferences/calibration after Settings changes without losing message/Undo, clear stale touch coordinates if layout/model changed, and honor suggestions/phrases toggles. Added three behavioral regressions, UNRUN. Native source remains unbuilt.
+- Renderer now writes to an ignored temporary MP4 and renames on success so interrupted renders preserve the last delivered movie.
+- Resumed existing automation typeparkinson-overnight-work as TypeParkinson overnight polish, ACTIVE hourly through 7 AM October 25 America/New_York. No duplicate automation, new app or PR. Last usage: 20% current window /25% weekly used, no credits or paid reset.

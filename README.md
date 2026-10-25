@@ -1,5 +1,4 @@
 # TypeParkinson
-place for parkinson people to type
 
 TypeParkinson measures how someone touches the screen, builds a keyboard around it, checks that the keyboard actually helps, and then keeps learning as they type. Around the keyboard it adds daily tracking of hands and voice, speech for when talking is hard, medication timing, and a report to share with a care team. It's an iPhone and iPad app plus a system keyboard that works in any app.
 
@@ -63,3 +62,10 @@ First launch: onboarding (five pages) → account (Sign in with Apple, or contin
 - **`-demoScreen <name>`** launch argument opens a screen with sample data: `onboarding`, `account`, `welcome`, `exercises`, `profile`, `proposal`, `check`, `compare`, `enable`, `home`, `recalResult`, `settings` (add `-demoSignedIn YES` to sign in, and `-demoTab today|practice|speak|progress|settings` with `home`).
 
 None of these are compiled into Release builds.
+
+
+## Presentation and project website
+
+The [presentation folder](presentation/README.md) contains the silent 94-second film, an offline HTML player and reproducible rendering tools. [Presenter script](presentation/PRESENTER-SCRIPT.md), [CAC alignment](presentation/CAC-ALIGNMENT.md) and [AI-assistance disclosure draft](presentation/AI-ASSISTANCE.md) are prepared for Atharv Sharma and Pranav Atreya to review and rehearse.
+
+The landing page is in [docs/index.html](docs/index.html). Privacy and support retain their existing URLs. These materials do not constitute a CAC application submission or App Store release. Native changes on the presentation branch remain unbuilt by user instruction; see [validation notes](presentation/VALIDATION.md).

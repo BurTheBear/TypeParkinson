@@ -57,3 +57,43 @@
     input.value = ''; resetCorrection(); status.textContent = 'Choose an example or type your own words.'; input.focus();
   });
 })();
+
+// Visitors choose a real screen; nothing moves or changes on a timer.
+(() => {
+  const image = document.getElementById('hero-screen');
+  const note = document.getElementById('screen-note');
+  if (!image || !note) return;
+  const screens = {
+    today: ['Today', 'TypeParkinson Today screen with daily rings, a six-tap check and personal insights. Simulator sample data.'],
+    practice: ['Practice', 'TypeParkinson Practice screen with spiral tracing, rhythm tapping and typing activities. Simulator sample data.'],
+    speak: ['Speak', 'TypeParkinson Speak screen with a message, speech controls and the personal keyboard. Simulator sample data.']
+  };
+  document.querySelectorAll('[data-screen]').forEach(button => button.addEventListener('click', () => {
+    const screen = screens[button.dataset.screen];
+    if (!screen) return;
+    image.src = `assets/${button.dataset.screen}.webp`;
+    image.alt = screen[1];
+    note.textContent = `${screen[0]} · Actual app · Simulator sample data`;
+    document.querySelectorAll('[data-screen]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+  }));
+})();
+
+(() => {
+  const video = document.querySelector('#film video');
+  const status = document.getElementById('chapter-status');
+  if (!video) return;
+  let requested = null;
+  function seekRequested() {
+    if (requested === null || video.readyState < 1) return;
+    video.currentTime = Math.min(requested, video.duration);
+    requested = null;
+    video.play().catch(() => { if (status) status.textContent = 'Chapter ready. Press Play on the video to begin.'; });
+  }
+  video.addEventListener('loadedmetadata', seekRequested);
+  document.querySelectorAll('[data-film-time]').forEach(button => button.addEventListener('click', () => {
+    requested = Number(button.dataset.filmTime);
+    if (status) status.textContent = `Playing ${button.firstChild.textContent.trim()}.`;
+    if (video.readyState >= 1) seekRequested();
+    else video.load();
+  }));
+})();

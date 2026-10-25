@@ -1,6 +1,6 @@
 # TypeParkinson presentation
 
-Open `animation.html` in Chrome, Safari or Edge. It works offline and includes the actual app media. The revised cinematic film runs for 94 seconds, silently, so the team can narrate. It uses close-up keys, moving iPhones, masked type and individual letter transformations, with actual simulator footage.
+Open `animation.html` in Chrome, Safari or Edge. It works offline and includes the actual app media. The revised cinematic film runs for 94 seconds, silently, so the team can narrate. It uses perspective camera orbits, extruded keys and phone chassis, masked type and individual letter transformations, with actual simulator footage.
 
 - **Space**: pause or play
 - **Left / right**: move between scenes
@@ -25,6 +25,14 @@ python3 presentation/tools/check-site.py
 ```
 
 Set `CHROME` to a Chrome executable on other operating systems. The renderer uses a separate temporary browser profile and DevTools port 9237. Video frames are piped directly to ffmpeg; it doesn't fill the repository with thousands of PNGs. The preview command makes a full 94-second 960×540 / 15 fps draft in the ignored preview directory; video exports 1080p30. Set STILL_TIMES to a comma-separated list of seconds for detailed motion review. Absolute-time video seeking is awaited before capture. Encoding caps the bitrate to keep the film below 25 MB.
+
+## Pitch materials
+
+- [PRESENTER-SCRIPT.md](PRESENTER-SCRIPT.md): timed two-person narration and technical Q&A.
+- [CAC-ALIGNMENT.md](CAC-ALIGNMENT.md): required video information, sample-rubric map and outstanding submission actions.
+- [AI-ASSISTANCE.md](AI-ASSISTANCE.md): disclosure draft for the team to review and complete truthfully.
+
+The official sample rubric is used as a planning framework; no separate NJ-11 rubric was verified. The film is silent. Recording your own narration and submitting the application remain team actions.
 
 ## Presenter notes
 
