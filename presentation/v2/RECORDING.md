@@ -1,6 +1,8 @@
 # Record today
 
-Use **VOICEOVER.md** for the **2:48 submission**. Atharv and Pranav alternate at its timestamped chapter boundaries. The script contains391 words. Record in a quiet room, keep the microphone at a steady distance, and leave a short pause between sections. If a line needs another take, record that section again; the fixed chapter times make it easy to edit.
+For the user's latest request—animation plus a real app walkthrough—use **HYBRID-SCRIPT.md**. It targets **2:45 total**: the 45-second showcase followed by two minutes of actual app footage and closing. The short showcase includes Practice, tremor and voice screens. The 30-second intro is also available if you need more demonstration time. Neither contains recorded student narration.
+
+**VOICEOVER.md** is an alternative narration for the separate **2:48 illustrated film**. Do not add an app demo after that film: the official maximum is three minutes for the entire uploaded video. Atharv and Pranav alternate at its timestamped chapter boundaries. It contains 391 words. Record in a quiet room, keep the microphone at a steady distance, and leave a short pause between sections.
 
 The exported submission film contains captions and quiet procedural music/SFX. It does not contain a synthetic or recorded student voice. Lay your recorded narration over it; lower the music further if it competes with speech. Check the final exported narrated video's duration remains below3minutes and that the captions still match your words.
 

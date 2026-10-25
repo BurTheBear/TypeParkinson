@@ -82,6 +82,9 @@
   const video = document.querySelector('#film video');
   const status = document.getElementById('chapter-status');
   if (!video) return;
+  const failure = document.getElementById('film-error');
+  video.addEventListener('error', () => { if (failure) failure.hidden = false; });
+  video.addEventListener('loadeddata', () => { if (failure) failure.hidden = true; });
   let requested = null;
   function seekRequested() {
     if (requested === null || video.readyState < 1) return;

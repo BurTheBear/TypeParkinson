@@ -24,6 +24,12 @@ export const narration = [
  ['There is no TypeParkinson server. The keyboard stores numerical touch parameters, never typed text. Speak can save phrases and recent messages locally. These measurements describe activity; they do not diagnose disease.'],
  ['TypeParkinson. A keyboard that learns your hands. Atharv Sharma and Pranav Atreya, Livingston High School, New Jersey. Congressional App Challenge 2026. AI assistance and open-source dependencies are documented with the project.']
 ];
-export function timeline(cut='presenter') {let t=0;return scenes.map((s,i)=>{const d=s[cut==='submission'?'s':'p'];const r={...s,i,start:t,end:t+d,duration:d};t+=d;return r;});}
+const shortDurations=[4,4,8,7,7];
+const exerciseScenes=[
+ {id:'practice-showcase',name:'Practice',title:'Practice your way.',sub:'Spiral · Rhythm · Typing',note:'Actual app screen',duration:5},
+ {id:'tremor-showcase',name:'Tremor meter',title:'Know your movement.',sub:'A short motion check.',note:'Simulator sample · Not a diagnosis',duration:5},
+ {id:'voice-showcase',name:'Voice practice',title:'Find your voice.',sub:'Practice a comfortable volume.',note:'Simulator sample · Relative volume',duration:5}
+];
+export function timeline(cut='presenter') {let t=0;const short=cut==='intro'||cut==='showcase';const list=short?scenes.slice(0,5).map((s,i)=>({...s,duration:shortDurations[i]})):scenes;const chosen=cut==='showcase'?[...list,...exerciseScenes]:list;return chosen.map((s,i)=>{const d=short?s.duration:s[cut==='submission'?'s':'p'];const r={...s,i,start:t,end:t+d,duration:d};t+=d;return r;});}
 export function at(t,cut='presenter'){const a=timeline(cut);return a.find(s=>t<s.end)||a.at(-1);}
 export function captionCues(){const cues=[];for(const s of timeline('submission')){const words=narration[s.i][0].split(' ');const count=Math.ceil(words.length/13);for(let i=0;i<count;i++){const chunk=words.slice(i*13,(i+1)*13).join(' ');cues.push({start:s.start+i*s.duration/count,end:s.start+(i+1)*s.duration/count,text:chunk});}}return cues;}

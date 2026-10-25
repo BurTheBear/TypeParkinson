@@ -13,3 +13,4 @@
 @media(max-width:440px){.landing .site-header{padding-inline:16px}.hero{padding:28px 16px 45px}.hero h1{font-size:57px}.hero .intro{font-size:20px}.hero-art{height:620px}.hero-phone{width:230px;margin:-145px 0 0}.hero .screen-note{font-size:10px}.screen-picker{bottom:37px}.button-secondary{padding-inline:20px}.hero .actions{gap:12px}.hero .coming{margin-top:0}.film-chapters{gap:8px}.film-chapters button{font-size:12px;padding:12px;gap:8px}.film-chapters span{font-size:11px}}
 @media(max-width:350px){.hero h1{font-size:51px}.hero-art{height:610px}.hero-phone{width:220px}.screen-picker button{min-width:68px;padding-inline:12px}}
 @media(prefers-reduced-motion:reduce){.hero-phone{transform:none}.hero .aura-field:before{animation:none}}
+.film-caption{flex-wrap:wrap}.film-error{margin-top:16px;font-size:16px}.film-error[hidden]{display:none}

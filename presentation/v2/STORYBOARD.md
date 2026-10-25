@@ -33,3 +33,8 @@ Two cuts share scene poses and animation functions. Presenter: **112 s**. Submis
 3. Three review iterations with contact sheets and actual short motion clips. Record findings and changes in REVIEW.md. Do not claim whole-film viewing without doing it.
 4. Render60fps with4 temporal shutter samples, sound WAV, presenter sound/silent copies and168s captioned submission. Full decode, media-size and deterministic seek checks.
 5. Update existing website film/poster/transcript after film is secure. Commit/push personal first, then fork and update existing upstream draftPR7. No upstream merge.
+# October 25 revision after the user's export review
+
+The user rejected the rendered draft's visual finish and requested actual exercises. Keep the long drafts available; revise the recording opener in the existing Three.js world. A 30-second intro and 45-second showcase share five shots: macro contact (4s), need (4s), device reveal (8s), touch model (7s), correction (7s). The showcase adds Practice, the tremor meter and voice practice (5s each). These use actual existing app captures; sensor footage is simulator sample data, not patient evidence.
+
+Measured fixes: soften the mirror-like key reflections, remove the floating keyboard from the device reveal and correction shot, reserve separate areas for the word/Undo/note, use a sustained camera move instead of a drift that returns to its starting pose, and enlarge the app screen in the exercise shots. Review stills before the short export. The 45-second version leaves 2:15 of the official three-minute limit for a real walkthrough and closing; the suggested assembled pitch is 2:45.

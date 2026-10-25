@@ -2,6 +2,10 @@
 
 This maps the film to published national criteria. It is not an eligibility certification or a verified NJ11 local rubric. Official sources and limitations are in RESEARCH.md.
 
+For the latest requested format, use **HYBRID-SCRIPT.md**: 45 seconds of revised animation/exercise footage plus two minutes of a real app walkthrough and closing, targeting 2:45 total. It covers the names, audience, purpose and Swift/SwiftUI during the opener; the touch model and comparison at 0:45; actual keyboard/Speak functionality at 1:10; exercises and sensor engineering at 1:40; Progress/export/privacy at 2:05; and code, App Group architecture, verified test count and limitations at 2:25. This reserves most of the video for visible app functionality. Caption the students' actual recorded words; the long-film SRT does not match this version.
+
+The table below maps the alternative 168-second illustrated draft. Do not append an app demonstration to it; three minutes is the maximum for the entire upload.
+
 | Required concern | Submission time | Evidence |
 |---|---|---|
 | App name, purpose and audience | 0:00–0:37 | An intended hello, Parkinson's audience, both creators, iPhone app/system keyboard |

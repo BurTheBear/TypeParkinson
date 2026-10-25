@@ -1,0 +1,120 @@
+{
+  "checkedAt": "2026-10-25T23:50:26.002Z",
+  "playerSHA256": "fe3a431c7bb7c3e93553dfc0e1e5774f59b78a5fdfc1e852a26aef03e94a9553",
+  "files": [
+    {
+      "file": "TypeParkinson-intro-30s.mp4",
+      "duration": 30,
+      "bytes": 12622065,
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "60/1",
+        "nb_frames": "1800",
+        "side_data_list": [
+          {}
+        ]
+      },
+      "audio": "aac",
+      "fullDecode": true
+    },
+    {
+      "file": "TypeParkinson-showcase-45s.mp4",
+      "duration": 45,
+      "bytes": 17641356,
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "60/1",
+        "nb_frames": "2700",
+        "side_data_list": [
+          {}
+        ]
+      },
+      "audio": "aac",
+      "fullDecode": true
+    },
+    {
+      "file": "TypeParkinson-showcase-silent.mp4",
+      "duration": 45,
+      "bytes": 16876999,
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "60/1",
+        "nb_frames": "2700",
+        "side_data_list": [
+          {}
+        ]
+      },
+      "audio": null,
+      "fullDecode": true
+    },
+    {
+      "file": "TypeParkinson-presenter.mp4",
+      "duration": 112.05,
+      "bytes": 39885874,
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "60/1",
+        "nb_frames": "6720"
+      },
+      "audio": "aac",
+      "fullDecode": true
+    },
+    {
+      "file": "TypeParkinson-presenter-silent.mp4",
+      "duration": 112.05,
+      "bytes": 37983431,
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "60/1",
+        "nb_frames": "6720"
+      },
+      "audio": null,
+      "fullDecode": true
+    },
+    {
+      "file": "TypeParkinson-submission.mp4",
+      "duration": 168,
+      "bytes": 43464957,
+      "video": {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1920,
+        "height": 1080,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "60/1",
+        "nb_frames": "10080",
+        "side_data_list": [
+          {}
+        ]
+      },
+      "audio": "aac",
+      "fullDecode": true
+    }
+  ],
+  "srt": {
+    "cues": 36,
+    "endsAt": 168,
+    "matchesNarration": true
+  },
+  "passed": true
+}
