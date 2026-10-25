@@ -1,0 +1,143 @@
+1
+00:00:00,000 --> 00:00:05,000
+A simple word. Hello. But when a hand trembles, one intended tap can
+
+2
+00:00:05,000 --> 00:00:10,000
+become several. We want the keyboard to adapt to the person.
+
+3
+00:00:10,000 --> 00:00:15,000
+An estimated 1.1 million Americans live with Parkinson’s, according to the Parkinson’s Foundation.
+
+4
+00:00:15,000 --> 00:00:20,000
+Tremor and stiffness can make fine motor tasks harder. Some people also experience
+
+5
+00:00:20,000 --> 00:00:25,000
+a quieter voice.
+
+6
+00:00:25,000 --> 00:00:29,000
+We are Atharv Sharma and Pranav Atreya, freshmen at Livingston High School in
+
+7
+00:00:29,000 --> 00:00:33,000
+New Jersey. This is TypeParkinson: an iPhone app and system keyboard built with
+
+8
+00:00:33,000 --> 00:00:37,000
+Swift and SwiftUI.
+
+9
+00:00:37,000 --> 00:00:43,000
+First, short setup exercises measure where touches land. A two-dimensional Gaussian describes the
+
+10
+00:00:43,000 --> 00:00:49,000
+person’s offset and spread. The keyboard uses that personal touch model, and a
+
+11
+00:00:49,000 --> 00:00:55,000
+standard-versus-personal check lets the user compare their own typing.
+
+12
+00:00:55,000 --> 00:01:00,500
+Next, smart correction combines touch evidence with word likelihood. A dynamic-programming alignment considers
+
+13
+00:01:00,500 --> 00:01:06,000
+repeated touches, missing letters and swapped letters. Tje can become the; hellloo becomes
+
+14
+00:01:06,000 --> 00:01:11,500
+hello. A one-tap Undo keeps the person in control. These are tested examples,
+
+15
+00:01:11,500 --> 00:01:17,000
+not patient outcomes.
+
+16
+00:01:17,000 --> 00:01:21,750
+An expert-set naive Bayes model describes touch patterns; it does not diagnose Parkinson’s.
+
+17
+00:01:21,750 --> 00:01:26,500
+Core Motion recordings use a windowed Fourier analysis to estimate shaking strength and
+
+18
+00:01:26,500 --> 00:01:31,250
+frequency. AVFoundation supports relative voice-volume practice and speaking typed messages. This five-hertz graphic
+
+19
+00:01:31,250 --> 00:01:36,000
+and the sensor readings are illustrative samples.
+
+20
+00:01:36,000 --> 00:01:41,333
+The app includes a direct comparison screen. Here, demo data shows four errors
+
+21
+00:01:41,333 --> 00:01:46,667
+versus one and six fixes versus two. These sample numbers explain the check.
+
+22
+00:01:46,667 --> 00:01:52,000
+They are not a clinical study or a promise of improvement.
+
+23
+00:01:52,000 --> 00:01:57,000
+The engineering stays on the device. The app shares numerical settings through an
+
+24
+00:01:57,000 --> 00:02:02,000
+App Group with the custom keyboard extension. Here is the real Swift candidate-scoring
+
+25
+00:02:02,000 --> 00:02:07,000
+code. The current simulator run passed 67 automated tests across 13 suites. Hardware
+
+26
+00:02:07,000 --> 00:02:12,000
+and keyboard integration still need real-device validation.
+
+27
+00:02:12,000 --> 00:02:16,250
+The same app brings together a daily check, spiral and rhythm practice, a
+
+28
+00:02:16,250 --> 00:02:20,500
+tremor meter, voice practice and Speak. Progress, medication logs and PDF or CSV
+
+29
+00:02:20,500 --> 00:02:24,750
+exports help a person bring observations to their care team. Displayed histories are
+
+30
+00:02:24,750 --> 00:02:29,000
+sample data.
+
+31
+00:02:29,000 --> 00:02:32,000
+There is no TypeParkinson server. The keyboard stores numerical touch parameters, never typed
+
+32
+00:02:32,000 --> 00:02:35,000
+text. Speak can save phrases and recent messages locally. These measurements describe activity;
+
+33
+00:02:35,000 --> 00:02:38,000
+they do not diagnose disease.
+
+34
+00:02:38,000 --> 00:02:41,333
+TypeParkinson. A keyboard that learns your hands. Atharv Sharma and Pranav Atreya, Livingston
+
+35
+00:02:41,333 --> 00:02:44,667
+High School, New Jersey. Congressional App Challenge 2026. AI assistance and open-source dependencies
+
+36
+00:02:44,667 --> 00:02:48,000
+are documented with the project.
