@@ -452,3 +452,64 @@ import Testing
         #expect(text.correction == nil)
     }
 }
+
+// MARK: - Speak preference refresh (requires native execution)
+
+@MainActor
+@Suite struct TextComposerSettingsTests {
+    private let layout = KeyboardLayout(size: .standard, width: 390, options: .init())
+
+    private func type(_ value: String, into composer: TextComposer) throws {
+        for (index, letter) in value.enumerated() {
+            let key = try #require(layout.keys.first { $0.id == String(letter) })
+            composer.press(KeyPress(key: key, uncorrectedKey: key,
+                                   point: CGPoint(x: key.frame.midX, y: key.frame.midY),
+                                   time: Double(index) * 0.4, layout: layout))
+        }
+    }
+
+    private func space(_ composer: TextComposer) throws {
+        let key = try #require(layout.keys.first { $0.action == .space })
+        composer.press(KeyPress(key: key, uncorrectedKey: key))
+    }
+
+    @Test func turningCorrectionOffPreservesMessageAndUndo() throws {
+        var settings = KeyboardSettings()
+        let composer = TextComposer(settings: settings, autoCapitalize: false)
+        try type("teh", into: composer)
+        settings.smartCorrectionEnabled = false
+        composer.apply(settings: settings)
+        try space(composer)
+        #expect(composer.text == "teh ")
+        #expect(composer.correction == nil)
+        composer.correct(.undo)
+        #expect(composer.text == "teh")
+    }
+
+    @Test func recalibrationDiscardsOnlyStaleTouchCoordinates() throws {
+        var settings = KeyboardSettings()
+        let composer = TextComposer(settings: settings, autoCapitalize: false)
+        try type("teh", into: composer)
+        settings.touchModel = TouchModel(meanX: 30, meanY: 0, sigmaX: 7, sigmaY: 7)
+        composer.apply(settings: settings)
+        try space(composer)
+        #expect(composer.text == "teh ")
+        #expect(composer.correction == nil)
+        composer.correct(.undo)
+        #expect(composer.text == "teh")
+    }
+
+    @Test func disablingSuggestionsClearsTheVisibleCandidates() throws {
+        var settings = KeyboardSettings()
+        let composer = TextComposer(settings: settings, autoCapitalize: false)
+        try type("hel", into: composer)
+        #expect(!composer.suggestions.isEmpty)
+        settings.suggestionsEnabled = false
+        composer.apply(settings: settings)
+        #expect(composer.suggestions.isEmpty)
+        #expect(composer.text == "hel")
+        settings.suggestionsEnabled = true
+        composer.apply(settings: settings)
+        #expect(!composer.suggestions.isEmpty)
+    }
+}

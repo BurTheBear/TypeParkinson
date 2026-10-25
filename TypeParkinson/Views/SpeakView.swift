@@ -59,8 +59,14 @@ struct SpeakView: View {
         .onAppear {
             if composer == nil {
                 composer = TextComposer(settings: model.settings, smartCorrection: model.settings.smartCorrectionEnabled,
-                                        suggestions: true, autoCapitalize: true)
+                                        suggestions: model.settings.suggestionsEnabled, autoCapitalize: true)
+            } else {
+                composer?.apply(settings: model.settings)
             }
+        }
+        .onChange(of: model.settings) { _, settings in
+            composer?.apply(settings: settings)
+            if !settings.phrasesEnabled { showingPhrases = false }
         }
     }
 
@@ -84,13 +90,13 @@ struct SpeakView: View {
 
         VStack(spacing: 6) {
             SuggestionBar(suggestions: composer.suggestions, correction: composer.correction,
-                          showsPhrasesButton: true, isShowingPhrases: showingPhrases,
+                          showsPhrasesButton: settings.phrasesEnabled, isShowingPhrases: showingPhrases,
                           palette: palette, largeLabels: settings.largeLabels,
                           onPick: { composer.pick($0) },
                           onTogglePhrases: { withAnimation(.snappy(duration: 0.2)) { showingPhrases.toggle() } },
                           onRevert: { composer.revertCorrection(to: nil) },
                           onPickAlternative: { composer.revertCorrection(to: $0) })
-            if showingPhrases {
+            if showingPhrases && settings.phrasesEnabled {
                 PhrasePanel(phrases: model.phrases, palette: palette,
                             height: settings.keySize.keyboardHeight(compact: false) + (settings.correctionBarEnabled ? KeyboardView.correctionBarHeight(compact: false) : 0),
                             largeLabels: settings.largeLabels) { phrase in

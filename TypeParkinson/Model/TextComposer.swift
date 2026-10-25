@@ -29,13 +29,32 @@ final class TextComposer {
     @ObservationIgnored private var wordTouches: [TypedTouch] = []
     @ObservationIgnored private var lastLayout: KeyboardLayout?
     @ObservationIgnored private var isRepeatingDelete = false
+    @ObservationIgnored private var keySize: KeySize?
 
     init(settings: KeyboardSettings?, smartCorrection: Bool? = nil, suggestions: Bool? = nil, autoCapitalize: Bool = true) {
         self.smartCorrection = smartCorrection ?? (settings?.smartCorrectionEnabled ?? false)
         self.showsSuggestions = suggestions ?? (settings?.suggestionsEnabled ?? false)
         self.autoCapitalize = autoCapitalize
+        keySize = settings?.keySize
         decoder = IntentDecoder(model: settings?.touchModel ?? TouchModel(), strength: settings?.correctionStrength ?? 0.6)
         updateShift()
+    }
+
+    /// Speak stays alive across tabs. Refresh preferences and calibration without
+    /// discarding the person's message or Undo history. Touch coordinates from an
+    /// older layout/model must not be interpreted using a new calibration.
+    func apply(settings: KeyboardSettings) {
+        let model = settings.touchModel ?? TouchModel()
+        if decoder.model != model || keySize != settings.keySize {
+            wordTouches = []
+            lastLayout = nil
+        }
+        keySize = settings.keySize
+        decoder.model = model
+        decoder.strength = settings.correctionStrength
+        smartCorrection = settings.smartCorrectionEnabled
+        showsSuggestions = settings.suggestionsEnabled
+        updateSuggestions()
     }
 
     var isEmpty: Bool { text.isEmpty }
