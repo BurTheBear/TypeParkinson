@@ -74,9 +74,9 @@ async function loadMedia(){await document.fonts.load('900 100px Nunito');await d
 const shortPoses=[
  {cam:[.7,1.35,4.8],look:[1,.2,0],phone:[16,-2,-5],rot:[.1,-.8,.05],key:[0,0,0],kr:[-.2,.1,-.08]},
  {cam:[0,1.4,16.4],look:[0,0,0],phone:[5,-.1,-1],rot:[.06,-.65,-.07],key:[-2,-4.6,-1],kr:[-.35,.1,-.06]},
- {cam:[0,.35,16.4],look:[0,0,0],phone:[4.1,-.1,0],rot:[.035,-.18,-.045],key:[-3,-9,-3],kr:[-.4,.1,0]},
+ {cam:[0,.35,16.4],look:[0,0,0],phone:[4.1,-.1,0],rot:[.035,-.18,-.045],key:[-2.8,-3,-3],kr:[-.4,.1,0]},
  {cam:[0,2.1,15.1],look:[0,0,0],phone:[5.4,-.2,-2],rot:[.04,-.22,-.045],key:[-2.3,-1.05,0],kr:[-.24,.08,-.02]},
- {cam:[0,.8,15.7],look:[0,0,0],phone:[5,-.1,-.6],rot:[.025,-.16,-.035],key:[-3,-9,-3],kr:[-.3,.05,0]},
+ {cam:[0,.8,15.7],look:[0,0,0],phone:[5,-.1,-.6],rot:[.025,-.16,-.035],key:[-3.2,-3.5,-5],kr:[-.3,.05,0]},
  {cam:[0,.3,15.4],look:[0,0,0],phone:[4.2,-.15,0],rot:[.025,-.14,-.035],key:[-3,-10,-3],kr:[0,0,0]},
  {cam:[0,.3,15.4],look:[0,0,0],phone:[4.2,-.15,0],rot:[.025,-.14,-.035],key:[-3,-10,-3],kr:[0,0,0]},
  {cam:[0,.3,15.4],look:[0,0,0],phone:[4.2,-.15,0],rot:[.025,-.14,-.035],key:[-3,-10,-3],kr:[0,0,0]}
@@ -108,7 +108,9 @@ function state(t,staticPose=false){const selected=at(t,cut);if(staticPose)t=sele
    camera.position.x+=(travel-.5)*(s.i===0?1.05:1.6);
    camera.position.z-=travel*(s.i===0?.25:.65);camera.lookAt(look);
    if(s.i===2){phone.rotation.y=mix(-.65,-Math.PI*2-.18,travel);phone.rotation.z=-.045+arc*.04;}
-   keyboard.scale.setScalar(s.i===0?1:s.i===1?1-smooth(u/.46):s.i===3?smooth(u/.2):.0001);
+   const keyScales=[1,.7,.65,1,.5,.5,.5,.5];keyboard.scale.setScalar(mix(keyScales[Math.max(0,s.i-1)],keyScales[s.i],blend));
+   if(s.i===4)keyboard.position.y-=smooth((u-.82)/.18)*7;
+   if(s.i===5)keyboard.position.y-=7*(1-blend);
    floor.material.opacity=0;
  }
  // Key springs and highlighted contact. No random state advances here.
@@ -126,7 +128,7 @@ function state(t,staticPose=false){const selected=at(t,cut);if(staticPose)t=sele
  evidence.position.set(-3.5,-.6,.5);evidence.rotation.set(.02,.08,-.025);vis(evidence,s.i===6?envelope(u,0,1,.08):0);
  engineering.position.set(-2.2,-.2,.2);engineering.rotation.set(.025,.07,0);vis(engineering,s.i===7?envelope(u,0,1,.06):0);code.rotation.y=staticPose?0:Math.sin(u*Math.PI)*.035;
  daily.position.set(-3.3,-.3,-.6);daily.rotation.set(.08,.12,0);vis(daily,s.i===8?envelope(u,0,1,.08):0);rings.forEach((r,i)=>r.rotation.z=Math.PI*.2+i*.2+(staticPose?0:u*.3));report.visible=s.i===8&&u>.53;report.scale.setScalar(smooth((u-.53)/.13));
- if((cut==='intro'||cut==='showcase')&&s.i>=4)keyboard.scale.setScalar(.0001);
+ if((cut==='intro'||cut==='showcase')&&s.i===4)undoLabel.visible=false;
  if(cut==='showcase'&&s.i>=5){signal.visible=false;evidence.visible=false;engineering.visible=false;}
  // Device screen changes dissolve through a real texture-backed panel; no fabricated app states.
  let name=s.i<=2?'today':s.i===3?'onboarding':s.i===4?'speak':s.i===5?(u<.58?'tremor':'voice'):s.i===6?'compare':s.i===7?'practice':s.i===8?['today','practice','speak','progress'][Math.min(3,Math.floor(u*4))]:s.i===9?'progress':'today';if(cut==='showcase'&&s.i>=5)name=['practice','tremor','voice'][s.i-5];currentMedia=name;const nextMap=textures[name]||textures[name+'-still']||textures['today'];if(screenMaterial.map!==nextMap){screenMaterial.map=nextMap;screenMaterial.needsUpdate=true;}dof.enabled=s.i===0;dof.uniforms.focus.value=camera.position.distanceTo(V(1.1,.1,.2));

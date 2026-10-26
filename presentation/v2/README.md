@@ -12,7 +12,7 @@ Start with [HYBRID-SCRIPT.md](HYBRID-SCRIPT.md) for the latest requested format:
 | [TypeParkinson-presenter.mp4](TypeParkinson-presenter.mp4) | Earlier 1:52 illustrated draft with score; [silent copy](TypeParkinson-presenter-silent.mp4) |
 | [TypeParkinson-submission.mp4](TypeParkinson-submission.mp4) | Earlier 2:48 illustrated draft, burned planned narration captions and music; [VOICEOVER.md](VOICEOVER.md) and [SRT](TypeParkinson-submission.srt) match this draft only |
 
-The user rejected the long draft's visual finish. The short cuts revise its materials, camera staging, typography/export spacing and exercise coverage; the longer exports preserve that earlier draft. They are alternatives, not clips to concatenate. No subjective user approval is claimed. See [REVIEW.md](REVIEW.md) and [VALIDATION.md](VALIDATION.md) for measured checks and limitations.
+The user rejected the long draft's visual finish. The short cuts revise its materials, camera staging, typography/export spacing, keyboard continuity and exercise coverage; the longer exports preserve that earlier draft. They are alternatives, not clips to concatenate. No subjective user approval is claimed. See [REVIEW.md](REVIEW.md) and [VALIDATION.md](VALIDATION.md) for measured checks and limitations.
 
 The default offline player opens the revised 45-second version. Normal live playback uses a 1280px render surface to reduce GPU load; offline export explicitly uses 1920×1080. The capture renderer accumulates four actual shutter-time poses per frame. The 30-second intro is trimmed from the same native 60fps short master; the earlier presenter was retimed scene-by-scene from the 168-second master to save a second full render.
 

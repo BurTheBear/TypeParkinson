@@ -13,3 +13,5 @@ The landing page uses the existing Aura palette: #F3F4F8 ground, #0E1424 text, #
 The45-second showcase has music/SFX and visible text, no student narration. demo.html is an interactive tour of real screenshots and recorded simulator exercises; it is not a live native iOS instance. A hosted running iOS simulator would require a separate service/account and is not included. All sensor/history samples are labeled. The keyboard illustration has four fixed correction examples, not the app's full Swift decoder.
 
 The existing upstream GitHub Pages deployment still requires Pranav to merge draftPR7 and, if needed, select main /docs in Settings → Pages. Netlify can deploy the complete independent BurTheBear/TypeParkinson-CAC repository directly using its presentation branch. Neither action submits the CAC application.
+
+Live manual Netlify deployment: https://fancy-frangipane-e17df3.netlify.app/ . The app tour is /demo. Future updates require another manual upload; Git integration was not enabled.

@@ -14,9 +14,9 @@ All six files passed ffprobe format/duration/size checks and full ffmpeg decode 
 
 | File | Duration | Bytes |
 |---|---:|---:|
-| TypeParkinson-intro-30s.mp4 | 30 s | 12,622,065 |
-| TypeParkinson-showcase-45s.mp4 | 45 s | 17,641,356 |
-| TypeParkinson-showcase-silent.mp4 | 45 s | 16,876,999 |
+| TypeParkinson-intro-30s.mp4 | 30 s | 13,431,325 |
+| TypeParkinson-showcase-45s.mp4 | 45 s | 18,252,945 |
+| TypeParkinson-showcase-silent.mp4 | 45 s | 17,488,588 |
 | TypeParkinson-presenter.mp4 | 112.05 s | 39,885,874 |
 | TypeParkinson-presenter-silent.mp4 | 112.05 s | 37,983,431 |
 | TypeParkinson-submission.mp4 | 168 s | 43,464,957 |
@@ -40,3 +40,5 @@ Three prototype/still passes and the user's rejection are documented honestly in
 ## Publication
 
 Publish all work to personal/presentation FIRST, then fork/presentation and the same upstream draft PR7. Never push or merge upstream. Netlify deployment requires the user's login; its page explicitly accepts terms at login, so that step is handed to the user. Static deploy config and a ready-to-upload website ZIP are prepared. No credits, paid hosting or paid reset were purchased.
+
+Final keyboard follow-up: the corrected first30seconds were rendered again at1080p60/four shutter samples and joined to the unchanged15seconds of exercise footage. All six media checks passed afterward. The public Netlify deployment is https://fancy-frangipane-e17df3.netlify.app/ (Netlify Drop, October25). Actual public-browser playback at24s returned duration45, readyState4, paused=false, with the 3D keyboard visible. Public /demo loads the interactive tour. Proof: reviews/netlify-film-playing.jpg. This is a manual deployment; future source pushes do not automatically redeploy Netlify.

@@ -1,11 +1,11 @@
 {
-  "checkedAt": "2026-10-25T23:50:26.002Z",
-  "playerSHA256": "fe3a431c7bb7c3e93553dfc0e1e5774f59b78a5fdfc1e852a26aef03e94a9553",
+  "checkedAt": "2026-10-26T00:09:22.090Z",
+  "playerSHA256": "e92656d6d00cad400ad6c5082a22e39eaf7fb78b998f95abff1499f31f051331",
   "files": [
     {
       "file": "TypeParkinson-intro-30s.mp4",
       "duration": 30,
-      "bytes": 12622065,
+      "bytes": 13431325,
       "video": {
         "codec_name": "h264",
         "codec_type": "video",
@@ -24,7 +24,7 @@
     {
       "file": "TypeParkinson-showcase-45s.mp4",
       "duration": 45,
-      "bytes": 17641356,
+      "bytes": 18252945,
       "video": {
         "codec_name": "h264",
         "codec_type": "video",
@@ -43,7 +43,7 @@
     {
       "file": "TypeParkinson-showcase-silent.mp4",
       "duration": 45,
-      "bytes": 16876999,
+      "bytes": 17488588,
       "video": {
         "codec_name": "h264",
         "codec_type": "video",
